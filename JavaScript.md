@@ -38,6 +38,12 @@ string，number，boolean，undefined，null，symbol，object
     console.log(Object.prototype.toString.call("Lance"));//[object String]
     ```
 
+### === 和 == 的区别
+
+`==` 在允许强制转换的条件下检查值的等价性，而 `===` 是在不允许强制转换的条件下检查值的等价性；
+
+因此 `===` 常被称为「严格等价」。（"55" == 55 true, "55" === 55 false。p.s. 把字符串转为数值）
+
 ## 哪些非 boolean 值被强制转换为一个 boolean 时，它是 false ？
 
 - `""`（空字符串）
@@ -615,3 +621,1297 @@ console.log(anyString.substring(NaN,3));
 ### toLowerCase / toUpperCase
 
 字母转为全小写或全大写
+
+# JS进阶
+
+## 闭包
+
+### 什么是闭包/对闭包的理解
+
+函数中有另一个函数或有另一个对象，里面的函数或者是对象都可以使用外面函数中定义的变量或者参数，此时形成闭包。
+
+> YouDontKnowJS对闭包的解释 —— 闭包就是函数能够记住并访问它的词法作用域，即使当这个函数在它的词法作用域之外执行时。由于这个性质，**闭包让我们能够从一个函数内部访问其外部函数的作用域**
+>
+> 闭包就是能够读取其他函数内部变量的函数。可以简单理解成“定义在一个函数内部的函数”
+
+### 闭包的用途
+
+- **保存**：缓存数据，延长作用域链
+- **保护**：形成私有作用域，保护里面私有变量不受外界干扰，避免全局污染
+
+> 缺点：**耗内存，耗性能**，函数中的变量不能及时释放
+
+### 如何使用闭包
+
+要使用闭包，只需要简单地将一个函数定义在另一个函数内部，并将它暴露出来。要暴露一个函数，可以将它返回或者传给其他函数。
+
+**内部函数将能够访问到外部函数作用域中的变量**，即使外部函数已经执行完毕。
+
+想要缓存数据的时候就用闭包，把想要缓存的数据放在外层函数和内层函数的中间位置。
+
+### 闭包应用场景
+
+#### li 节点的 onclick 事件都能正确的弹出当前被点击的 li 索引
+
+```html
+<ul id="testUL">
+    <li> index = 0</li>
+    <li> index = 1</li>
+    <li> index = 2</li>
+    <li> index = 3</li>
+</ul>
+<script type="text/javascript">
+    var nodes = document.getElementsByTagName("li");
+    for (var i = 0; i < nodes.length; i += 1) {
+        nodes[i].onclick = (function (i) {
+            return function () {     // <----重点是此处返回了个一个匿名函数，这个函数能访问
+              // 立即执行函数作用域内的i这个变量，形成闭包
+                console.log(i);
+            } //不用闭包的话，值每次都是4
+        })(i);
+    }
+</script>
+```
+
+#### 用闭包模拟私有方法
+
+使用闭包定义能访问私有函数和私有变量的公有函数（也叫做模块模式）
+
+```js
+var counter = (function() {
+  var privateCounter = 0;
+  function changeBy(val) {
+    privateCounter += val;
+  }
+  return {
+    increment: function() {
+      changeBy(1);
+    },
+    decrement: function() {
+      changeBy(-1);
+    },
+    value: function() {
+      return privateCounter;
+    }
+  };   
+})(); // 立即执行函数
+
+console.log(counter.value()); // logs 0
+counter.increment();
+counter.increment();
+console.log(counter.value()); // logs 2
+counter.decrement();
+console.log(counter.value()); // logs 1
+```
+
+环境中包含两个私有项：名为 privateCounter 的变量和名为 changeBy 的函数。 它俩都无法在匿名函数外部直接访问。必须通过匿名包装器返回的对象的三个公共函数访问。
+
+### 解决 循环+闭包 问题
+
+直接 [点击此处](https://juejin.im/post/58f1fa6a44d904006cf25d22) 查看
+
+## 什么是 JavaScript 作用链域？
+
+全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
+
+当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找， 直至全局函数，这种组织形式就是作用域链。
+
+## this
+
+### 对 this 的理解
+
+- this 总是指向函数的直接调用者（而非间接调用者）
+- 如果有 new 关键字，this 指向 new 出来的那个对象
+- 在事件中，this 指向触发这个事件的对象，特殊的是，IE 中的 attachEvent 中的 this 总是指向全局对象 window
+
+**重要**：
+
+- 普通函数的 this 指向是在函数的**执行期间**绑定的
+- 箭头函数的 this 指向是在函数**创建期间**就绑定好了的，指向的是创建该箭头函数所在的作用域对象
+- 一般不在事件（比如 onclick ）上传递箭头函数，使用 function 就好
+
+### 判定 `this`
+
+> 摘自 YouDontKnowJS
+
+现在，我们可以按照优先顺序来总结一下从函数调用的调用点来判定 `this` 的规则了。按照这个顺序来问问题，然后在第一个规则适用的地方停下。
+
+1. 函数是通过 `new` 被调用的吗（**new 绑定**）？如果是，`this` 就是新构建的对象。
+   `var bar = new foo()`
+2. 函数是通过 `call` 或 `apply` 被调用（**明确绑定**），甚至是隐藏在 `bind` *硬绑定* 之中吗？如果是，`this` 就是那个被明确指定的对象。
+   `var bar = foo.call( obj2 )`
+3. 函数是通过环境对象（也称为拥有者或容器对象）被调用的吗（**隐含绑定**）？如果是，`this` 就是那个环境对象。
+   `var bar = obj1.foo()`
+4. 否则，使用默认的 `this`（**默认绑定**）。如果在 `strict mode` 下，就是 `undefined`，否则是 `global` 对象。
+   `var bar = foo()`
+
+以上，就是理解对于普通的函数调用来说的 `this` 绑定规则 *所需的全部*。是的……几乎是全部。
+
+## apply, call, bind 的区别
+
+> apply, call, bind 本身存在于大 Function 构造函数的 prototype 中
+>
+> 所有的函数都是大 Function 的实例对象
+
+![apply](https://cdn.nlark.com/yuque/0/2019/png/260235/1549791418436-78a38fa1-d824-45c0-8caa-7a6314637140.png)
+
+apply, call, bind 方法都可以改变 this 的指向
+
+- apply(对象, [参数1, 参数2, 餐数3, ...])
+- call(对象, 参数1, 参数2, 餐数3,...)
+- bind(对象,参数1, 参数2, 餐数3,...)
+    - 函数名称.bind()---->返回值是复制之后的这个函数
+
+### 区别
+
+- apply，call 是调用的时候改变 this 指向，然后返回函数执行的结果。
+    - 参数较多时用 apply ，参数较少时用 call
+- bind 是复制一份函数并返回，并且这个函数的 this 指向变成了传入的第一个参数。
+
+## JavaScript 原型
+
+### 什么是原型
+
+> **实例对象**中有个属性 \_\_proto\_\_ ，是个对象，叫原型，不是标准的属性，浏览器使用的----->可以叫**原型对象**
+>
+> **构造函数**中有一个属性 **prototype** ，也是个对象，叫原型，是标准属性，程序员使用--->可以叫**原型对象**
+>
+> *实例对象的 \_\_proto\_\_ 和构造函数中的 prototype 相等---> true*
+>
+> *又因为实例对象是通过构造函数来创建的，构造函数中有原型对象prototype*
+>
+> *实例对象的 \_\_proto\_\_ 指向了构造函数的原型对象 prototype*
+
+每个对象都会在其内部初始化一个属性，就是 prototype（原型）。原型就是 \_\_proto\_\_（IE8不支持，非标准属性） 或者是 prototype ，都是原型对象。
+
+### 作用
+
+- 共享数据，目的是：节省内存空间
+- 实现继承，目的是：节省内存空间
+
+## 什么是原型链
+
+**精简版**
+
+原型链是一种关系，实例对象和原型对象之间的关系，关系是通过原型（__proto__）来联系的。
+
+**详细版**
+
+每个对象都会在其内部初始化一个属性 prototype（原型），当我们访问一个对象的属性时， 如果这个对象内部不存在这个属性，那么他就会去 prototype 里找这个属性，这个 prototype 又会有自己的 prototype ，于是就这样一直找下去，也就是我们平时所说的原型链的概念。
+
+**原型和原型链**
+![prototype](https://cdn.nlark.com/yuque/0/2019/png/260235/1549711479179-356c282c-60db-41ea-82df-5ebfb9550785.png)
+
+
+**原型链最终指向**
+![原型链最终指向](https://cdn.nlark.com/yuque/0/2019/png/260235/1549711526339-9b043225-9ad9-4f88-b1b5-95da79cc4bf8.png)
+
+## 分别使用原型链和 class 的方式实现继承
+
+### 1. 组合继承（原型链 + 借用构造函数）【不推荐】
+
+```js
+function Person(name, age) {
+  this.name = name
+  this.age = age
+}
+Person.prototype.sayHi=function () {}
+
+function Student(name, age, weight) {
+  // 借用构造函数
+  Person.call(this, name, age)
+  this.weight = weight
+}
+// 改变原型指向----继承
+// 我们让 Student.prototype 指向一个 Person 的实例对象
+// 这个对象的 __proto__ 指向的是 Person.prototype
+// 所以我们就可以借助这个实例对象拿到 sayHi 方法，实现继承
+Student.prototype = new Person()
+Student.prototype.eat = function () {}
+var stu = new Student("Lance", 20, 120)
+var stu2 = new Student("Will", 200 , 110)
+
+// 属性和方法都被继承了
+```
+
+由上面方案引出的问题：
+
+#### 为什么不能 Student.prototype = Person.prototype
+
+对象的赋值只是引用的赋值, 上面两者都指向同一个内存地址，只要随便通过 1 个途径就能修改该内存地址的对象，这样子类就无法单独扩展方法，因为会影响父类。
+
+#### 单纯的原型链继承有什么缺陷
+
+虽然改变了原型的指向，但属性在初始化的时候就已经固定了【Student.prototype = new Person("小明", 29, 90)】，如果是多个对象实例化，那么每个实例对象的属性的初始值就都是一样的。换句话说，无法向父类传递参数。
+
+#### 单纯的借用构造函数继承有什么缺陷
+
+只能继承父类构造函数里面的属性和方法【Person.call(this, name, age)】，但父类的 prototype（原型）上的属性和方法不能继承。
+
+#### 组合继承的缺点
+
+调用了两次父类的构造函数。第一次给子类的原型添加了父类构造函数中的属性方法，第二次又给子类的构造函数添加了父类的构造函数的属性方法，从而覆盖了子类原型中的同名参数。这种被覆盖的情况造成了性能上的浪费：
+
+```js
+function SuperType() {
+    this.name = 'parent'
+    this.arr = [1, 2, 3]
+}
+
+SuperType.prototype.say = function() {}
+
+function SubType() {
+    SuperType.call(this) // 第二次调用SuperType
+}
+
+SubType.prototype = new SuperType() // 第一次调用SuperType
+```
+
+### 2. 寄生组合继承【推荐】
+
+```js
+function Person(name, age) {
+    this.name = name
+    this.age = age
+    this.sayHi = function() {}
+}
+
+Person.prototype.eat = function() {}
+
+function Student(name, age, weight) {
+    Person.call(this, name, age)
+    this.weight = weight
+    this.study = function() {}
+}
+
+var F = function (){}
+// 核心：因为是对父类原型的复制，所以不包含父类的构造函数，也就不会调用两次父类的构造函数造成浪费
+F.prototype = Person.prototype // 创建了父类原型的浅复制
+Student.prototype = new F();
+Student.prototype.constructor = Student // 修正原型的构造函数
+
+var stu1 = new Student("Lance", 19, 120)
+console.dir(stu1)
+```
+
+### 3. class 实现继承
+
+```js
+class Person {
+    constructor(name, age) {
+        this.name = name
+        this.age = age
+        // 类本身的方法
+        this.sayHi = function() {}
+    }
+    // 这里的 eat 相当于 prototype 中的 eat
+    eat() {}
+}
+
+// 关键点：extends super
+class Student extends Person {
+    constructor(name, age, weight) {
+        super(name, age)
+        this.weight = weight
+        this.study = function() {}
+    }
+    run() {}
+}
+
+var stu = new Student("Jerry", 20, 100)
+console.dir(stu)
+```
+
+## 原型链，proto 和 prototype 的区别
+
+对象拥有 \_\_proto\_\_ 属性，函数拥有 prototype 属性。某个实例对象的 \_\_proto\_\_ 指向构造它的构造函数的 prototype 属性。所以：实例对象的 \_\_proto\_\_ 指向了构造函数的原型对象 prototype
+：
+
+```js
+// 构造函数
+function B(b) {
+  this.b = b
+}
+// 实例对象
+var b = new B('lc')
+b.__proto__ === B.prototype  // true
+```
+
+参考：[**彻底理解什么是原型链，prototype和__proto__的区别。**](https://blog.csdn.net/lc237423551/article/details/80010100)
+
+## 对象
+
+> 函数（包括构造函数）是对象
+>
+> 对象不一定是函数
+>
+> 对象有 \_\_proto\_\_
+>
+> 函数有 prototype
+
+### 创建对象的三种方式
+
+#### 字面量的方式
+
+```js
+var obj = {
+  name: "Lance",
+  age: 20,
+  sayHi: function(){}
+}
+```
+
+#### 调用系统的构造函数
+
+```js
+var obj = new Object()
+obj.name = 'Lance'
+obj.age = 20
+obj.sayHi = function(){}
+```
+
+#### 自定义构造函数
+
+```js
+function Person(name, age) {
+  this.name = name
+  this.age = age
+  this.sayHi = function(){}
+}
+```
+
+### new 操作符具体干了什么呢？
+
+1. 创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型。
+2. 属性和方法被加入到 this 引用的对象中。
+3. 新创建的对象由 this 所引用，并且最后隐式的返回 this 。
+
+```js
+var obj  = {}
+obj.__proto__ = Base.prototype
+Base.call(obj)
+```
+
+## 事件
+
+### 什么是事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
+
+1. 我们在网页中的某个操作（有的操作对应多个事件）。例如：当我们点击一个按钮就会产生一个事件。是可以被  JavaScript 侦测到的行为。
+2. 事件处理机制：IE9以下只支持事件冒泡、Firefox、Chrome等则同时支持两种事件模型，也就是：捕获型事件和冒泡型事件。
+3. ev.stopPropagation();（旧 ie 的方法 ev.cancelBubble = true）
+
+### 事件流
+
+![事件阶段.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/260235/1550160415749-0297296f-0559-485f-bfe4-05859bdc757a.jpeg)
+
+### 事件绑定的三种方式
+
+```js
+// 【 DOM0 级事件 】
+// 第一种：作为属性，写在标签上
+// <div onclick="fun();">click</div> ← 绑定在事件冒泡阶段
+
+// 第二种，使用 onclick
+document.getElementById("xxx").onclick = function(){}   // ← 绑定在事件冒泡阶段
+
+
+// 【 DOM2 级事件 】
+// 第三种：使用推荐的标准模式
+document.getElementById("xxx").addEventListener("click", function(e){}, false)
+// 第三种可以改变事件绑定的阶段
+// ---> 为 false 时，绑定在事件冒泡阶段（默认下是绑定在冒泡阶段）
+// ---> 为 true 时，绑定在捕获阶段
+
+// 如果绑定在捕获阶段，监听函数就只在捕获阶段触发
+// 如果绑定在冒泡阶段，监听函数只在冒泡阶段触发。
+```
+
+### 事件的执行顺序
+
+- 无论是哪种绑定方式，对于同一个绑定元素，都是遵循先绑定的先执行原则。
+- 如果是以 onclick 的方式绑定的，如果对同一个元素重复绑定的话，后面的会覆盖前面的。但是如果是以 addEventListener 方式绑定的话，同一个元素绑定多少次，就会执行多少次。
+- 如果在 DOM 中直接使用 onclick ，则 onclick 的绑定是早于 addEventListener 的。
+
+### 事件委托
+
+绑定在父级元素，利用事件冒泡去触发父级事件处理函数的一种技巧。
+
+#### 实现一个事件委托
+
+```js
+var ul = document.querySelector('ul')
+
+function listen(element, eventType, targetElement, fn) {
+    element.addEventListener(eventType, function(e) {
+        // 先拿到当前事件的直接触发对象
+        var curTarget = e.target
+        // 看它是不是使用者监听的目标对象类型
+        // 一旦发现不是，就执行循环
+        while(!curTarget.matches(targetElement)) {
+            // 先看看当前对象是不是和父元素相同
+            // 相同则把当前对象置为空，且不执行回调
+            if (curTarget === element) {
+                curTarget = null
+                break
+            }
+            // 不相同则把当前对象设置成自己的父对象
+            curTarget = curTarget.parentNode
+        }
+        // 是，则先看当前对象有没有值，有值则执行回调函数
+        curTarget && fn(e, curTarget, e)
+    })
+}
+
+listen(ul, 'click', 'li', function(event, el) {
+    console.log(event, el)
+});
+
+// jquery 使用方式
+$("ul").on("click", "li", function(e) {
+  console.log($(e.target).html());
+});
+// 这个 on 事件是绑定在 ul 上面的，li 是目标元素，
+// on 事件内部是通过 e.target 来判断点击元素是不是 li 的
+```
+
+### 我们给一个 dom 同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
+
+会执行两次事件，按代码执行顺序来
+
+**规律**：绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照[W3C](https://www.baidu.com/s?wd=W3C&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的标准，先发生捕获事件，后发生冒泡事件。所有事件的顺序是：其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件
+
+### 什么是节流和防抖
+
+#### 介绍
+
+- debounce（防抖）的作用是在让在用户动作停止后延迟x ms再执行回调
+- throttle（节流）的作用是在用户动作时每隔一定时间（如200ms）执行一次回调
+
+#### 作用
+
+- debounce 应用在搜索框的即时搜索（input 事件），避免用户狂按键盘导致的频繁请求
+- throttle 应用在监听 resize 改变布局或 onscroll 滚动
+
+**防抖**：
+
+```js
+// <input type="text" oninput="change()">
+// 防抖（一段时间会等，然后带着一起做了）
+
+function debounce(fn, delay) {
+  let timer = null
+  return function() {
+    const context = this, args = arguments
+    if (timer) {
+        window.clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, args)
+      timer = null
+    }, delay)
+  }
+}
+
+var change = debounce(function() {
+  var input = document.querySelector("input")
+  console.log(input.value)
+}, 1000)
+```
+
+**节流**：
+
+```js
+// <div class="sw">23333</div>
+// 节流（一段时间执行一次之后，就不执行第二次）
+
+function throttle(fn, delay) {
+  let canUse = true
+  return function() {
+    var context = this, args = arguments
+    if (canUse) {
+      fn.apply(context, args)
+      canUse = false
+      setTimeout(()=>canUse = true, delay)
+    }
+  }
+}
+
+var sw = document.querySelector(".sw")
+
+sw.addEventListener("click", throttle(function(e) {
+    console.log(e)
+}, 1000))
+```
+
+参考：
+
+- [在React、Vue和小程序中使用函数节流和函数防抖](https://blog.csdn.net/qq_37860930/article/details/83545473‘)
+- [函数防抖与函数节流](https://zhuanlan.zhihu.com/p/38313717)
+- [JS事件中防抖debounce和节流throttle概念原理的学习](http://www.webfront-js.com/articaldetail/99.html)
+
+## ES6相关
+
+### ES6 用到过吗，新增了哪些东西，你用到过什么？
+
+- `let` 和 `const`
+- 模板字符串
+- 箭头函数（自己没有 this ，从自己的作用域链的``上一层继承 this`` ）
+- `for-of`（用来遍历数据—例如数组中的值）e.g. Array，String，Set，Map
+- `arguments` 对象可被不定参数和默认参数完美代替
+- Promise
+- 数组的拓展
+    - 数组.find((item,index,arr) => {条件}) 返回满足条件的第一个元素的值。否则返回 undefined
+    - 数组.findIndex((item,index,arr)=>{...}) 返回满足条件的第一个元素的索引值。否则返回 -1
+    - 数组.includes(数据,[searchIndex]) 判断数据是否在数组中,第二个参数(可选参数)为从指定索引处(包含索引处的值)开始搜索 返回布尔值(es7时加入)
+    - 扩展运算符 ...
+
+- 引入 `module` 模块的概念
+
+### const 和 let 区别
+
+- let 定义变量可以只声明不赋值
+- const 定义常量声明时必须赋值，一旦定义不可轻易改变值
+
+#### 共同点
+
+解决 var 没有块作用域、变量提升、可以重复声明的问题。let 和 const 有自己的块作用域，不存在变量提升问题，同一块作用域中不可重复声明（会报错）
+
+#### let var 区别
+
+- var 有变量提升，let 没有
+- let 的作用域是块，而 var 的作用域是函数
+
+    ```js
+    var a = 5
+    var b = 10
+
+    if (a === 5) {
+    let a = 4 // The scope is inside the if-block
+    var b = 1 // The scope is inside the function
+
+    console.log(a)  // 4
+    console.log(b)  // 1
+    }
+
+    console.log(a) // 5
+    console.log(b) // 1
+    ```
+
+- let 有暂时性死区，只要 let/const 声明的变量，在未声明之前使用或者赋值都会报错（ReferenceError）
+- let 不能重复定义
+
+#### 可以改变 const 定义的某个对象的属性吗
+
+可以，因为对象是复杂类型，const 存储的是引用，所以改变对象的成员不会报错，但不建议这样做。
+
+### 箭头函数（ this 指向）
+
+- 箭头函数，本质上，就是一个匿名函数
+- 箭头函数无法通过 call、apply、bind 来手动改变内部 this 指向
+- 箭头函数：自动 .bind(this) 也就是说箭头函数中的 this 指向与其所在作用域的 this 指向相同
+
+**总结**：
+
+箭头函数不会创建自己的 ``this`` ，它只会从自己的作用域链的 `上一层继承 this`
+
+```js
+function Person() {
+  // Person() 构造函数定义 `this` 作为它自己的实例.
+  this.age = 0
+
+  setInterval(function growUp() {
+    // 在非严格模式, growUp() 函数定义 `this`作为全局对象, 
+    // 与在 Person() 构造函数中定义的 `this`并不相同.
+    this.age++
+  }, 1000)
+}
+
+var p = new Person()
+
+// 使用箭头函数
+function Person() {
+  this.age = 0
+
+  setInterval(() => {
+    this.age++ // |this| 正确地指向 p 实例
+  }, 1000)
+}
+
+var p = new Person()
+```
+
+### Set 和 Map
+
+#### 概念
+
+- Set 是有序列表，类似于数组，但是没有重复值
+- Map 是存储许多键值对的有序列表，key 和 value 支持所有数据类型
+
+#### 相同点
+
+- 都是有序列表
+- Set 值不重复；Map 键不重复
+
+#### 用法
+
+> SET
+
+- 属性：
+    - `Set.prototype.constructor`：构造函数，默认就是 Set 函数
+    - `Set.prototype.size`：返回实例的成员总数
+- 操作方法：
+    -  `add(value)`：添加一个值，返回Set结构本身
+    - `delete(value)`：删除某个值，返回布尔值
+    - `has(value)`：返回布尔值，表示是否是成员
+    - `clear()`：清除所有成员，无返回值
+
+- 遍历方法（ key() 和 values() 行为是一致的。）
+    - `keys()`：返回键名的遍历器（什么是遍历器？Iterator）
+    - `values()`：返回键值的遍历器
+    - `entries()`：返回键值对的遍历器
+    - `forEach()`：使用回调函数遍历每个成员
+
+> MAP
+
+- 属性
+    - `size` ：返回 Map 结构的成员总数。
+- 操作方法
+    - `set(key, value)`: `set` 方法设置键名 `key` 对应的键值为 `value` ，然后返回整个 Map 结构。
+    - `get(key)` ：`get` 方法读取 `key` 对应的键值，如果找不到 `key` ，返回 `undefined` 。
+    - `has(key)`：`has` 方法返回一个布尔值，表示某个键是否在当前 Map 对象之中。
+    - `delete(key)`：`delete` 方法删除某个键，返回 `true` 。如果删除失败，返回 `false` 。
+  - `clear()`：`clear`方法清除所有成员，没有返回值。
+
+- 遍历方法
+    - `keys()`：返回键名的遍历器。
+    - `values()`：返回键值的遍历器。
+    - `entries()`：返回所有成员的遍历器。
+    - `forEach()`：遍历 Map 的所有成员。
+
+#### 用途
+
+Set 集合可以用来过滤数组中重复的元素，只能通过 has 方法检测指定的值是否存在，或者是通过 forEach 处理每个值。
+
+Map 集合通过 set() 添加键值对，通过 get() 获取键值，各种方法的使用查看文章教程，你可以把它看成是比 Object 更加强大的对象。
+
+### Set 与 数组 的区别
+
+set不可重复，array可重复
+
+### Map 与 对象 的区别
+
+- Object 的键只能是字符串或者 symbol ，Map 的键可以是任意类型的值（包括对象）
+- Map 可以通过 size 获取元素个数，对象得遍历。
+- Map 是有序的（根据用户插入的顺序进行排序），对象排序有自己规则（比如先排数字开头的 key ，再到字符串）
+- `Map` 可直接进行迭代，而 `Object` 的迭代需要先获取它的键数组，然后再进行迭代。
+
+```js
+var map = new Map()
+map.set("name", "Lance")
+map.set("age", 18)
+
+var per = {
+    name: 'Jerry',
+    age: 19
+}
+
+for (const attr of map.values()) {
+    console.log(attr)
+} // Lance 18
+
+for (const attr of Object.keys(per)) {
+    console.log(per[attr])
+} // Jerry 19
+```
+
+### Promise
+
+#### promise 是什么
+
+Promise 是异步编程的一种解决方案，比传统的异步解决方案【回调函数】和【事件】更合理、更强大。
+
+#### 诞生的原因
+
+异步网络请求的回调地狱，而且我们还得对每次请求的结果进行一些处理，代码会更加臃肿。
+
+#### promise 使用场景有哪些
+
+- ajax请求得到返回值的时间不同,有了 callback 的回调结果之后才能知道接下来应该做什么
+- node 中读取文件
+
+#### 三种状态
+
+- pending: 初始状态，既不是成功，也不是失败状态。
+- fulfilled: 意味着操作成功完成。
+- rejected: 意味着操作失败。
+
+#### 基本用法
+
+```js
+//defined Promise async function
+function asyncFun(){
+    return new Promise((reslove,reject)=>{
+        if(reslove){
+            reslove(/*reslove parameter*/)
+        }else{
+            reject(new Error(/*Error*/))
+        }
+    })
+}
+
+//use Promise&then
+asyncFun().then(/*function*/).then(/*function*/)...
+```
+
+#### promise 特性
+
+参考：[八段代码彻底掌握 Promise](https://juejin.im/post/597724c26fb9a06bb75260e8)
+
+#### promise 里面 return 一个 string，和在 resolve 一个 string 的区别
+
+return 一个 string 后续的 then 不会执行; resolve 一个 string 会返回一个 promise 对象，对象的值是这个 string
+
+#### 在 then 里面 throw 一个 error，怎么捕捉
+
+```js
+// throw 这个 error 后，在紧挨的下一个 then 中添加两个回调方法（ resolve 的，和 reject ）。
+// 然后在第二个 reject 方法中可以捕获
+new Promise(function (resolve, rej) {
+        return resolve("返回Promise")
+    })
+    .then(data => {
+        console.log("第一个then")
+        throw new Error("我是错误")
+    })
+    .then(resolve => {
+        console.log("成功")
+        console.log(resolve)
+    }, err => {
+        console.log("紧挨的失败")
+        console.log(err)
+    })
+    .catch(err => {
+        console.log("catch错误")
+        console.log(err)
+    });
+// 123
+// 第一个then
+// 紧挨的失败
+// Error: 我是错误
+// at Promise.then.data (<anonymous>:6:15)
+
+// 在 then 的链式调用后添加一个 catch 来捕获
+new Promise(function (resolve, reject) {
+    return resolve("返回Promise")
+}).then(data => {
+    console.log("第一个then")
+    throw new Error("我是错误")
+}).then(err => {
+    console.log("then错误")
+    console.log(err)
+}).catch(err => {
+    console.log("catch错误")
+    console.log(err)
+})
+
+console.log("123")
+
+// 123
+// 第一个 then
+// catch 错误
+// Error: 我是错误
+// at Promise.then.data
+```
+
+#### 使用 Promise 封装一个 url
+
+```js
+var url = ''
+var getJSON = url => new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.open('GET', url)
+    xhr.send(null)
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) { // <= 请求已完成，且响应已就绪
+            if (xhr.status === 200) { // <= 状态OK
+                resolve(JSON.parse(xhr.responseText))
+            } else {
+                reject(new Error("请求失败"))
+            }
+        }
+    }
+})
+
+getJSON(url).then(res => console.log(res))
+```
+
+#### 在 Promise 链式调用中，怎样才能保证上一个 promise 出现报错不会影响到后续 .then 的正常执行
+
+为了不影响后续 .then 的执行，需要在每一个 then 中指定失败的回调
+
+```js
+let asyncFunc = () => new Promise(resolve => {
+  resolve("123")                 // 123, 二楼
+  // throw new Error("出错了")    // Error: 出错了, 二楼
+});
+
+asyncFunc().then(res => {
+  console.log(res)
+  return Promise.resolve("二楼")
+}, err => {                      // <====== 指定失败的回调
+  console.log(err)
+    return Promise.resolve("二楼")
+}).then(res => {
+  console.log(res)
+})
+```
+
+### Async / Await
+
+#### 是什么
+
+- async 用于声明一个异步的 function
+- await 用于等待一个异步方法执行完成
+
+#### Async
+
+async 函数会返回一个 Promise 对象，如果在函数中 `return` 一个直接量，async 会把这个直接量通过 `Promise.resolve()` 封装成 Promise 对象。
+
+#### Await
+
+await 是在等待一个 async 函数完成。不过按 [语法说明](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/await) ，await 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值
+
+```js
+function getSomething() {
+    return "something"
+}
+
+function testAsync() {
+    return Promise.resolve("hello async")
+}
+
+async function test() {
+    const v1 = await getSomething()
+    const v2 = await testAsync()
+    console.log(v1, v2)
+}
+
+test()
+```
+
+#### 优势
+
+让代码更易读
+
+假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。
+
+传统 promise ，链式调用 then 一个接一个
+
+改用 async/await 后就像同步代码一样
+
+```js
+function doIt() {
+    console.time("doIt")
+    const time1 = 300
+    step1(time1)
+        .then(time2 => step2(time2))
+        .then(time3 => step3(time3))
+        .then(result => {
+            console.log(`result is ${result}`)
+            console.timeEnd("doIt")
+        });
+}
+
+doIt()
+
+// =======
+
+async function doIt() {
+    console.time("doIt");
+    const time1 = 300
+    const time2 = await step1(time1)
+    const time3 = await step2(time2)
+    const result = await step3(time3)
+    console.log(`result is ${result}`)
+    console.timeEnd("doIt")
+}
+
+doIt()
+```
+
+参考：[理解 JavaScript 的 async/await](https://segmentfault.com/a/1190000007535316)
+
+### 解构赋值
+
+#### 数组用法
+
+```js
+// 前后的形式必须完全一致 才可以完成结构赋值
+let [foo, [[bar], baz]] = [1, [[2], 3]]
+foo // 1
+bar // 2
+baz // 3
+
+let [ , , third] = ["foo", "bar", "baz"]
+third // "baz"
+
+let [x, , y] = [1, 2, 3]
+x // 1
+y // 3
+
+let [head, ...tail] = [1, 2, 3, 4]
+head // 1
+tail // [2, 3, 4]
+
+let [x, y, ...z] = ['a']
+x // "a"
+y // undefined
+z // []
+// 如果解构不成功，变量的值就等于undefined。
+```
+
+#### 对象用法
+
+```js
+// 对象的属性没有次序，变量必须与属性同名，才能取到正确的值。
+{name, age} = {name:'wang',age: 18}
+name // wang
+age // 18
+
+// 支持别名
+{name:nname, age} = {name:'wang',age: 18}
+name // '' 取别名时原名就会为空字符串
+nname // wang
+age // 18
+```
+
+#### ...运算符
+
+```js
+[a, ...b] = [1, 2, 3, 4, 5]
+a // 1
+b // [2,3,4,5]
+
+var app = (...sum) => {sum.forEach(item => console.log(item))}
+app(1,2,3,4) // 1,2,3,4
+// 此运算符或得值为数组形式 主要用于替代函数中的 arguments(伪数组) 属性
+// 这样可以非常方便的遍历获取到的未知个数的实参
+```
+
+### 函数中的 rest（剩余） 参数
+
+> **剩余参数**语法允许我们将一个不定数量的参数表示为一个数组。
+>
+> ——> MDN - [剩余参数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Rest_parameters)
+
+```js
+function sum(...theArgs) {
+  return theArgs.reduce((previous, current) => {
+    return previous + current
+  });
+}
+
+console.log(sum(1, 2, 3))
+// expected output: 6
+
+console.log(sum(1, 2, 3, 4))
+// expected output: 10
+
+// 下例中，剩余参数包含了从第二个到最后的所有实参，然后用第一个实参依次乘以它们
+function multiply(multiplier, ...theArgs) {
+  return theArgs.map(function (element) {
+    return multiplier * element
+  });
+}
+
+var arr = multiply(2, 1, 2, 3)
+console.log(arr)  // [2, 4, 6]
+```
+
+#### 剩余参数和 arguments 对象的区别
+
+剩余参数和 `arguments` 对象之间的区别主要有三个：
+
+- 剩余参数只包含那些没有对应形参的实参，而 `arguments` 对象包含了传给函数的所有实参。
+- `arguments` 对象不是一个真正的数组，而剩余参数是真正的 `Array` 实例，也就是说你能够在它上面直接使用所有的数组方法，比如 `sort`，`map`，`forEach` 或 `pop` 。
+- `arguments` 对象还有一些附加的属性 （如 `callee` 属性）。
+    - arguments.callee 属性包含当前正在执行的函数。
+
+### 模块化
+
+#### 模块化发展
+
+无模块化 --> CommonJS规范 --> AMD规范 --> CMD规范 --> ES6模块化
+
+#### 无模块劣势
+
+```js
+<script src="jquery.js"></script>
+<script src="jquery_scroller.js"></script>
+<script src="main.js"></script>
+...
+
+缺点：
+被依赖的放在前面，否则使用就会报错
+污染全局作用域
+维护成本高
+依赖关系不明显
+```
+
+#### CommonJS规范（NodeJS）
+
+```js
+// 定义模块math.js
+var basicNum = 0
+function add(a, b) {
+  return a + b
+}
+module.exports = { //在这里写上需要向外暴露的函数、变量
+  add,
+  basicNum
+}
+
+// 引用自定义的模块时，参数包含路径，可省略.js
+var math = require('./math')
+math.add(2, 5)
+
+// 引用核心模块时，不需要带路径
+var http = require('http')
+http.createService(...).listen(3000)
+```
+
+**exports 是对 module.exports 的引用**。比如我们可以认为在一个模块的顶部有这句代码： `exports = module.exports` 所以，我们不能直接给 `exports` 赋值:
+
+- ✅ exports.foo = 'bar'
+- ❌ exports = {foo: 'bar'} //error 这种方式是错误的，相当于重新定义了 exports
+
+**优点**
+
+解决了依赖、全局变量污染的问题
+
+**缺点**
+
+CommonJS 用同步的方式加载模块，这对服务器端不是一个问题，因为所有的模块都存放在本地硬盘，可以同步加载完成，等待时间就是硬盘的读取时间。但是，对于浏览器却是一个大问题，因为模块都放在服务器端，等待时间取决于网速的快慢，可能要等很长时间，浏览器处于"假死"状态。所以**不适合浏览器端模块加载**，更合理的方案是使用异步加载。
+
+#### AMD规范（RequireJS）
+
+AMD规范采用**异步方式加载模块**，模块的加载不影响它后面语句的运行。所有**依赖这个模块的语句，都定义在一个回调函数中**，等到加载完成之后，这个回调函数才会运行。
+
+```js
+/** 网页中引入 require.js 及 main.js **/
+<script src="js/require.js" data-main="js/main"></script>
+
+/** main.js 入口文件/主模块 **/
+// 首先用 config() 指定各模块路径和引用名
+require.config({
+  baseUrl: "js/lib",
+  paths: {
+    "jquery": "jquery.min",  //实际路径为js/lib/jquery.min.js
+    "underscore": "underscore.min",
+  }
+});
+// 执行基本操作
+require(["jquery","underscore"], function($,_){
+  // some code here
+});
+```
+
+**优点**
+
+适合在浏览器环境中异步加载模块、并行加载多个模块
+
+**缺点**
+
+必须要**提前加载所有的依赖**，然后才可以使用，而不是需要使用时再加载。（**不能按需加载**）
+
+#### CMD（SeaJS）
+
+与AMD类似，不同点在于：
+
+- AMD 推崇依赖前置、提前执行
+- CMD 推崇依赖就近、延迟执行。
+
+**CMD 与 AMD 区别**
+
+```js
+/** AMD写法 **/
+define(["a", "b", "c", "d", "e", "f"], function(a, b, c, d, e, f) {
+     // 等于在最前面声明并初始化了要用到的所有模块
+    a.doSomething()
+    if (false) {
+        // 即便没用到某个模块 b，但 b 还是提前执行了
+        b.doSomething()
+    }
+})
+
+/** CMD写法 **/
+define(function(require, exports, module) {
+    var a = require('./a') //在需要时申明
+    a.doSomething()
+    if (false) {
+        var b = require('./b');
+        b.doSomething()
+    }
+})
+```
+
+#### ES6模块化
+
+ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，旨在成为**浏览器和服务器通用**的模块解决方案。其模块功能主要由两个命令构成： `export` 和 `import` 。 `export` 命令用于规定模块的对外接口，`import` 命令用于输入其他模块提供的功能。
+
+```js
+/** 定义模块 math.js **/
+var basicNum = 0
+var add = function (a, b) {
+    return a + b
+};
+export { basicNum, add }
+
+/** 引用模块 **/
+import { basicNum, add } from './math'
+function test(ele) {
+    ele.textContent = add(99 + basicNum)
+}
+```
+
+es6 在导出的时候有一个默认导出， `export default` ，使用它导出后，在 import 的时候，不需要加上 {} ，模块名字可以随意起。该名字实际上就是个对象，包含导出模块里面的函数或者变量。
+
+```js
+/** export default **/
+//定义输出
+export default { basicNum, add }
+//引入
+import math from './math'
+function test(ele) {
+    ele.textContent = math.add(99 + math.basicNum)
+}
+```
+
+参考：
+
+- [前端模块化：CommonJS,AMD,CMD,ES6](https://juejin.im/post/5aaa37c8f265da23945f365c)
+- [这一次，我要弄懂javascript的模块化](https://juejin.im/post/5b4420e7f265da0f4b7a7b27)
+
+#### 模块化开发怎么做？
+
+[立即执行函数](http://benalman.com/news/2010/11/immediately-invoked-function-expression/),不暴露私有成员
+
+```js
+var module1 = (function(){
+  var _count = 0
+  var m1 = function(){
+    //...
+  }
+  var m2 = function(){
+    //...
+  }
+  return {
+    m1,
+    m2
+  }
+})();
+```
+
+## 异步
+
+### Ajax
+
+#### Ajax 是什么? 如何创建一个Ajax？
+
+使用 JavaScript 异步获取数据，而且页面不会发生整页刷新的，提高了用户体验。
+
+1. 创建 XMLHttpRequest 对象,也就是创建一个异步调用对象
+2. 创建一个新的 HTTP 请求,并指定该 HTTP 请求的方法、URL 及验证信息
+3. 设置响应 HTTP 请求状态变化的函数
+4. 发送 HTTP 请求
+5. 获取异步调用返回的数据
+6. 使用 JavaScript 和 DOM 实现局部刷新
+
+```js
+// 1. 创建一个 XMLHttpRequest 类型的对象 —— 相当于打开了一个浏览器
+var xhr = new XMLHttpRequest()
+
+// 2. 打开与一个网址之间的连接 —— 相当于在地址栏输入访问地址
+xhr.open('GET', './time.php')
+
+// 3. 通过连接发送一次请求 —— 相当于回车或者点击访问发送请求
+xhr.send(null)
+
+// 4. 指定 xhr 状态变化事件处理函数 —— 相当于处理网页呈现后的操作
+xhr.onreadystatechange = function () {
+    // 通过 xhr 的 readyState 判断此次请求的响应是否接收完成
+    // 4代表done
+    if (this.readyState === 4) {
+        // 通过 xhr 的 responseText 获取到响应的响应体
+        console.log(this)
+    }
+}
+```
+
+#### Ajax 解决浏览器缓存问题？
+
+1. 在ajax发送请求前加上 anyAjaxObj.setRequestHeader("If-Modified-Since","0")
+2. 在ajax发送请求前加上 anyAjaxObj.setRequestHeader("Cache-Control","no-cache")
+3. 在URL后面加上一个随机数： "fresh=" + Math.random()
+4. 在URL后面加上时间戳："nowtime=" + new Date().getTime()
+
+### 什么是同源策略？
+
+同源策略是浏览器的一种安全策略，所谓同源是指 **域名，协议，端口** 完全相同，只有同源的地址才可以相互通过 AJAX 的方式请求。
+
+### 如何解决跨域问题
+
+#### jsonp
+
+借助于 `script` 标签发送跨域请求的技巧
+
+**原理**
+
+css，script 标签允许跨域。客户端借助 `script` 标签请求服务端的一个动态网页（php 文件），服务端的这个动态网页返回一段带有函数调用的 JavaScript 全局函数调用的脚本，将原本需要返回给客户端的数据传递进去。
+
+客户端：
+
+- foo(...arr) {console.log(arr.join(","))} 定义方法，名称随便
+- <script src="http://api.zce.me/users.php?callback=foo"></script>
+    - 服务端会获取参数名 callback 的值 foo ，然后把数据扔进 foo 中调用
+    - 一旦数据返回，就相当于在调用上面的 foo
+
+服务端：
+
+- foo(['我', '是', '你', '原', '本', '需', '要', '的', '数', '据'])
+
+**特色**
+
+1. JSONP 需要服务端配合，服务端按照客户端的要求返回一段 JavaScript 调用客户端的函数
+2. 只能发送 GET 请求
+
+#### CORS 跨域资源共享
+
+服务端设置：
+
+```js
+// 服务端请求头设置：允许远端访问
+header('Access‐Control‐Allow‐Origin: *');
+
+// 这种方案无需客户端作出任何变化（客户端不用改代码），只是在被请求的服务端响应的时候添加一个  
+// Access-Control-Allow-Origin  的响应头，表示这个资源是否允许指定域请求。
+```
+
+### defer 和 async 的区别
+
+参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
+
+## 概念性问题
+
+### 你理解的面向对象
+
+一种编程开发思想。是过程式代码的一种高度封装，目的在于提高代码的开发效率和可维护性。
+
+### 什么叫优雅降级和渐进增强？
+
+- 优雅降级：Web 站点在所有新式浏览器中都能正常工作，如果用户使用的是老式浏览器，则代码会针对旧版本的IE进行降级处理了,使之在旧式浏览器上以某种形式降级体验却不至于完全不能用。 如：border-shadow
+- 渐进增强：从被所有浏览器支持的基本功能开始，逐步地添加那些只有新版本浏览器才支持的功能,向页面增加不影响基础浏览器的额外样式和功能的。当浏览器支持时，它们会自动地呈现出来并发挥作用。 如：默认使用 flash 上传，但如果浏览器支持  HTML5 的文件上传功能，则使用 HTML5 实现更好的体验
+
+### compose 函数 ❌
+
+### 函数柯里化 ❌
