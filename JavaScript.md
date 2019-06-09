@@ -443,8 +443,6 @@ let str2 = b.join(); // [object Object],test
 // 如果是对象的话，对象会被转为 [object Object] 字符串。
 ```
 
-
-
 #### toLocaleString() 数组转字符串
 
 > 定义: 返回一个表示数组元素的字符串。该字符串由数组中的每个元素的  toLocaleString() 返回值经调用  join() 方法连接（由逗号隔开）组成。
@@ -563,7 +561,7 @@ console.log(a.indexOf('啦啦')); // 0
 >
 > fromIndex (可选):默认值为 0 ，参数表示搜索的起始位置，接受负值。正值超过数组长度，数组不会被搜索，返回 false 。负值绝对值超过长数组度，重置从 0 开始搜索。
 >
-> 
+>
 >
 > **includes 方法是为了弥补 indexOf 方法的缺陷而出现的:**
 >
@@ -679,29 +677,29 @@ console.log(anyString.substring(NaN,3));
 
 ```js
 var counter = (function() {
-  var privateCounter = 0;
+  var privateCounter = 0
   function changeBy(val) {
-    privateCounter += val;
+    privateCounter += val
   }
   return {
     increment: function() {
-      changeBy(1);
+      changeBy(1)
     },
     decrement: function() {
-      changeBy(-1);
+      changeBy(-1)
     },
     value: function() {
       return privateCounter;
     }
-  };   
+  }
 })(); // 立即执行函数
 
-console.log(counter.value()); // logs 0
-counter.increment();
-counter.increment();
-console.log(counter.value()); // logs 2
-counter.decrement();
-console.log(counter.value()); // logs 1
+console.log(counter.value()) // logs 0
+counter.increment()
+counter.increment()
+console.log(counter.value()) // logs 2
+counter.decrement()
+console.log(counter.value()) // logs 1
 ```
 
 环境中包含两个私有项：名为 privateCounter 的变量和名为 changeBy 的函数。 它俩都无法在匿名函数外部直接访问。必须通过匿名包装器返回的对象的三个公共函数访问。
@@ -1087,7 +1085,7 @@ $("ul").on("click", "li", function(e) {
 - debounce（防抖）的作用是在让在用户动作停止后延迟x ms再执行回调
 - throttle（节流）的作用是在用户动作时每隔一定时间（如200ms）执行一次回调
 
-#### 作用
+#### 节流防抖作用
 
 - debounce 应用在搜索框的即时搜索（input 事件），避免用户狂按键盘导致的频繁请求
 - throttle 应用在监听 resize 改变布局或 onscroll 滚动
