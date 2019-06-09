@@ -1,27 +1,10 @@
 # front-end-interview
 
-自己整理的前端面试题汇总
+网上摘录并自己整理的前端面试题汇总
+
+由于知识点和题目过多，建议在我的博客中查看：[Lance个人博客-面试系列](https://evestorm.github.io/tags/%E9%9D%A2%E8%AF%95/)
 
 - [HTML](./HTML.md)
 - [CSS](./CSS.md)
 - [JavaScript](./JavaScript.md)
 - [浏览器](./浏览器.md)
-
-## 如何生存 Markdown 文件目录
-
-使用 [github-markdown-toc](https://github.com/ekalinin/github-markdown-toc) 插件。
-
-### 安装
-
-macOS (manual installation)
-
-```shell
-$ curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
-$ chmod a+x gh-md-toc
-```
-
-### 使用（例子）
-
-```shell
-./gh-md-toc ./HTML.md
-```
