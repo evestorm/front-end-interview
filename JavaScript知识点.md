@@ -1210,6 +1210,19 @@ sw.addEventListener("click", throttle(function(e) {
 - [函数防抖与函数节流](https://zhuanlan.zhihu.com/p/38313717)
 - [JS事件中防抖debounce和节流throttle概念原理的学习](http://www.webfront-js.com/articaldetail/99.html)
 
+### mouseover 和 mouseenter 的区别
+
+- mouseover：
+  不论鼠标指针穿过被选元素或其子元素，都会触发 `mouseover` 事件。
+  支持事件冒泡。
+  相对应 `mouseout` 事件。
+- mouseenter：
+  只有在鼠标指针穿过被选元素时，才会触发 `mouseenter` 事件。
+  不支持事件冒泡。
+  相对应 `mouseleave` 事件。
+
+参考：[JavaScript中的 mouseover 与 mouseenter ，mouseout 和 mouseleave 的区别](https://blog.csdn.net/u010297791/article/details/57412796)
+
 ## ES6相关
 
 ### ES6 用到过吗，新增了哪些东西，你用到过什么？
@@ -1966,7 +1979,7 @@ header('Access‐Control‐Allow‐Origin: *');
 
 ### JSON 的了解
 
-一种轻量级的数据交换格式。 它是基于JavaScript的一个子集。
+一种轻量级的数据交换格式。 它是基于 JavaScript 的一个子集。
 
 数据格式简单、易于读写、占用带宽小。 e.g. {"age":"12", "name":"back"}
 
@@ -1987,6 +2000,12 @@ var storage = {
 
 export default storage
 ```
+
+#### JSON 方法的缺点
+
+- 不能复制function、正则、Symbol
+- 循环引用报错
+- 相同的引用会被重复复制
 
 ## 概念性问题
 
