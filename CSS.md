@@ -1,12 +1,14 @@
+# CSS知识点
+
 ## 盒模型
 
 标准盒模型（W3C标准）：
 
-**一个块的总宽度 = 内容宽度 + margin(左右) + padding(左右) + border(左右)**
+一个块的总宽度 = **内容宽度** + margin(左右) + padding(左右) + border(左右)
 
 怪异盒模型（IE标准）：
 
-**一个块的总宽度 = width（包含 padding 和 border） + margin(左右)**
+一个块的总宽度 = **width（包含 padding 和 border）** + margin(左右)
 
 ### 怪异盒模型触发条件
 
@@ -55,126 +57,13 @@ border padding margin width height
 
 ## CSS3新增伪类有那些？
 
-- `p:first-of-type`	属于其父元素的特定类型首个子元素 等同于 `:nth-of-type(1)`
+- `p:first-of-type` 属于其父元素的特定类型首个子元素 等同于 `:nth-of-type(1)`
 - `p:last-of-type` 属于其父元素的特定类型的最后一个子元素  等同于 `:nth-last-of-type(1)`
 
 - `::after` 在元素之前添加内容,也可以用来做清除浮动。
 - `::before` 在元素之后添加内容
 - `:enabled/:disabled` 控制表单控件的禁用状态。
 - `:checked` 单选框或复选框被选中。
-
-## 如何居中div？
-
-### 行内元素水平居中
-
-```css
-#container {
-    text-align: center;
-}
-```
-
-### 单个 div（块级元素）水平居中
-
-```css
-#center {
-  width: 200px;
-  margin: 0 auto;
-}
-```
-
-### 多个 div 水平居中
-
-```css
-/* 传统方案 */
-#container {
-    text-align: center;
-}
-#center {
-    display: inline-block;
-}
-
-/* flex 布局方案 */
-#container {
-    justify-content: center;
-    display: flex;
-}
-```
-
-### 绝对定位的 div 居中（已知宽高）
-
-#### 子绝父相 + margin
-
-```css
-#center {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  margin: auto; /* 0 auto 水平居中；auto 水平垂直居中 */
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: pink; /* 方便看效果 */
-}
-```
-
-#### 子绝父相 + 负边距
-
-```css
-#center {
-  position: absolute;
-  width:500px;
-  height:300px;
-  top: 50%;
-  left: 50%;
-  margin: -150px 0 0 -250px;  /* 外边距为自身宽高的一半 */
-  background-color: pink;     /* 方便看效果 */
-}
-```
-
-#### 当被居中的元素是 inline or inline-block 元素
-
-```css
-#container {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-}
-```
-
-### 任意元素（未知宽高）
-
-#### 子绝父相 + translate
-
-```css
-#container {
-    position: relative;
-}
-
-/* 利用transform */
-#center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-```
-
-#### flex（需考虑兼容性）
-
-```css
-#container {
-  display: flex;
-  display: -webkit-flex; /* Safari仍旧需要使用特定的浏览器前缀 */
-  align-items: center;    /* 垂直居中 */
-  justify-content: center;  /* 水平居中 */
-}
-#center {
-  width: 100px;
-  height: 100px;
-  background-color: pink;   /* 方便看效果 */
-}
-```
 
 ## display: none 与 visibility: hidden 的区别？
 
@@ -342,92 +231,76 @@ box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 ### 边框
 
 - 边框图片 border-image
+
     ```css
     border-image: image-source image-height image-width image-repeat
     ```
 
 - 圆角边框 border-radius
+
     ```css
     border-radius: 左上角，右上角，右下角，左下角
     ```
 
-### 请解释一下CSS3的 Flexbox（弹性盒布局模型）,以及适用场景？
+### CSS弹性布局（flex）
 
-该布局模型的目的是提供一种更加高效的方式来对容器中的条目进行布局、对齐和分配空间。
-
-在传统的布局方式中:
-block 布局是把块在垂直方向从上到下依次排列的；
-inline 布局则是在水平方向来排列。
-flex 弹性盒布局并没有这样内在的方向限制，可以由开发人员自由操作。
-
-适用场景：弹性布局适合于移动前端开发，在 Android 和 iOS 上也完美支持。
-
-参考：http://www.w3cplus.com/css3/flexbox-basics.html
-
-### 用纯CSS创建一个三角形的原理是什么？
+#### Flex容器属性
 
 ```css
-把上、左、右三条边隐藏掉（颜色设为 transparent）
-#demo {
-    width: 0;
-    height: 0;
-    border-width: 20px;
-    border-style: solid;
-    border-color: transparent transparent red transparent;
-}
+主轴方向：水平排列（默认） | 水平反向排列 | 垂直排列 | 垂直反向排列
+flex-direction: row | row-reverse | column | column-reverse;
+
+换行：不换行（默认） | 换行 | 反向换行(第一行在最后面)
+flex-wrap: nowrap | wrap | wrap-reverse;
+
+flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap
+flex-flow: <flex-direction> || <flex-wrap>;
+
+主轴对齐方式：起点对齐（默认） | 终点对齐 | 居中对齐 | 两端对齐 | 分散对齐
+justify-content: flex-start | flex-end | center | space-between | space-around;
+
+交叉轴对齐方式：拉伸对齐（默认） | 起点对齐 | 终点对齐 | 居中对齐 | 第一行文字的基线对齐
+align-items: stretch | flex-start | flex-end | center | baseline;
+
+多根轴线对齐方式：拉伸对齐（默认） | 起点对齐 | 终点对齐 | 居中对齐 | 两端对齐 | 分散对齐
+align-content: stretch | flex-start | flex-end | center | space-between | space-around;
 ```
 
-## css多列等高如何实现？
-
-### 原理
-
-利用 `padding-bottom|margin-bottom` 正负值相抵； 
-
-设置父容器设置超出隐藏（overflow:hidden），这样子父容器的高度就还是它里面的列没有设定 padding-bottom 时的高度， 当它里面的任一列高度增加了，则父容器的高度被撑到里面最高那列的高度， 其他比这列矮的列则会用它们的 padding-bottom 来补偿这部分高度差。
-
-因为背景是可以用在 padding 占用的空间里的，而且边框也是跟随 padding 变化的，所以就成功的完成了一个障眼法。
-
-### 实现
-
-> HTML
-
-```html
-<ul class="Article">
-  <li class="js-equalheight">
-    <p>
-      一家将客户利益置于首位的经纪商，
-      为客户提供专业的交易工具一家将客户利益置于首位的经纪商
-    </p>
-  </li>
-  <li class="js-equalheight">
-    <p>一家将客户利益置于首位的经纪商，为客户提供专业的交易工具</p>
-  </li>
-  <li class="js-equalheight">
-    <p>一家将客户利益置于首位的经纪商</p>
-  </li>
-</ul>
-```
-
-> CSS
+#### Flex项目属性
 
 ```css
-.Article {
-  overflow: hidden;
-}
+顺序：数值越小越靠前，默认为0
+order: <number>;
 
-.Article > li {
-  float: left;
-  margin: 0 10px -9999px 0;
-  padding-bottom: 9999px;
-  background: #4577dc;
-  width: 200px;
-  color: #fff;
-}
+放大比例：默认为0，如果有剩余空间也不放大，值为1则放大，2是1的双倍大小，以此类推
+flex-grow: <number>;
 
-.Article > li > p {
-  padding: 10px;
-}
+缩小比例：默认为1，如果空间不足则会缩小，值为0不缩小
+flex-shrink: <number>;
+
+项目自身大小：默认auto，为原来的大小，可设置固定值 50px/50%
+flex-basis: <length> | auto;
+
+flex-grow, flex-shrink 和 flex-basis 的简写，默认值为0 1 auto
+两个快捷值：auto (1 1 auto) 和 none (0 0 auto)
+flex:none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
+
+项目自身对齐：继承父元素（默认） | 起点对齐 | 终点对齐 | 居中对齐 | 基线对齐 | 拉伸对齐
+align-self: auto | flex-start | flex-end | center | baseline | stretch;
 ```
+
+#### 应用
+
+左右分栏、上下分栏。（检验下自己如何完成下列布局）
+
+![上下分栏.png](https://cdn.nlark.com/yuque/0/2019/png/260235/1549370833162-7634582a-1731-4566-96e6-0632a2ea0cfa.png?x-oss-process=image/resize,w_416)![左右分栏.png](https://cdn.nlark.com/yuque/0/2019/png/260235/1549370843489-6c8f8d27-843d-4447-9e39-b74e665bde27.png?x-oss-process=image/resize,w_408)![内容结构板块.png](https://cdn.nlark.com/yuque/0/2019/png/260235/1549370859715-e41edd2d-53a8-4528-9365-4c0c3f9f1f40.png?x-oss-process=image/resize,w_398)
+
+对 flex 不熟悉的同学可以参考下面网站进行学习：
+
+- [30 分钟学会 Flex 布局](https://zhuanlan.zhihu.com/p/25303493)
+- [flex网页布局首选方案 灵活应用 flex 弹性布局快速构建 web 结构](http://www.deathghost.cn/article/css/38)
+
+不愿意看长篇大论的可以通过这个塔防游戏来学习：[Flexbox Defense](http://www.flexboxdefense.com/)
 
 ## li 与 li 之间有看不见的空白间隔是什么原因引起的？有什么解决办法？
 
@@ -578,7 +451,7 @@ BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不�
 基本原理是通过媒体查询检测不同的设备屏幕尺寸做处理。
 
 ```css
-@media screen and (max-width: 990px){
+@media screen and (max-width: 990px) {
     .container{
         background: orange;
     }
@@ -593,7 +466,7 @@ BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不�
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 ```
 
-兼容ie6-8方案：使用 respond.js 插件：
+兼容 ie6-8 方案：使用 respond.js 插件：
 
 ```html
 <!--[if lte IE 8]>
@@ -658,7 +531,7 @@ span {
 
 自动变成了 display: block
 
-## 让页面里的字体变清晰，变细用CSS怎么做？
+## 让页面里的字体变清晰，变细用 CSS 怎么做？
 
 ```css
 -webkit-font-smoothing: antialiased;
@@ -672,138 +545,6 @@ span {
 
 ```css
 -webkit-overflow-scrolling: touch;
-```
-
-## 有一个高度自适应的 div ，里面有两个 div ，一个高度 100px ，希望另一个填满剩下的高度。
-
-> HTML
-
-```html
-<body>
-    <div class="outer">
-        <div class="A"></div>
-        <div class="B"></div>
-    </div>
-</body>
-```
-
-> CSS
-
-### 方案1
-
-```css
-.A {
-    height: 100px;
-    background-color: pink;
-}
-
-.B {
-    background-color: blue;
-    height: calc(100vh - 100px);
-}
-```
-
-### 方案2
-
-```css
-/* 
-  利用border-box将padding包含在高度内； 
-*/
-.outer {
-    height: 100%;
-    padding: 100px 0 0;
-    box-sizing: border-box;
-    background-color: pink;
-}
-/* 
-  用负margin值将A子容器顶到页面顶部
-*/
-.A {
-    height: 100px;
-    margin: -100px 0 0;
-    background: #BBE8F2;
-}
-/* 
-  剩下的高度100%-100px就是B容器所谓的100%高了
-*/
-.B {
-    height: 100%;
-    background: #D9C666;
-}
-```
-
-### 方案3
-
-```css
-.outer {
-    height: 100%;
-    padding: 100px 0 0;
-    box-sizing: border-box;
-    position: relative;
-}
-/*
-  绝对定
-*/
-.A {
-    height: 100px;
-    background: #BBE8F2;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.B {
-    height: 100%;
-    background: #D9C666;
-}
-```
-
-### 方案4
-
-```css
-.outer {
-    height: 100%;
-    position: relative;
-}
-
-.A {
-    height: 100px;
-    background: #BBE8F2;
-}
-
-.B {
-    background: #D9C666;
-    width: 100%;
-    position: absolute;
-    top: 100px;
-    left: 0;
-    bottom: 0;
-}
-```
-
-### 方案5
-
-```css
-.outer {
-    height: 100%;
-    background: red;
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: column;
-    -webkit-flex-direction: row;
-}
-
-.A {
-    width: 100%;
-    height: 100px;
-    background: green;
-}
-
-.B {
-    background: blue;
-    flex: 1;
-}
 ```
 
 ## 什么是 CSS 预处理器 / 后处理器？
@@ -824,21 +565,6 @@ CSS 后处理器 是对 CSS 进行处理，并最终生成 CSS 的 预处理器�
 
 参考：[CSS预处理器和后处理器](https://blog.csdn.net/yushuangyushuang/article/details/79209752)
 
-## rem布局的优缺点
-
-优点：
-
-能维持能整体的布局效果，移动端兼容性好，不用写多个css代码，而且还可以利用@media进行优化。
-
-缺点：
-
-开头要引入一段 js 代码，单位都要改成 rem（ font-size 可以用 px ），计算 rem 比较麻烦(可以引用预处理器，但是增加了编译过程，相对麻烦了点)。PC 和 Mobile 要分开。
-
-参考：
-- [用 rem 实现 WebApp 自适应的优劣分析](https://www.cnblogs.com/qieguo/p/5386565.html)
-- [CSS3 的字体大小单位\[rem\]到底好在哪？](https://www.zhihu.com/question/21504656)
-- [总结个人使用过的移动端布局方法](https://segmentfault.com/a/1190000010211016)
-
 ## 图片为什么有左右上下间隙,怎么去除：
 
 原因：
@@ -849,484 +575,10 @@ CSS 后处理器 是对 CSS 进行处理，并最终生成 CSS 的 预处理器�
 解决办法：
 
 - 移除上下间隙：
-    - img本身设置 display: block;
+    - img 本身设置 display: block;
     - 父元素设置 font-size: 0; （基线与字体大小有关，字体为零，基线间就没距离了）
     - img本身设置 vertical-align: bottom;（让 inline-block 的 img 与每行的底部对齐）
-
 - 移除左右间距：
     - 行内元素间不要有换行，连成一行写消除间隙
     - 第一行结尾写上 `<!-- ，第二行开头跟上 -->` 。即利用注释消除间距
     - 父元素 font-size 设置 0
-
-## 慎用 em 的原因
-
-**em会叠加计算。**在这个机制下太容易犯错了，因为你不知道这段`css`指定的字号具体是多少。
-
-> HTML
-
-```html
-<span>
-    abc
-    <span>def</span>
-    abc
-</span>
-```
-
-> CSS
-
-```css
-span { font-size: 1.5em; }
-```
-
-实际效果：
-
-![abc.png](https://cdn.nlark.com/yuque/0/2019/png/260235/1549344767634-006a0ce5-2c0c-4087-97c3-c8e77933009d.png)
-
-先要搞清楚 `em` 的计算原理，它是根据**当前元素的字号**按比例计算的。
-
-外层 `span` 的字号是 `16px`（浏览器默认值），所以 `1.5em` 之后是 `24px` 。由于字号是继承的，导致内层 `span` 的字号继承过来是 `24px` ，再经过 `1.5em` 之后就成了 `36px` 。
-
-所以，就算要用 `em` 的话，尽量不要用在继承属性（`font-size`）上，除非你真的清楚你在做什么！
-
-## Flex 弹性布局
-
-对 flex 不熟悉的同学可以参考下面网站进行学习：
-
-- [30 分钟学会 Flex 布局](https://zhuanlan.zhihu.com/p/25303493)
-- [flex网页布局首选方案 灵活应用 flex 弹性布局快速构建 web 结构](http://www.deathghost.cn/article/css/38)
-
-不愿意看长篇大论的可以通过这个塔防游戏来学习：[Flexbox Defense](http://www.flexboxdefense.com/)
-
-## 两列布局（左列定宽，右列自适应）
-
-> HTML
-
-```html
-<body>
-  <div id="left">左列定宽</div>
-  <div id="right">右列自适应</div>
-</body>
-```
-
-### 1. 利用 float + margin
-
-```css
-#left {
-    background-color: #f00;
-    float: left;
-    width: 100px;
-    height: 500px;
-}
-
-#right {
-    background-color: #0f0;
-    height: 500px;
-    margin-left: 100px; /*设置间隔，大于等于#left的宽度*/
-}
-
-原理：#left左浮动，脱离文档流，#right为了不被#left挡住，
-设置margin-left大于等于#left的宽度达到视觉上的两栏布局
-```
-
-### 2. 使用 float + overflow（触发bfc）
-
-```css
-#left {
-    background-color: #f00;
-    float: left;
-    width: 100px;
-    height: 500px;
-}
-
-#right {
-    background-color: #0f0;
-    height: 500px;
-    overflow: hidden; /*触发bfc达到自适应*/
-}
-
-原理：#left左浮动，#right触发bfc达到自适应
-```
-
-### 3. 使用 table 实现
-
-```css
-#parent {
-    width: 100%;
-    display: table;
-    height: 500px;
-}
-
-#left {
-    width: 100px;
-    background-color: #f00;
-}
-
-#right {
-    background-color: #0f0;
-}
-/*利用单元格自动分配宽度*/
-#left, #right {
-    display: table-cell;
-}
-```
-
-### 4. 使用 position 实现
-
-```css
-#parent{
-    position: relative;
-}  /*父相*/
-
-#left {
-    position: absolute;  /*子绝*/
-    top: 0;
-    left: 0;
-    background-color: #f00;
-    width: 100px;
-    height: 500px;
-}
-
-#right {
-    position: absolute;  /*子绝*/
-    top: 0;
-    left: 100px;  /*值大于等于#left的宽度*/
-    right: 0;
-    background-color: #0f0;
-    height: 500px;
-}
-```
-
-### 5. 使用 flex 实现
-
-```css
-#parent {
-    width: 100%;
-    height: 500px;
-    display: flex;
-}
-
-#left {
-    width: 100px;
-    background-color: #f00;
-}
-
-#right {
-    flex: 1; /*均分了父元素剩余空间*/
-    background-color: #0f0;
-}
-```
-
-## 两列布局（一列不定宽，一列自适应）
-
-### 1. float + overflow
-
-```css
-#left {
-    margin-right: 10px;
-    float: left;  /*只设置浮动,不设宽度*/
-    height: 500px;
-    background-color: #f00;
-}
-
-#right {
-    overflow: hidden;  /*触发bfc*/
-    height: 500px;
-    background-color: #0f0;
-}
-
-原理：#left不设宽度左浮动，#right触发 bfc 达到自适应
-```
-
-### 2. flex 布局
-
-```css
-#parent{
-    display: flex;
-}
-
-#left { /*不设宽度*/
-    margin-right: 10px;
-    height: 500px;
-    background-color: #f00;
-}
-
-#right {
-    height: 500px;
-    background-color: #0f0;
-    flex: 1;  /*均分#parent剩余的部分*/
-}
-```
-
-## 三列布局（左中定宽，右侧自适应）
-
-> HTML
-
-```html
-<body>
-<div id="parent">
-    <div id="left">左列定宽</div>
-    <div id="center">中间定宽</div>
-    <div id="right">右列自适应</div>
-</div>
-</body>
-```
-
-### 1. float + margin
-
-```css
-#parent{
-    min-width: 310px;
-} /*100+10+200,防止宽度不够,子元素换行*/
-
-#left {
-    margin-right: 10px;  /*#left和#center间隔*/
-    float: left;
-    width: 100px;
-    height: 500px;
-    background-color: #f00;
-}
-
-#center{
-    float: left;
-    width: 200px;
-    height: 500px;
-    background-color: #eeff2b;
-}
-
-#right {
-    margin-left: 320px;  /*等于#left和#center的宽度之和加上间隔,多出来的就是#right和#center的间隔*/
-    height: 500px;
-    background-color: #0f0;
-}
-```
-
-### 2. float + overflow
-
-```css
-#parent{
-    min-width: 320px;
-} /*100+10+200+20,防止宽度不够,子元素换行*/
-
-#left {
-    margin-right: 10px; /*间隔*/
-    float: left;
-    width: 100px;
-    height: 500px;
-    background-color: #f00;
-}
-
-#center{
-    margin-right: 10px; /*在此定义和#right的间隔*/
-    float: left;
-    width: 200px;
-    height: 500px;
-    background-color: #eeff2b;
-}
-
-#right {
-    overflow: hidden;  /*触发bfc*/
-    height: 500px;
-    background-color: #0f0;
-}
-```
-
-### 3. 利用 position
-
-```css
-#parent {
-    position: relative;
-} /*父相*/
-
-#left {
-    position: absolute; /*子绝*/
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: 500px;
-    background-color: #f00;
-}
-
-#center {
-    position: absolute; /*子绝*/
-    left: 100px;        /*对应#left的width值*/
-    top: 0;
-    width: 200px;
-    height: 500px;
-    background-color: #eeff2b;
-}
-
-#right {
-    position: absolute; /*子绝*/
-    left: 300px;        /*对应#left和#center的width值之和*/
-    top: 0;
-    right: 0;
-    height: 500px;
-    background-color: #0f0;
-}
-```
-
-### 4. 利用 table
-
-```css
-#parent {
-    width: 100%;
-    height: 520px; /*抵消上下间距10*2的高度影响*/
-    margin: -10px 0;  /*抵消上下边间距10的位置影响*/
-    display: table;
-    /*左右两边间距无法消除,子元素改用padding设置盒子间距就没有这个问题*/
-    border-spacing: 10px;  /*关键!!!设置间距*/
-}
-
-#left {
-    display: table-cell;
-    width: 100px;
-    background-color: #f00;
-}
-
-#center {
-    display: table-cell;
-    width: 200px;
-    background-color: #eeff2b;
-}
-
-#right {
-    display: table-cell;
-    background-color: #0f0;
-}
-```
-
-### 5. 利用 flex
-
-```css
-#parent {
-    height: 500px;
-    display: flex;
-}
-
-#left {
-    margin-right: 10px;  /*间距*/
-    width: 100px;
-    background-color: #f00;
-}
-
-#center {
-    margin-right: 10px;  /*间距*/
-    width: 200px;
-    background-color: #eeff2b;
-}
-
-#right {
-    flex: 1;  /*均分#parent剩余的部分达到自适应*/
-    background-color: #0f0;
-}
-```
-
-## 三列布局（两侧定宽，中间自适应）
-
-### 圣杯布局 [详解](https://blog.csdn.net/konglei1996/article/details/50881391?utm_source=blogxgwz4)
-
-> HTML
-
-```html
-<div class="container">
-    <div class="center">中间</div>  <!-- 让中间第一，这样浮动的时候它会先占据100%宽 -->
-    <div class="left">左边</div>
-    <div class="right">右边</div>
-</div>
-```
-
-> CSS
-
-```css
-.container {
-  height: 500px;
-  min-width: 400px;  /* 左边w*2+右边w */
-  padding: 0 100px 0 150px; /* 1. 父容器左右留出固定padding */
-  background-color: gray;
-}
-
-.left {
-  margin-left: -100%; /* 4.1 让被挤到center下方的left左移整个容器的宽度，此时左上角与center重叠 */
-  position: relative; /* 4.2 为了让left移到最左边,设置相对定位 */
-  left: -150px; /* 4.3 然后相对自己左移自已宽度的单位，使自己移动到最左边 */
-  height: 100%;
-  float: left;  /* 2.1 左浮动 */
-  width: 150px;
-  background-color: rgba(233, 233, 0, .2);
-}
-
-.center {
-  height: 100%;
-  width: 100%;  /* 3. 让center占据剩下父容器的100%宽 */
-  float: left;  /* 2.1 左浮动 */
-  background-color: rgba(165, 12, 23, .4);
-}
-
-.right {
-  margin-right: -100px; /* 5. 给在第二行的right设置一个负自己宽度的margin-right。让其最右边 */
-  height: 100%;
-  width: 100px;
-  float: left;  /* 2.1 左浮动 */
-  background-color: green;
-}
-```
-
-### 双飞翼布局方法 [详情](http://m.10qianwan.com/web/350789.html)
-
-> HTML
-
-```html
-<div class="container">
-    <div class="center">
-        <div>中间</div>
-    </div>
-    <div class="left">左边</div>
-    <div class="right">右边</div>
-</div>
-```
-
-> CSS
-
-```css
-.container {
-    width: 100%;  /* 1. 整个容器宽100%自适应 */
-    height: 500px;
-    background-color: gray;
-}
-
-.left {
-    width: 100px; /* 3.1 设置定宽 */
-    margin-left: -100%; /* 5. 左移容器宽度100%个单位，就把自己排在了center前面 */
-    background-color: rgba(233, 233, 0, .2);
-}
-
-.center {
-    width: 100%;  /* 4. 中间容器100%，此时会把左右挤到第二行 */
-    background-color: rgba(165, 12, 23, .4);
-}
-
-.center div {
-    margin: 0 150px 0 100px;  
-    /* 7. 此时center的左右分别有100和150宽与left，right重叠。所以让center子容器左右margin抵消 */
-}
-
-.right {
-    width: 150px; /* 3.2 设置定宽 */
-    margin-left: -150px;  /* 6. 同样左移自身宽度的单位，让right也回到第一行 */
-    background-color: green;
-}
-
-.left, .center, .right {
-    height: 100%;
-    float: left; /*2. 子容器全部左浮动 */
-}
-```
-
-## 布局的几种方式
-
-1. 伸缩布局 flex
-2. 流式布局 百分比
-3. 响应式布局 媒体查询（超小屏设备时：流式布局）
-    <!- 以上布局共同点：元素只能做到宽度的适配（排除图片）->
-4. rem布局 宽度和高度都能做到适配（等比适配）
-

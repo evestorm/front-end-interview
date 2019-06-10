@@ -1,4 +1,4 @@
-# JS基础
+# JS
 
 ## JS类型
 
@@ -44,13 +44,13 @@ string，number，boolean，undefined，null，symbol，object
 
 因此 `===` 常被称为「严格等价」。（"55" == 55 true, "55" === 55 false。p.s. 把字符串转为数值）
 
-## 哪些非 boolean 值被强制转换为一个 boolean 时，它是 false ？
+### 哪些非 boolean 值被强制转换为一个 boolean 时，它是 false ？
 
 - `""`（空字符串）
 - `0`, `-0`, `NaN` （非法的 `number` ）
 - `null`, `undefined`
 
-## null，undefined 的区别？
+### null，undefined 的区别？
 
 - null 表示一个对象是「没有值」的值，也就是值为 "空"；
 - undefined 表示一个变量声明了没有初始化(赋值)；
@@ -68,7 +68,9 @@ null == undefined // true
 null === undefined // false
 ```
 
-## DOM 操作——怎样添加、移除、移动、复制、创建和查找节点？
+## DOM操作
+
+### DOM 操作——怎样添加、移除、移动、复制、创建和查找节点？
 
 ```js
 （1）创建新节点
@@ -81,7 +83,7 @@ null === undefined // false
     replaceChild()
     insertBefore() //在已有的子节点前插入一个新的子节点
 （3）查找
-    querySeletor("ul") / querySelectorAll("ul li"); // 查找单个元素 / 多个元素
+    querySelector("ul") / querySelectorAll("ul li") // 查找单个元素 / 多个元素
     getElementsByTagName("div")
     getElementsByClassName()
     getElementById()
@@ -171,10 +173,12 @@ for (const [key, value] of Object.entries(obj)) {
 }
 ```
 
-## 数组的遍历方法
+## 数组
+
+### 数组的遍历方法
 
 - 标准for循环
-- forEach((当前值, 当前索引,当前数组)=>{}）
+- forEach((当前值, 当前索引,当前数组)=>{})
     - 无法中途退出循环，只能用 `return` 退出本次回调，进行下一次回调。
     - 它总是返回 undefined 值,即使你 return 了一个值。
 - for-in（不推荐）会把继承链的对象属性都会遍历一遍，而且数组遍历不一定按次序
@@ -182,10 +186,11 @@ for (const [key, value] of Object.entries(obj)) {
 - for (variable of iterable)（ES6）可迭代 [Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Array) ，[Map](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Map)，[Set](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)，[String](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/String) 等（迭代的是值 value ）
     - 在 `for-of` 中如果遍历中途要退出，可以使用 `break` 退出循环。
 
-### ES5
+#### ES5
 
 - map (不改变原数组) 会给原数组中的每个元素都按顺序调用一次 callback 函数
 - reduce (不改变原数组) 数组中的前项和后项做某种计算,并累计最终值。
+
     ```js
     // arr.reduce(function(total, currentValue, currentIndex, arr), initialValue)
     // callback 参数
@@ -196,7 +201,9 @@ for (const [key, value] of Object.entries(obj)) {
         return countedMoney + curMoney;
     }, 0)
     ```
+
 - filter（不改变原数组）
+
     ```js
     var arr = [2, 3, 4, 5, 6]
     var morearr = arr.filter(function (number) {
@@ -226,7 +233,7 @@ for (const [key, value] of Object.entries(obj)) {
     }) // true
     ```
 
-### ES6
+#### ES6
 
 - find() & findIndex() 根据条件找到数组成员
     - find() 定义：用于找出第一个符合条件的数组成员，并返回该成员，如果没有符合条件的成员，则返回 undefined 。
@@ -248,6 +255,7 @@ for (const [key, value] of Object.entries(obj)) {
     let b = [1, 4, -5, 10,NaN].findIndex((n) => Object.is(NaN, n));
     <!-- 返回索引4 -->
     ```
+
 - keys() & values() & entries() 遍历键名、遍历键值、遍历键名+键值
     - 三个方法都返回一个新的 Array Iterator 对象，对象根据方法不同包含不同的值。
 
@@ -274,7 +282,7 @@ for (const [key, value] of Object.entries(obj)) {
     // 1 "b"
     ```
 
-### for in 和 for of 区别
+#### for in 和 for of 区别
 
 ```js
 Object.prototype.objCustom = function() {};
@@ -300,11 +308,11 @@ for (let i of iterable) {  <-- 迭代的是值
 
 参考：[JavaScript 数组遍历方法的对比](https://juejin.im/post/5a3a59e7518825698e72376b)
 
-## JS 数组有哪些方法
+### JS数组有哪些方法
 
-### 改变原数组的方法（9个）
+#### 改变原数组的方法（9个）
 
-#### splice() 添加 / 删除数组元素
+##### splice() 添加 / 删除数组元素
 
 > splice() 方法**向/从数组中添加/删除**项目，然后返回被删除的项目
 >
@@ -320,41 +328,41 @@ for (let i of iterable) {  <-- 迭代的是值
 
 ```js
 // 从数组下标0开始，删除3个元素
-let a = [1, 2, 3, 4, 5, 6, 7];
-let item = a.splice(0, 3); // [1,2,3]
-console.log(a); // [4,5,6,7]
+let a = [1, 2, 3, 4, 5, 6, 7]
+let item = a.splice(0, 3) // [1,2,3]
+console.log(a) // [4,5,6,7]
 
 // 从最后一个元素开始删除3个元素，因为最后一个元素，所以只删除了7
-let item = a.splice(-1, 3); // [7]
+let item = a.splice(-1, 3) // [7]
 ```
 
 **删除并添加**
 
 ```js
 // 从数组下标0开始，删除3个元素，并添加元素'添加'
-let a = [1, 2, 3, 4, 5, 6, 7];
-let item = a.splice(0,3,'添加'); // [1,2,3]
-console.log(a); // ['添加',4,5,6,7]
+let a = [1, 2, 3, 4, 5, 6, 7]
+let item = a.splice(0,3,'添加') // [1,2,3]
+console.log(a) // ['添加',4,5,6,7]
 
 // 从数组最后第二个元素开始，删除3个元素，并添加两个元素'添加1'、'添加2'
-let b = [1, 2, 3, 4, 5, 6, 7];
-let item = b.splice(-2,3,'添加1','添加2'); // [6,7]
-console.log(b); // [1,2,3,4,5,'添加1','添加2']
+let b = [1, 2, 3, 4, 5, 6, 7]
+let item = b.splice(-2,3,'添加1','添加2') // [6,7]
+console.log(b) // [1,2,3,4,5,'添加1','添加2']
 ```
 
 **不删除只添加**
 
 ```js
-let a = [1, 2, 3, 4, 5, 6, 7];
-let item = a.splice(0,0,'添加1','添加2'); // [] 没有删除元素，返回空数组
-console.log(a); // ['添加1','添加2',1,2,3,4,5,6,7]
+let a = [1, 2, 3, 4, 5, 6, 7]
+let item = a.splice(0,0,'添加1','添加2') // [] 没有删除元素，返回空数组
+console.log(a) // ['添加1','添加2',1,2,3,4,5,6,7]
 
-let b = [1, 2, 3, 4, 5, 6, 7];
-let item = b.splice(-1,0,'添加1','添加2'); // [] 没有删除元素，返回空数组
-console.log(b); // [1,2,3,4,5,6,'添加1','添加2',7] 在最后一个元素的前面添加两个元素
+let b = [1, 2, 3, 4, 5, 6, 7]
+let item = b.splice(-1,0,'添加1','添加2') // [] 没有删除元素，返回空数组
+console.log(b) // [1,2,3,4,5,6,'添加1','添加2',7] 在最后一个元素的前面添加两个元素
 ```
 
-#### sort() 数组排序
+##### sort() 数组排序
 
 > 定义: sort() 方法对数组元素进行排序，并返回这个数组。
 >
@@ -366,11 +374,11 @@ console.log(b); // [1,2,3,4,5,6,'添加1','添加2',7] 在最后一个元素的�
 
 ```js
 // 字符串排列 看起来很正常
-var a = ["Banana", "Orange", "Apple", "Mango"];
-a.sort(); // ["Apple","Banana","Mango","Orange"]
+var a = ["Banana", "Orange", "Apple", "Mango"]
+a.sort() // ["Apple","Banana","Mango","Orange"]
 
 // 数字排序的时候 因为转换成Unicode字符串之后，有些数字会比较大会排在后面 这显然不是我们想要的
-var a = [10, 1, 3, 20,25,8];
+var a = [10, 1, 3, 20,25,8]
 console.log(a.sort()) // [1,10,20,25,3,8];
 ```
 
@@ -397,65 +405,119 @@ sort 的比较函数有两个默认参数，要在函数中接收这两个参数
  console.log(array); // [25,20,10,8,4,4,3,1];
 ```
 
-### 不改变原数组的方法（8个）
+##### pop() 删除一个数组中的最后的一个元素
 
-#### slice() 浅拷贝数组的元素
+> 定义: pop() 方法删除一个数组中的最后的一个元素，并且返回这个元素。
+
+```js
+let  a =  [1,2,3]
+let item = a.pop()  // 3
+console.log(a) // [1,2]
+```
+
+##### shift() 删除数组的第一个元素
+
+> 定义: shift()方法删除数组的第一个元素，并返回这个元素。
+
+```js
+let  a =  [1,2,3]
+let item = a.shift()  // 1
+console.log(a) // [2,3]
+```
+
+##### push() 向数组的末尾添加元素
+
+> 定义：push() 方法可向数组的末尾添加一个或多个元素，并返回新的长度。
+>
+> 参数: item1, item2, ..., itemX ,要添加到数组末尾的元素
+
+```js
+let  a =  [1,2,3]
+let item = a.push('末尾', '233')  // 5
+console.log(a) // [1,2,3,'末尾', '233']
+```
+
+##### unshift()
+
+> 定义：unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。
+>
+> 参数: item1, item2, ..., itemX ,要添加到数组开头的元素
+
+```js
+let a = [1, 2, 3]
+let item = a.unshift('开头', '开头2')  // 5
+console.log(a) // [ '开头', '开头2', 1, 2, 3 ]
+```
+
+##### reverse() 颠倒数组中元素的顺序
+
+> 定义: reverse() 方法用于颠倒数组中元素的顺序。
+
+```js
+let  a =  [1,2,3]
+a.reverse()
+console.log(a) // [3,2,1]
+```
+
+#### 不改变原数组的方法（8个）
+
+##### slice() 浅拷贝数组的元素
 
 > 定义： 方法返回一个从开始到结束（**不包括结束**）选择的数组的一部分浅拷贝到一个新数组对象，且原数组不会被修改。
 >
 > 语法：array.slice(begin, end);
 
 ```js
-let a= ['hello','world'];
-let b=a.slice(0,1); // ['hello']
+let a= ['hello','world']
+let b=a.slice(0,1) // ['hello']
 
 // 新数组是浅拷贝的，元素是简单数据类型，改变之后不会互相干扰。
 // 如果是复杂数据类型(对象,数组)的话，改变其中一个，另外一个也会改变。
-a[0] = '改变原数组';
-console.log(a,b); // ['改变原数组','world'] ['hello']
+a[0] = '改变原数组'
+console.log(a,b) // ['改变原数组','world'] ['hello']
 
-let a = [{name:'OBKoro1'}];
-let b = a.slice();
-console.log(b,a); // [{"name":"OBKoro1"}]  [{"name":"OBKoro1"}]
-// a[0].name='改变原数组';
-// console.log(b,a); // [{"name":"改变原数组"}] [{"name":"改变原数组"}]
+let a = [{name:'OBKoro1'}]
+let b = a.slice()
+console.log(b,a) // [{"name":"OBKoro1"}]  [{"name":"OBKoro1"}]
+// a[0].name='改变原数组'
+// console.log(b,a) // [{"name":"改变原数组"}] [{"name":"改变原数组"}]
 ```
 
-#### join() 数组转字符串
+##### join() 数组转字符串
 
 > 定义: join() 方法用于把数组中的所有元素通过指定的分隔符进行分隔放入一个字符串，返回生成的字符串。
 >
 > 语法: array.join(str)
 
 ```js
-let a = ['hello','world'];
-let str = a.join(); // 'hello,world'
-let str2 = a.join('+'); // 'hello+world'
+let a = ['hello','world']
+let str = a.join() // 'hello,world'
+let str2 = a.join('+') // 'hello+world'
 
-let a = [['OBKoro1','23'],'test'];
-let str1 = a.join(); // OBKoro1,23,test
-let b = [{name:'OBKoro1',age:'23'},'test'];
-let str2 = b.join(); // [object Object],test
-// 对象转字符串推荐JSON.stringify(obj);
+let a = [['OBKoro1','23'],'test']
+let str1 = a.join() // OBKoro1,23,test
+let b = [{name:'OBKoro1',age:'23'},'test']
+let str2 = b.join() // [object Object],test
+// 对象转字符串推荐JSON.stringify(obj)
 
 // 结论：
 // join()/toString() 方法在数组元素是数组的时候，会将里面的数组也调用 join()/toString() ,
 // 如果是对象的话，对象会被转为 [object Object] 字符串。
 ```
 
-#### toLocaleString() 数组转字符串
+##### toLocaleString() 数组转字符串
 
 > 定义: 返回一个表示数组元素的字符串。该字符串由数组中的每个元素的  toLocaleString() 返回值经调用  join() 方法连接（由逗号隔开）组成。
 
 ```js
 let a = [{
     name: 'OBKoro1'
-}, 23, 'abcd', new Date()];
+}, 23, 'abcd', new Date()]
 
-console.log(a.join(","));
-console.log(a.toString());
-console.log(a.toLocaleString('en-us'));
-console.log(a.toLocaleString('zh-cn'));
+console.log(a.join(","))
+console.log(a.toString())
+console.log(a.toLocaleString('en-us'))
+console.log(a.toLocaleString('zh-cn'))
 
 [object Object],23,abcd,Tue Feb 26 2019 11:47:03 GMT+0800 (中国标准时间)
 [object Object],23,abcd,Tue Feb 26 2019 11:47:03 GMT+0800 (中国标准时间)
@@ -463,7 +525,7 @@ console.log(a.toLocaleString('zh-cn'));
 [object Object],23,abcd,2019/2/26 上午11:47:03
 ```
 
-#### concat
+##### concat 合并数组
 
 > 定义： 方法用于合并两个或多个数组，返回一个新数组。
 >
@@ -472,31 +534,31 @@ console.log(a.toLocaleString('zh-cn'));
 > 参数：arrayX（必须）：该参数可以是具体的值，也可以是数组对象。可以是任意多个。
 
 ```js
-let a = [1, 2, 3];
-let b = [4, 5, 6];
+let a = [1, 2, 3]
+let b = [4, 5, 6]
 //连接两个数组
-let newVal = a.concat(b); // [1,2,3,4,5,6]
+let newVal = a.concat(b) // [1,2,3,4,5,6]
 // 连接三个数组
 let c = [7, 8, 9]
-let newVal2 = a.concat(b, c); // [1,2,3,4,5,6,7,8,9]
+let newVal2 = a.concat(b, c) // [1,2,3,4,5,6,7,8,9]
 // 添加元素
-let newVal3 = a.concat('添加元素',b, c,'再加一个');
+let newVal3 = a.concat('添加元素',b, c,'再加一个')
 // [1,2,3,"添加元素",4,5,6,7,8,9,"再加一个"]
 // 合并嵌套数组  会浅拷贝嵌套数组
-let d = [1,2 ];
-let f = [3,[4]];
-let newVal4 = d.concat(f); // [1,2,3,[4]]
+let d = [1,2 ]
+let f = [3,[4]]
+let newVal4 = d.concat(f) // [1,2,3,[4]]
 ```
 
-#### ES6扩展运算符 `...` 合并数组
+##### ES6扩展运算符 `...` 合并数组
 
 ```js
 let a = [2, 3, 4, 5]
 let b = [ 4,...a, 4, 4]
-console.log(a,b); //  [2, 3, 4, 5] [4,2,3,4,5,4,4]
+console.log(a,b) //  [2, 3, 4, 5] [4,2,3,4,5,4,4]
 ```
 
-#### indexOf() 查找数组是否存在某个元素，返回下标
+##### indexOf() 查找数组是否存在某个元素，返回下标
 
 > 定义: 返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
 >
@@ -518,12 +580,12 @@ console.log(a,b); //  [2, 3, 4, 5] [4,2,3,4,5,4,4]
 
 ```js
 let a=['啦啦',2,4,24,NaN]
-console.log(a.indexOf('啦'));  // -1
-console.log(a.indexOf('NaN'));  // -1
-console.log(a.indexOf('啦啦')); // 0
+console.log(a.indexOf('啦'))  // -1
+console.log(a.indexOf('NaN'))  // -1
+console.log(a.indexOf('啦啦')) // 0
 ```
 
-#### lastIndexOf() 查找指定元素在数组中的最后一个位置
+##### lastIndexOf() 查找指定元素在数组中的最后一个位置
 
 > 定义: 方法返回指定元素,在数组中的最后一个的索引，如果不存在则返回 -1。（从数组后面往前查找）
 >
@@ -542,14 +604,14 @@ console.log(a.indexOf('啦啦')); // 0
 > 3. 负值。其绝对值大于数组长度，则方法返回 -1，即数组不会被查找。
 
 ```js
- let a = ['OB',4,'Koro1',1,2,'Koro1',3,4,5,'Koro1']; // 数组长度为10
- // let b=a.lastIndexOf('Koro1',4); // 从下标4开始往前找 返回下标2
- // let b=a.lastIndexOf('Koro1',100); //  大于或数组的长度 查找整个数组 返回9
- // let b=a.lastIndexOf('Koro1',-11); // -1 数组不会被查找
- let b = a.lastIndexOf('Koro1',-9); // 从第二个元素4往前查找，没有找到 返回-1
+ let a = ['OB',4,'Koro1',1,2,'Koro1',3,4,5,'Koro1'] // 数组长度为10
+ // let b=a.lastIndexOf('Koro1',4) // 从下标4开始往前找 返回下标2
+ // let b=a.lastIndexOf('Koro1',100) //  大于或数组的长度 查找整个数组 返回9
+ // let b=a.lastIndexOf('Koro1',-11) // -1 数组不会被查找
+ let b = a.lastIndexOf('Koro1',-9) // 从第二个元素4往前查找，没有找到 返回-1
 ```
 
-#### ES7 includes() 查找数组是否包含某个元素 返回布尔
+##### ES7 includes() 查找数组是否包含某个元素 返回布尔
 
 > 定义： 返回一个布尔值，表示某个数组是否包含给定的值
 >
@@ -565,33 +627,34 @@ console.log(a.indexOf('啦啦')); // 0
 >
 > **includes 方法是为了弥补 indexOf 方法的缺陷而出现的:**
 >
-> 1. indexOf 方法不能识别 `NaN` 
+> 1. indexOf 方法不能识别 `NaN`
 > 2. indexOf 方法检查是否包含某个值不够语义化，需要判断是否不等于 `-1` ，表达不够直观
 
 ```js
-let a = ['OB','Koro1',1,NaN];
-// let b=a.includes(NaN); // true 识别NaN
-// let b=a.includes('Koro1',100); // false 超过数组长度 不搜索
-// let b=a.includes('Koro1',-3);  // true 从倒数第三个元素开始搜索
-// let b=a.includes('Koro1',-100);  // true 负值绝对值超过数组长度，搜索整个数组
+let a = ['OB','Koro1',1,NaN]
+// let b=a.includes(NaN) // true 识别NaN
+// let b=a.includes('Koro1',100) // false 超过数组长度 不搜索
+// let b=a.includes('Koro1',-3)  // true 从倒数第三个元素开始搜索
+// let b=a.includes('Koro1',-100)  // true 负值绝对值超过数组长度，搜索整个数组
 ```
 
 参考：[js 数组详细操作方法及解析合集](https://juejin.im/post/5b0903b26fb9a07a9d70c7e0)
 
-## 字符串的方法
+## 字符串
 
-### charAt
+### 字符串的方法
 
-> #### 从一个字符串中返回指定字符
->
+#### charAt 返回字符串字符
+
+> 从一个字符串中返回指定字符
 > 如果指定的 index 值超出了该范围，则返回一个空字符串
 
 ```js
-var anyString = "Brave new world";
-console.log(anyString.charAt(0)); // B
+var anyString = "Brave new world"
+console.log(anyString.charAt(0)) // B
 ```
 
-### substring
+#### substring 返回字符串子集
 
 > 返回一个字符串在开始索引到结束索引之间的一个子集, 或从开始索引直到字符串的末尾的一个子集。
 >
@@ -602,25 +665,29 @@ console.log(anyString.charAt(0)); // B
 > - 如果 `indexStart` 大于 `indexEnd`，则 `substring` 的执行效果就像两个参数调换了一样。见下面的例子。
 
 ```js
-var anyString = "Mozilla";
+var anyString = "Mozilla"
 // 输出 "Moz"
-console.log(anyString.substring(0,3));
-console.log(anyString.substring(3,0));
-console.log(anyString.substring(3,-3));
-console.log(anyString.substring(3,NaN));
-console.log(anyString.substring(-2,3));
-console.log(anyString.substring(NaN,3));
+console.log(anyString.substring(0,3))
+console.log(anyString.substring(3,0))
+console.log(anyString.substring(3,-3))
+console.log(anyString.substring(3,NaN))
+console.log(anyString.substring(-2,3))
+console.log(anyString.substring(NaN,3))
 ```
 
-### replace
+#### replace 替换字符串
 
 > 返回一个由替换值（replacement）替换一些或所有匹配的模式（pattern）后的新字符串。模式可以是一个字符串或者一个 [正则表达式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/RegExp) ，替换值可以是一个字符串或者一个每次匹配都要调用的回调函数。
 
-### toLowerCase / toUpperCase
+#### toLowerCase / toUpperCase 转换字母大小写
 
 字母转为全小写或全大写
 
-# JS进阶
+## 什么是 JavaScript 作用链域？
+
+全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
+
+当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找， 直至全局函数，这种组织形式就是作用域链。
 
 ## 闭包
 
@@ -659,14 +726,14 @@ console.log(anyString.substring(NaN,3));
     <li> index = 3</li>
 </ul>
 <script type="text/javascript">
-    var nodes = document.getElementsByTagName("li");
+    var nodes = document.getElementsByTagName("li")
     for (var i = 0; i < nodes.length; i += 1) {
         nodes[i].onclick = (function (i) {
             return function () {     // <----重点是此处返回了个一个匿名函数，这个函数能访问
               // 立即执行函数作用域内的i这个变量，形成闭包
-                console.log(i);
+                console.log(i)
             } //不用闭包的话，值每次都是4
-        })(i);
+        })(i)
     }
 </script>
 ```
@@ -692,7 +759,7 @@ var counter = (function() {
       return privateCounter;
     }
   }
-})(); // 立即执行函数
+})() // 立即执行函数
 
 console.log(counter.value()) // logs 0
 counter.increment()
@@ -707,12 +774,6 @@ console.log(counter.value()) // logs 1
 ### 解决 循环+闭包 问题
 
 直接 [点击此处](https://juejin.im/post/58f1fa6a44d904006cf25d22) 查看
-
-## 什么是 JavaScript 作用链域？
-
-全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
-
-当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找， 直至全局函数，这种组织形式就是作用域链。
 
 ## this
 
@@ -787,7 +848,9 @@ apply, call, bind 方法都可以改变 this 的指向
 - 共享数据，目的是：节省内存空间
 - 实现继承，目的是：节省内存空间
 
-## 什么是原型链
+## 原型链
+
+### 什么是原型链
 
 **精简版**
 
@@ -804,9 +867,9 @@ apply, call, bind 方法都可以改变 this 的指向
 **原型链最终指向**
 ![原型链最终指向](https://cdn.nlark.com/yuque/0/2019/png/260235/1549711526339-9b043225-9ad9-4f88-b1b5-95da79cc4bf8.png)
 
-## 分别使用原型链和 class 的方式实现继承
+### 分别使用原型链和 class 的方式实现继承
 
-### 1. 组合继承（原型链 + 借用构造函数）【不推荐】
+#### 1. 组合继承（原型链 + 借用构造函数）【不推荐】
 
 ```js
 function Person(name, age) {
@@ -834,19 +897,19 @@ var stu2 = new Student("Will", 200 , 110)
 
 由上面方案引出的问题：
 
-#### 为什么不能 Student.prototype = Person.prototype
+##### 为什么不能 Student.prototype = Person.prototype
 
 对象的赋值只是引用的赋值, 上面两者都指向同一个内存地址，只要随便通过 1 个途径就能修改该内存地址的对象，这样子类就无法单独扩展方法，因为会影响父类。
 
-#### 单纯的原型链继承有什么缺陷
+##### 单纯的原型链继承有什么缺陷
 
 虽然改变了原型的指向，但属性在初始化的时候就已经固定了【Student.prototype = new Person("小明", 29, 90)】，如果是多个对象实例化，那么每个实例对象的属性的初始值就都是一样的。换句话说，无法向父类传递参数。
 
-#### 单纯的借用构造函数继承有什么缺陷
+##### 单纯的借用构造函数继承有什么缺陷
 
 只能继承父类构造函数里面的属性和方法【Person.call(this, name, age)】，但父类的 prototype（原型）上的属性和方法不能继承。
 
-#### 组合继承的缺点
+##### 组合继承的缺点
 
 调用了两次父类的构造函数。第一次给子类的原型添加了父类构造函数中的属性方法，第二次又给子类的构造函数添加了父类的构造函数的属性方法，从而覆盖了子类原型中的同名参数。这种被覆盖的情况造成了性能上的浪费：
 
@@ -865,7 +928,7 @@ function SubType() {
 SubType.prototype = new SuperType() // 第一次调用SuperType
 ```
 
-### 2. 寄生组合继承【推荐】
+#### 2. 寄生组合继承【推荐】
 
 ```js
 function Person(name, age) {
@@ -892,7 +955,7 @@ var stu1 = new Student("Lance", 19, 120)
 console.dir(stu1)
 ```
 
-### 3. class 实现继承
+#### 3. class 实现继承
 
 ```js
 class Person {
@@ -920,7 +983,7 @@ var stu = new Student("Jerry", 20, 100)
 console.dir(stu)
 ```
 
-## 原型链，proto 和 prototype 的区别
+### 原型链，proto 和 prototype 的区别
 
 对象拥有 \_\_proto\_\_ 属性，函数拥有 prototype 属性。某个实例对象的 \_\_proto\_\_ 指向构造它的构造函数的 prototype 属性。所以：实例对象的 \_\_proto\_\_ 指向了构造函数的原型对象 prototype
 ：
@@ -978,7 +1041,7 @@ function Person(name, age) {
 }
 ```
 
-### new 操作符具体干了什么呢？
+#### new 操作符具体干了什么呢？
 
 1. 创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型。
 2. 属性和方法被加入到 this 引用的对象中。
@@ -1030,6 +1093,12 @@ document.getElementById("xxx").addEventListener("click", function(e){}, false)
 - 如果是以 onclick 的方式绑定的，如果对同一个元素重复绑定的话，后面的会覆盖前面的。但是如果是以 addEventListener 方式绑定的话，同一个元素绑定多少次，就会执行多少次。
 - 如果在 DOM 中直接使用 onclick ，则 onclick 的绑定是早于 addEventListener 的。
 
+#### 我们给一个 dom 同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
+
+会执行两次事件，按代码执行顺序来
+
+**规律**：绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照[W3C](https://www.baidu.com/s?wd=W3C&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的标准，先发生捕获事件，后发生冒泡事件。所有事件的顺序是：其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件
+
 ### 事件委托
 
 绑定在父级元素，利用事件冒泡去触发父级事件处理函数的一种技巧。
@@ -1071,12 +1140,6 @@ $("ul").on("click", "li", function(e) {
 // 这个 on 事件是绑定在 ul 上面的，li 是目标元素，
 // on 事件内部是通过 e.target 来判断点击元素是不是 li 的
 ```
-
-### 我们给一个 dom 同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
-
-会执行两次事件，按代码执行顺序来
-
-**规律**：绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照[W3C](https://www.baidu.com/s?wd=W3C&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的标准，先发生捕获事件，后发生冒泡事件。所有事件的顺序是：其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件
 
 ### 什么是节流和防抖
 
@@ -1292,11 +1355,11 @@ Set 集合可以用来过滤数组中重复的元素，只能通过 has 方法�
 
 Map 集合通过 set() 添加键值对，通过 get() 获取键值，各种方法的使用查看文章教程，你可以把它看成是比 Object 更加强大的对象。
 
-### Set 与 数组 的区别
+#### Set 与 数组 的区别
 
 set不可重复，array可重复
 
-### Map 与 对象 的区别
+#### Map 与 对象 的区别
 
 - Object 的键只能是字符串或者 symbol ，Map 的键可以是任意类型的值（包括对象）
 - Map 可以通过 size 获取元素个数，对象得遍历。
@@ -1347,10 +1410,10 @@ Promise 是异步编程的一种解决方案，比传统的异步解决方案【
 
 ```js
 //defined Promise async function
-function asyncFun(){
-    return new Promise((reslove,reject)=>{
-        if(reslove){
-            reslove(/*reslove parameter*/)
+function asyncFun() {
+    return new Promise((resolve, reject) => {
+        if(resolve) {
+            resolve(/*resolve parameter*/)
         }else{
             reject(new Error(/*Error*/))
         }
@@ -1374,7 +1437,7 @@ return 一个 string 后续的 then 不会执行; resolve 一个 string 会返�
 ```js
 // throw 这个 error 后，在紧挨的下一个 then 中添加两个回调方法（ resolve 的，和 reject ）。
 // 然后在第二个 reject 方法中可以捕获
-new Promise(function (resolve, rej) {
+new Promise(function (resolve, reject) {
         return resolve("返回Promise")
     })
     .then(data => {
@@ -1596,7 +1659,7 @@ app(1,2,3,4) // 1,2,3,4
 // 这样可以非常方便的遍历获取到的未知个数的实参
 ```
 
-### 函数中的 rest（剩余） 参数
+### 函数中的 rest（剩余）参数
 
 > **剩余参数**语法允许我们将一个不定数量的参数表示为一个数组。
 >
