@@ -14,7 +14,7 @@
 
 #### 1.1 面试题
 
-- [HTML面试题](./HTML面试题.md)
+- [HTML面试题](./HTML面试题.md){:target="_blank"}
 
 ### 2 CSS
 
