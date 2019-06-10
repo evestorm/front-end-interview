@@ -1,10 +1,12 @@
 # front-end-interview
 
+> 温馨提示：个人喜欢在点击链接的时候能跳转到新标签页，然而 github 貌似不支持？只能本页跳转。所以有跟我一样习惯的，就得按一下 CTRL + 点击链接实现。
+
 ## 介绍
 
 根据网上各大前端面试题文章，自己总结出来的一套面试宝典，包含前端知识点+面试题。
 
-为了更好的阅读体验，推荐各位看官在博客中查看：<a href="https://evestorm.github.io/tags/%E9%9D%A2%E8%AF%95/" target="_blank">Lance个人博客-面试系列</a>
+为了更好的阅读体验，推荐各位看官在博客中查看：[Lance个人博客-面试系列](https://evestorm.github.io/tags/%E9%9D%A2%E8%AF%95/)
 
 ## 大纲
 
@@ -14,7 +16,7 @@
 
 #### 1.1 面试题
 
-- <a href="./HTML面试题.md" target="_blank">HTML面试题</a>
+- [HTML面试题](./HTML面试题.md)
 
 ### 2 CSS
 
@@ -22,11 +24,11 @@
 
 #### 2.1 知识点+部分面试题
 
-- <a href="./CSS.md" target="_blank">CSS知识点</a>
+- [CSS知识点](./CSS.md)
 
 #### 2.2 布局
 
-- <a href="./CSS布局.md" target="_blank">CSS布局面试题</a>
+- [CSS布局面试题](./CSS布局.md)
 
 ### 3 JavaScript
 
@@ -44,12 +46,12 @@
 
 #### 3.1 知识点
 
-- <a href="./JavaScript知识点.md" target="_blank">JavaScript知识点</a>
+- [JavaScript知识点](./JavaScript知识点.md)
 
 #### 3.2 面试题
 
-- <a href="./JavaScript面试题.md" target="_blank">JavaScript面试题</a>
+- [JavaScript面试题](./JavaScript面试题.md)
 
 ### 4 浏览器
 
-- <a href="./浏览器.md" target="_blank">浏览器相关面试题</a>
+- [浏览器](./浏览器.md)
