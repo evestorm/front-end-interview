@@ -1962,6 +1962,32 @@ header('Access‐Control‐Allow‐Origin: *');
 
 参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
 
+## 其它
+
+### JSON 的了解
+
+一种轻量级的数据交换格式。 它是基于JavaScript的一个子集。
+
+数据格式简单、易于读写、占用带宽小。 e.g. {"age":"12", "name":"back"}
+
+JSON读写的基本封装：
+
+```js
+var storage = {
+    set: (key, val) => {
+        localStorage.setItem(key, JSON.stringify(val))
+    },
+    get: key => {
+        return JSON.parse(localStorage.getItem(key) === null ? '[]' : localStorage.getItem(key))
+    },
+    remove: key => {
+        localStorage.removeItem(key)
+    }
+}
+
+export default storage
+```
+
 ## 概念性问题
 
 ### 你理解的面向对象
