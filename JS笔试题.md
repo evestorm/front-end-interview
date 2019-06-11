@@ -1,4 +1,41 @@
-# JS基础题
+# JS笔试题
+
+## JS类型相关
+
+### typeof 没定义的变量会报错吗？typeof let定义了的呢？
+
+- 未声明的变量使用 typeof 返回字符串 "undefined"
+- typeof 一个 let 定义的变量会因为暂时性死区报错 [ReferenceError](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError)（前提：let/const 未声明之前赋值或使用）
+
+```js
+var tmp = 123
+if (true) {
+  tmp = 'abc' // ReferenceError: tmp is not defined
+  let tmp
+}
+
+console.log(typeof tmp) // ReferenceError: tmp is not defined
+let tmp
+
+let tmp
+console.log(typeof tmp) // undefined 不会报错
+```
+
+### typeof 的值有哪些
+
+7种数据类型（返回的都是字符串形式）：
+
+string, number, function, object, undefined, boolean, symbol（表独一无二的值）
+
+注意：
+
+- null 和 数组 返回的都是 object
+- NaN 返回的是 number
+
+### valueOf 和 toString
+
+- toString(): 返回对象的字符串表示。
+- valueOf(): 返回对象的字符串、数值或布尔值表示。
 
 ## 字符串
 
@@ -706,6 +743,56 @@ function rotate(arr) {
 console.log(rotate(matrix))
 ```
 
+### 如何将浮点数点左边的数每三位添加一个逗号，如12000000.11转化为『12,000,000.11』？
+
+```js
+var num = 12000000.11
+
+// 方法1：利用 toLocaleString() 返回某语言系统下数字的表示字符串 IE6+
+num.toLocaleString()
+
+// 方法2
+function toThousands(num) {
+    if (typeof num !== 'number') return 0
+    // 判断 num 是否小于 0 ，小于则设 flag 为 "-" 并且把 num 转为绝对值
+    if (num < 0) {
+        flag = "-"
+        num = Math.abs(num)
+    }
+    // 转为数组 e.g. [ '12000000', '11' ]
+    var arr = num.toString().split(".")
+    // 分别把「.」左边和右边存起来
+    var left = [...arr[0]]
+    var right = ""
+    // 如果 num 不是个整数的情况
+    if (arr.length > 1) {
+        right = "." + arr[1]
+    }
+    var count = left.length - 1
+    // 操作左边整数部分，逆向遍历并且逢3前面加个「,」 ，最后 i-1
+    while (count > 0) {
+        // [1,2,0,0,0,0]
+        // 例如如果数组长度为6，则一开始 count=5 ，不加
+        // count=3 时，就需要在前面加个「,」
+        if (count % 3 === 0) {
+            left.splice(-count, 0, ',')
+        }
+        count--
+    }
+    // 正负符号 + 左边 + 小数点和右边
+    return flag + left.join("") + right
+}
+
+// 方法3：正则
+function toThousands(num) {
+  return num && num
+    .toString()
+    .replace(/(\d)(?=(\d{3})+\.)/g, function($1, $2){
+    return $2 + ','
+  })
+}
+```
+
 ## 随机数 / 数字
 
 ### 如何获取0-9的随机数
@@ -768,7 +855,132 @@ parseFloat('12.3b')
 // 12.3
 ```
 
-## 原型 & 原型链
+### 如何检查一个数字是否为整数？
+
+> 将它对 1 进行取模，看看是否有余数。
+
+```js
+function isInt(num) {
+  return num % 1 === 0
+}
+
+console.log(isInt(4)) // true
+console.log(isInt(12.2)) // false
+console.log(isInt(0.3)) // false
+```
+
+### 为什么0.1+0.2不等于0.3？在什么场景下遇到这个问题，如何解决？
+
+> 二进制模拟十进制进行计算时 的精度问题
+
+```js
+// 方法1：ES6的 Number.EPSILON ，这个值无限接近于0。0.1 + 0.2的精度误差在这个值的范围内
+function numbersEqual(a,b) {
+    return Math.abs(a - b) < Number.EPSILON
+}
+var a = 0.1 + 0.2, b=0.3
+console.log(numbersEqual(a,b))    //true
+
+
+// 方法2：parseFloat + 内置函数 toFixed
+function formatNum(num, fixed = 10) {
+    // a.toFixed(fixed) 先转为小数点10位的字符串 "0.3000000000"
+    return parseFloat(a.toFixed(fixed)) // 然后通过parseFloat转为浮点数
+}
+var a = 0.1 + 0.2;
+console.log(formatNum(a)) //0.3
+
+// 方法3：内置函数toPrecision(中文：精确，精度)
+// 参数是精度.比如 5.1234 ，传 2 返回 5.1 ，传 1 返回 5 ；0.2 + 0.1 传 2 返回 0.30
+(0.1 + 0.2).toPrecision(10) == 0.3 // true
+```
+
+参考：
+
+- [0.1 + 0.2不等于0.3？为什么JavaScript有这种“骚”操作？](https://juejin.im/post/5b90e00e6fb9a05cf9080dff)
+- [JavaScript的设计缺陷?浮点运算：0.1 + 0.2 != 0.3](https://blog.csdn.net/nineteen73/article/details/51184387)
+
+## 对象 & 原型 & 原型链
+
+### 写一下浅/深拷贝
+
+> 深拷贝和浅拷贝针对的是引用类型，JS中的变量类型分为值类型（基本类型）和引用类型；对值类型进行复制操作会对值进行一份拷贝，而对引用类型复制，则会进行地址的拷贝，最终两个变量指向同一份数据。对于引用类型，会导致a b指向同一份数据，此时如果对其中一个进行修改，就会影响到另外一个，有时候这可能不是我们想要的结果。
+
+#### 浅拷贝
+
+```js
+// 实现一个浅拷贝，就是遍历源对象，然后在将对象的属性的属性值都放到一个新对象里就ok了
+
+// 方法1：遍历
+function copy(obj) {
+  if (!obj || typeof obj !== 'object') return
+
+  var newObj = obj.constructor === Array ? [] : {}
+  for (var key in obj) {
+    newObj[key] = obj[key]
+  }
+  return newObj
+}
+var a = {b: 'bb', c: 'cc',  d: {e: 'ee'}}
+var b = copy(a)
+console.log(b) // { b: 'bb', c: 'cc', d: { e: 'ee' } }
+
+// 方法2：原生方法 Object.assign
+var a = {a : 'old', b : { c : 'old'}}
+var b = Object.assign({}, a)
+b.a = 'new'
+b.b.c = 'new'
+console.log(a) // { a: 'old', b: { c: 'new' } }
+console.log(b) // { a: 'new', b: { c: 'new' } }
+```
+
+#### 深拷贝
+
+```js
+// 方法1：转 JSON 再转回来
+var obj1 = {a: {name: '小红'}, b: 2}
+var obj2 = JSON.parse(JSON.stringify(obj1))
+obj1.a.name = '被修改了'
+obj2   //{"a":{"name":"小红"},"b":2}  《---没有被修改
+
+// JSON方法的缺点：
+//  不能复制 function、正则、Symbol
+//  循环引用报错
+//  相同的引用会被重复复制
+
+// 方法2：递归的方法
+function copy(obj) {
+    // 递归退出条件
+    // 拷贝对象不存在或不是数组或不是对象
+    if (!obj || typeof obj !== 'object') return obj
+
+    var newObj = obj.constructor === Array ? [] : {}
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            // 如果是数组或者对象
+            if (typeof obj[key] === 'object') {
+                // 递归
+                newObj[key] = copy(obj[key])
+            } else {
+                // 否则直接返回
+                newObj[key] = obj[key]
+            }
+        }
+    }
+    return newObj
+}
+
+var old = { a: 'old', b: { c: 'old' } }
+var newObj = copy(old)
+newObj.b.c = 'new'
+console.log(old) // { a: 'old', b: { c: 'old' } }
+console.log(newObj) // { a: 'old', b: { c: 'new' } }
+```
+
+参考：
+
+- [浅探js深拷贝和浅拷贝](https://segmentfault.com/a/1190000016970483)
+- [深拷贝的终极探索](http://www.cnblogs.com/zhangycun/p/9799787.html)
 
 ### JavaScript 中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
 
@@ -800,97 +1012,45 @@ function myInstanceOf(leftValue, rightValue) {
 
 参考：[浅谈 instanceof 和 typeof 的实现原理](https://juejin.im/post/5b0b9b9051882515773ae714)
 
-## setTimeout
+### 实现一个单例
 
-### setTimeout的机制
+```js
+var SingleTest = (function () {
+    var _instance = null
+    SingleInstance.prototype._init = function(ops) {
+        for (let i in ops) {
+            this[i]=ops[i]
+        }
+    }
+    function SingleInstance(args) {
+        if (_instance == null) {
+            _instance=this
+        }
+        _instance._init(args)
+        return _instance
+    }
+    return SingleInstance
+})()
+
+var i1=new SingleTest({name:"lance1"})
+var i2=new SingleTest({name:"lance2"})
+console.log(i1===i2)  // 结果是true
+console.log(i1.name)  // 结果是escapist3
+```
+
+## Event Loop & setTimeout
+
+### setTimeout 的机制
 
 等到当前脚本的同步任务和 "任务队列" 中已有的事件，全部处理完以后，才会执行 setTimeout 指定的任务。
 
 参考：[JavaScript 运行机制详解：再谈Event Loop](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)
 
-## 综合题
+### Event Loop
 
-### 如何将浮点数点左边的数每三位添加一个逗号，如12000000.11转化为『12,000,000.11』？
+有关 Event Loop 相关的概念和面试题可参考我的博客：[Event Loop 学习笔记](https://evestorm.github.io/posts/10505/)
 
-```js
-var num = 12000000.11
-
-// 方法1：利用 toLocaleString() 返回某语言系统下数字的表示字符串 IE6+
-num.toLocaleString()
-
-// 方法2
-function toThousands(num) {
-    if (typeof num !== 'number') return 0
-    // 判断 num 是否小于 0 ，小于则设 flag 为 "-" 并且把 num 转为绝对值
-    if (num < 0) {
-        flag = "-"
-        num = Math.abs(num)
-    }
-    // 转为数组 e.g. [ '12000000', '11' ]
-    var arr = num.toString().split(".")
-    // 分别把「.」左边和右边存起来
-    var left = [...arr[0]]
-    var right = ""
-    // 如果 num 不是个整数的情况
-    if (arr.length > 1) {
-        right = "." + arr[1]
-    }
-    var count = left.length - 1
-    // 操作左边整数部分，逆向遍历并且逢3前面加个「,」 ，最后 i-1
-    while (count > 0) {
-        // [1,2,0,0,0,0]
-        // 例如如果数组长度为6，则一开始 count=5 ，不加
-        // count=3 时，就需要在前面加个「,」
-        if (count % 3 === 0) {
-            left.splice(-count, 0, ',')
-        }
-        count--
-    }
-    // 正负符号 + 左边 + 小数点和右边
-    return flag + left.join("") + right
-}
-
-// 方法3：正则
-function toThousands(num) {
-  return num && num
-    .toString()
-    .replace(/(\d)(?=(\d{3})+\.)/g, function($1, $2){
-    return $2 + ','
-  })
-}
-```
-
-## 其它
-
-### typeof 没定义的变量会报错吗？typeof let定义了的呢？
-
-- 未声明的变量使用 typeof 返回字符串 "undefined"
-- typeof 一个 let 定义的变量会因为暂时性死区报错 [ReferenceError](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError)（前提：let/const 未声明之前赋值或使用）
-
-```js
-var tmp = 123
-if (true) {
-  tmp = 'abc' // ReferenceError: tmp is not defined
-  let tmp
-}
-
-console.log(typeof tmp) // ReferenceError: tmp is not defined
-let tmp
-
-let tmp
-console.log(typeof tmp) // undefined 不会报错
-```
-
-### typeof 的值有哪些
-
-7种数据类型（返回的都是字符串形式）：
-
-string, number, function, object, undefined, boolean, symbol（表独一无二的值）
-
-注意：
-
-- null 和 数组 返回的都是 object
-- NaN 返回的是 number
+## DOM
 
 ### getElementsByClassName 和 querySelectorAll 的区别
 
@@ -909,27 +1069,58 @@ string, number, function, object, undefined, boolean, symbol（表独一无二�
 - [querySelectorAll 方法相比 getElementsBy 系列方法有什么区别？](https://www.zhihu.com/question/24702250)
 - [静态NodeList 和 动态NodeList的区别](https://segmentfault.com/a/1190000008829267)
 
-### 原生JS添加类
+### 原生 JS 添加类
 
 - element.setAttribute("class", 'Lance')
 - element.className = "lance awesome"
 - 追加类：element.setAttribute("class", element.getAttribute("class") + " " + "lance")
 
-### valueOf 和 toString
+### 编写一个可拖拽的 div
 
-- toString(): 返回对象的字符串表示。
-- valueOf(): 返回对象的字符串、数值或布尔值表示。
+> HTML
 
-### 如何检查一个数字是否为整数？
+```html
+<div id="sw"></div>
+```
 
-> 将它对 1 进行取模，看看是否有余数。
+> CSS
+
+```css
+#sw { position: absolute; }
+```
+
+> JS
 
 ```js
-function isInt(num) {
-  return num % 1 === 0
-}
-
-console.log(isInt(4)) // true
-console.log(isInt(12.2)) // false
-console.log(isInt(0.3)) // false
+var flag = false
+var position = null
+var sw = document.querySelector("#sw")
+sw.addEventListener("mousedown", function (e) {
+    flag = true
+    position = [e.clientX, e.clientY]
+    console.log(e.clientX, e.clientY)
+})
+// 这里监听 document ，如果监听 sw 则会有快速拖动导致鼠标「脱离」 div 的 bug
+document.addEventListener("mousemove", function (e) {
+    if (!flag) return
+    var x = e.clientX
+    var y = e.clientY
+    var moveX = x - position[0]
+    var moveY = y - position[1]
+    var left = parseInt(sw.style.left || 0)
+    var top = parseInt(sw.style.top || 0)
+    // 注意 style.left 带 px 单位
+    sw.style.left = left + moveX + 'px'
+    sw.style.top = top + moveY + 'px'
+    position = [x, y]
+})
+document.addEventListener("mouseup", function() {
+    flag = false
+})
 ```
+
+## 算法题
+
+我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
+
+- [常见排序算法](https://evestorm.github.io/posts/59937/)
