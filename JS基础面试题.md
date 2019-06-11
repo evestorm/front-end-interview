@@ -2,11 +2,98 @@
 
 ## 字符串
 
-### 如何将字符串转化为数字，例如'12.3b'？
+### 判断一个单词是否是回文
 
 ```js
-parseFloat('12.3b')
-// 12.3
+var str = "mamam"
+function checkPalindrom(str) {  
+    return str === str.split('').reverse().join('')
+}
+```
+
+### 验证回文字符串
+
+给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写。
+
+- **输入:** "A man, a plan, a canal: Panama"        **输出:** true
+- **输入:** "race a car"                                      **输出:** false
+
+```js
+var str = "A man, a plan, a canal: Panama"
+var isPalindrome = function (s) {
+    var reg = /[^A-Za-z0-9]/g
+    var tempStr = s.replace(reg, "")
+    var reverseStr = tempStr.split("").reverse().join("")
+    return reverseStr.toLowerCase() === tempStr.toLowerCase()
+};
+
+console.log(isPalindrome(str))
+```
+
+### 统计字符串出现最多的字母
+
+```js
+var str = "afjghdfraaaasdenas"
+
+function findMaxDuplicateChar(str) {
+    if (str.length == 1) return str
+    let charObj = {}
+    for (let i = 0; i < str.length; i++) {
+        if (!charObj[str.charAt(i)]) {
+            charObj[str.charAt(i)] = 1
+        } else {
+            charObj[str.charAt(i)] += 1
+        }
+    }
+    let maxChar = '',
+        maxValue = 1
+    for (var key in charObj) {
+        if (charObj[key] >= maxValue) {
+            maxChar = key
+            maxValue = charObj[key]
+        }
+    }
+    return maxChar
+}
+```
+
+### 字符串中的第一个唯一字符
+
+给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+
+- s = "leetcode"          返回 0.
+- s = "loveleetcode"    返回 2.
+
+```js
+var str = "leetcode"
+function firstUniqChar(str) {
+  for (var i = 0; i < str.length; i++) {
+    var curChar = str[i]
+    if (str.lastIndexOf(curChar) === str.indexOf(curChar)) {
+      return i
+    }
+  }
+  return -1
+}
+console.log(firstUniqChar(str))
+```
+
+### 有效的字母异位词
+
+即判断字符串中是否只有字符的位置不同，也就是判断两个字符串中包含的字符以及这些字符出现的次数是否相同
+
+- **输入:** *s* = "anagram", *t* = "nagaram"        **输出:** true
+- **输入:** *s* = "rat", *t* = "car"                        **输出:** false
+
+```js
+var s = "anagram", t = "nagaram"
+function isAnagram(s, t) {
+  if (s.length !== t.length) return false;
+  var ss = s.split("").sort().join("")
+  var tt = t.split("").sort().join("")
+  return ss === tt ? true : false
+}
+console.log(isAnagram(s, t))
 ```
 
 ### 判断一个给定的字符串是否是同构的
@@ -26,6 +113,91 @@ var isIsomorphic = function(s, t) {
       i++
     }
     return true
+}
+```
+
+### 报数
+
+报数序列是一个整数序列，按照其中的整数的顺序进行报数，得到下一个数。其前五项如下：
+
+```shell
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+```
+
+`1` 被读作  `"one 1"`  (`"一个一"`) , 即 `11`。
+
+`11` 被读作 `"two 1s"` (`"两个一"`）, 即 `21`。
+
+`21` 被读作 `"one 2"`,  "`one 1"` （`"一个二"` ,  `"一个一"`) , 即 `1211`。
+
+```js
+var countAndSay = function (n) {
+    // 从1开始报数
+    var result = '1'
+    // 循环第 N 次
+    for (let i = 1; i < n; i++) {
+        // 默认当前连续的数字的次数为1
+        var repeatCount = 1
+        var str = ''
+        // 循环当前数字
+        for (let j = 0; j < result.length; j++) {
+            console.log(result[j], result[j + 1])
+            // 当前数字和后面一个是否相同，相同则重复数计数+1
+            if (result[j] === result[j+1]) {
+                repeatCount++
+            } else {
+                // 否则就把到目前为止的报数“读出来”
+                str += repeatCount + result[j]
+                repeatCount = 1
+            }
+        }
+        // 当前第N次报数的结果，下次报数以此为准
+        result = str
+    }
+    return result
+}
+```
+
+### 最长公共前缀
+
+编写一个函数来查找字符串数组中的最长公共前缀。如果不存在公共前缀，返回空字符串 `""`。
+
+- **输入:** ["flower","flow","flight"]    **输出:** "fl"
+- **输入:** ["dog","racecar","car"]      **输出:** ""
+
+```js
+var arr = ["flower", "flow", "flight"]
+function longestCommonPrefix(arr) {
+    if (!arr.length) return ""
+    var firstStr = arr[0]
+    var result = ""
+
+    for (var i = 0; i < firstStr.length; i++) {
+        for (var j = 1; j < arr.length; j++) {
+            if (firstStr[i] !== arr[j][i]) {
+                return result
+            }
+        }
+        result += firstStr[i]
+    }
+    return result
+}
+console.log(longestCommonPrefix(arr))
+```
+
+### 生成指定长度的随机字母数字字符串
+
+```js
+function getRandomStr(len) {
+    var str = ""
+    for (var i = 0; i < len; i++ ) {
+        str += Math.random().toString(36).substring(2)
+    }
+    return str.substring(0, len)
 }
 ```
 
@@ -170,7 +342,371 @@ arr.sort(function() {
 console.log(arr)
 ```
 
-## 随机数
+### 找出正数组中的最大差值
+
+```js
+var arr = [10,5,11,7,8,9]; // 11-5=6
+
+function getMaxProfit(arr) {
+  var min = max = arr[0];
+  for(var i=0; i<arr.length; i++) {
+    min = min <= arr[i] ? min : arr[i];
+    max = max >= arr[i] ? max : arr[i];
+  }
+  return Math.abs(max - min);
+}
+```
+
+### 从排序数组中删除重复项
+
+```js
+// 若 nums = [1,1,2], 则函数应返回长度 2, 并且原数组 nums 的前两个元素被修改为 1, 2。
+// 若 nums = [0,0,1,1,1,2,2,3,3,4], 则返回 5, 并且原数组被修改为 0, 1, 2, 3, 4。
+var nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+function removeDuplicates(nums) {
+  for (var i = 1; i < nums.length; i++) {
+    if (nums[i - 1] === nums[i]) {
+      nums.splice(i - 1, 1)
+      i--
+    }
+  }
+  return nums.length
+}
+```
+
+### 找出数组中出现次数最多的元素，并给出其出现过的位置
+
+```js
+var arr = [1, 1, 2, 1, 10, 10, 11, 1, 7]
+
+function fn(arr) {
+    var bestItem, indexs = [], obj = {}
+    for (var i = 0, len = arr.length; i < len; i++) {
+        var item = arr[i].toString()
+        obj[item] ? obj[item].push(i) : obj[item] = [].concat([i])
+    }
+  
+    var tempArr = Object.entries(obj)
+    bestItem = parseInt(tempArr[0][0])
+    indexs = tempArr[0][1]
+  
+    for (const [key, value] of tempArr) {
+        if (indexs.length < value.length) {
+            bestItem = parseInt(key)
+            indexs = value
+        }
+    }
+
+    return { bestItem, indexs }
+}
+console.log(fn(arr))
+```
+
+### 买卖股票的最佳时机
+
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+**注意**：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+输入: [7,1,5,3,6,4]         输出: 7
+
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+
+```js
+var arr = [7, 1, 5, 3, 6, 4]
+function maxProfit(arr) {
+    var income = 0;
+    for (var i = 1, len = arr.length; i < len; i++) {
+        var gap = arr[i] - arr[i - 1] // 后一个与前一个比较，大于零则赚
+        if (gap > 0) {
+            income += gap
+        }
+    }
+    return income
+}
+console.log(maxProfit(arr))
+```
+
+### 旋转数组
+
+给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+
+输入: [1,2,3,4,5,6,7] 和 k = 3          输出: [5,6,7,1,2,3,4]
+
+解释:
+
+向右旋转 1 步: [7,1,2,3,4,5,6]
+
+向右旋转 2 步: [6,7,1,2,3,4,5]
+
+向右旋转 3 步: [5,6,7,1,2,3,4]
+
+```js
+var arr = [1, 2, 3, 4, 5, 6, 7]
+
+function rotate(arr, k) {
+    var len = arr.length
+    for (var i = 0; i < k; i++) {
+        var temp = arr.pop()
+        arr.unshift(temp)
+    }
+    return arr
+}
+
+console.log(rotate(arr, 3))
+```
+
+### 判断数组是否存在重复
+
+给定一个整数数组，判断是否存在重复元素。
+
+如果任何值在数组中出现至少两次，函数返回 true。如果数组中每个元素都不相同，则返回 false。
+
+输入: [1,2,3,1]        输出: true
+
+输入: [1,2,3,4]        输出: false
+
+```js
+var arr = [1, 2, 3, 1]
+function containsDuplicate(arr) {
+    var obj = {}
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (obj[arr[i]]) {
+            return true
+        } else {
+            obj[arr[i]] = true
+        }
+    }
+    return false
+}
+
+// or
+
+function containsDuplicate(arr) {
+  return [...new Set(arr)].length !== arr.length
+}
+
+console.log(containsDuplicate(arr))
+```
+
+### 找出只出现一次的数字
+
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+```js
+var arr = [4, 1, 2, 1, 2]
+
+function singleNumber(arr) {
+    var tempArr = arr
+    tempArr.sort()
+    var onceNumber = null
+    for (var i = 0, len = tempArr.length - 1; i < len; i++) {
+        if (tempArr[i] !== tempArr[i + 1]) {
+            onceNumber = tempArr[i]
+        } else {
+            ++i
+        }
+    }
+    // 有可能排序后最后一个才是单着的数字，所以直接赋值为数组最后一个值
+    return onceNumber !== null ? onceNumber : tempArr[tempArr.length - 1]
+}
+
+// or
+
+function singleNumber(arr) {
+    const a = [...new Set(arr)].reduce((total, cur) => total + cur, 0)
+    const b = arr.reduce((total, cur) => total + cur, 0)
+    return 2 * a - b
+}
+
+console.log(singleNumber(arr))
+```
+
+### 加一
+
+给定一个由**整数**组成的**非空**数组所表示的非负整数，在该数的基础上加一。
+
+最高位数字存放在数组的首位， 数组中每个元素只存储一个数字。
+
+你可以假设除了整数 0 之外，这个整数不会以零开头。
+
+**示例 1:**
+
+```shell
+输入: [1,2,3]
+输出: [1,2,4]
+解释: 输入数组表示数字 123。
+```
+
+**示例 2:**
+
+```shell
+输入: [4,3,2,1]
+输出: [4,3,2,2]
+解释: 输入数组表示数字 4321。
+```
+
+```js
+var arr = [9, 9, 9] // 预期：[1, 0, 0, 0]
+function plusOne(arr) {
+    var count = arr.length - 1
+    // 从末尾往前倒
+    while (count > -1) {
+        // 只要当前位+1大于9，就把当前位置为0，count--
+        if (arr[count] + 1 > 9) {
+            arr[count] = 0
+            count--
+        } else {
+            // 一旦当前位+1不大于9，就放心+1，且直接退出，不用再算更高位的了
+            arr[count]++
+            break;
+        }
+    }
+    // 如果while后，第一位还是0，证明这个数组所有数字都为9.这个时候往数组最前面加个1就好
+    if (arr[0] === 0) {
+        arr.unshift(1)
+    }
+    return arr;
+};
+console.log(plusOne(arr))
+```
+
+### 移动零
+
+给定一个数组 `nums`，编写一个函数将所有 `0` 移动到数组的末尾，同时保持非零元素的相对顺序。
+
+**示例:**
+
+```shell
+输入: [0,1,0,3,12]
+输出: [1,3,12,0,0]
+```
+
+```js
+var arr = [0, 1, 0, 3, 12] // 预期：[ 1, 3, 12, 0, 0 ]
+var moveZeroes = function (nums) {
+    // 长度提取出来
+    var len = nums.length
+    for (var i = 0; i < len; i++) {
+        // 从头往后遍历，遇到0则删掉追放到尾部，
+        // 同时让i--，因为头部删了个0；同时len--，因为不再判断追加后的
+        if (nums[i] === 0) {
+            nums.splice(i, 1)
+            nums.push(0)
+            i--
+            len--
+        }
+    }
+    return nums
+}
+console.log(moveZeroes(arr))
+```
+
+### 两数之和
+
+给定一个整数数组 `nums` 和一个目标值 `target`，请你在该数组中找出和为目标值的那 **两个** 整数，并返回他们的数组下标。
+
+你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
+
+**示例:**
+
+```shell
+给定 nums = [2, 7, 11, 15], target = 9
+
+因为 nums[0] + nums[1] = 2 + 7 = 9
+所以返回 [0, 1]
+```
+
+```js
+var nums = [2, 7, 11, 15], target = 9
+function twoSum(nums, target) {
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i]
+    // 第二个数索引
+    const targetIndex = nums.indexOf(target - num)
+    // 确保存在第二个数，且不为当前遍历的数
+    if (targetIndex > -1 && targetIndex !== i) {
+      return [i, targetIndex]
+    }
+  }
+}
+console.log(twoSum(nums, target))
+```
+
+### 旋转图像
+
+给定一个 *n* × *n* 的二维矩阵表示一个图像。
+
+将图像顺时针旋转 90 度。
+
+**说明：**
+
+你必须在**原地**旋转图像，这意味着你需要直接修改输入的二维矩阵。**请不要**使用另一个矩阵来旋转图像。
+
+**示例 1:**
+
+```shell
+给定 matrix = 
+[
+  [1,2,3],
+  [4,5,6],
+  [7,8,9]
+],
+
+原地旋转输入矩阵，使其变为:
+[
+  [7,4,1],
+  [8,5,2],
+  [9,6,3]
+]
+```
+
+**示例 2:**
+
+```shell
+给定 matrix =
+[
+  [ 5, 1, 9,11],
+  [ 2, 4, 8,10],
+  [13, 3, 6, 7],
+  [15,14,12,16]
+],
+
+原地旋转输入矩阵，使其变为:
+[
+  [15,13, 2, 5],
+  [14, 3, 4, 1],
+  [12, 6, 8, 9],
+  [16, 7,10,11]
+]
+```
+
+```js
+var matrix = [
+    [5, 1, 9, 11],
+    [2, 4, 8, 10],
+    [13, 3, 6, 7],
+    [15, 14, 12, 16]
+]
+
+function rotate(arr) {
+    for (var i = 0; i < arr.length; i++) {
+        for (var j = i + 1; j < arr.length; j++) {
+            var tempArr = arr[j][i]
+            arr[j][i] = arr[i][j]
+            arr[i][j] = tempArr
+        }
+        arr[i].reverse()
+    }
+    return arr
+}
+
+console.log(rotate(matrix))
+```
+
+## 随机数 / 数字
 
 ### 如何获取0-9的随机数
 
@@ -187,6 +723,49 @@ return Math.round(Math.random() * (max - min) + min)
 return Math.ceil(Math.random() * (max - min) + min)
 // [n, m)：
 return Math.floor(Math.random() * (max - min) + min)
+```
+
+### 随机获取数组中的元素
+
+```js
+var arr = ["前端", "后端", "全栈"]
+function fn(arr) {
+    return arr[parseInt(Math.random() * arr.length)]
+}
+var i = 0
+while (i<10) {
+    console.log(fn(arr))
+    i++
+}
+```
+
+### 打乱数组顺序
+
+```js
+var arr = [1,2,3,4,5,6,7,'a','dsfs',8,9,'v']
+function fn(arr) {
+  for(var i = 0; i < arr.length; i++) {
+    var randomIndex = parseInt(Math.random() * arr.length)
+    var temp = arr[i]
+    arr[i] = arr[randomIndex]
+    arr[randomIndex] = temp
+  }
+  return arr
+}
+```
+
+### 保留指定小数位
+
+```js
+var num =4.345678
+num = num.toFixed(4) // 4.3457 第四位小数位以四舍五入计算
+```
+
+### 如何将字符串转化为数字，例如'12.3b'？
+
+```js
+parseFloat('12.3b')
+// 12.3
 ```
 
 ## 原型 & 原型链
