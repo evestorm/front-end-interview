@@ -82,6 +82,14 @@ console.log(newObj) // { a: 'old', b: { c: 'new' } }
 - [浅探js深拷贝和浅拷贝](https://segmentfault.com/a/1190000016970483)
 - [深拷贝的终极探索](http://www.cnblogs.com/zhangycun/p/9799787.html)
 
+## JS垃圾回收机制
+
+这部分可参考我的博客：[JS垃圾回收机制](https://evestorm.github.io/posts/20229/)
+
+## Event Loop
+
+同样可参考我的博客：[Event Loop 学习笔记](https://evestorm.github.io/posts/10505/)
+
 ## 综合题
 
 ### 编写一个可拖拽的 div
