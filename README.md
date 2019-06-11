@@ -77,3 +77,11 @@ Vue没什么好说的，数据响应式（双向数据绑定）是一定会问�
 
 - [如何使用webpack4](https://evestorm.github.io/posts/47462/)
 - [Webpack面试题](./Webpack面试题.md)
+
+## 更多
+
+本项目整合了大量下方资源的面试题内容，但毕竟是按照我自己技术栈整合的，所以如果你还想查缺补漏（例如 react 相关面试题等），可以点击下方链接了解更多：
+
+- [前端开发面试题](https://github.com/markyun/My-blog/tree/master/Front-end-Developer-Questions/Questions-and-Answers)
+- [前端面试考点多？看这些文章就够了](https://juejin.im/post/5aae076d6fb9a028cc6100a9)
+- [KieSun/Front-end-knowledge](https://github.com/KieSun/Front-end-knowledge)
