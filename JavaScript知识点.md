@@ -1971,6 +1971,19 @@ header('Access‐Control‐Allow‐Origin: *');
 // Access-Control-Allow-Origin  的响应头，表示这个资源是否允许指定域请求。
 ```
 
+如果跨域 + 发送 cookie：
+
+- 前端：withCredentials = true
+- 后端：Access-Control-Allow-Origin 不为 * ，(Access-Control-Allow-Credentials, true)
+- 如果还需要发送 post 请求：
+  - 前端：
+    - post:['Content-Type'] = 'application/x-www-form-urlencoded';
+    - qs.stringify(): 对象序列化成URL的形式，以 & 进行拼接
+
+#### 代理
+
+除此之外，还可以通过前端设置代理实现跨域，原理是利用后端不存在跨域问题。比如可以在 `@vue/cli` 项目中新建 `vue.config.js` 文件来配置代理。如果你想了解更多这方面的设置，可以阅读我的这篇博客 [Axios异步请求跨域解决方案](https://evestorm.github.io/posts/15391/)
+
 ### defer 和 async 的区别
 
 参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
