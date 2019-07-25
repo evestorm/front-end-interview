@@ -165,12 +165,25 @@ this.goodsId = this.$route.params.goodsId
 #### 应用
 
 - 全局守卫：beforeEach（用户登录以及权限判定）
+
+    ```js
+    router.beforeEach((to, from, next) => {
+      const isLogin = localStroage.token
+      // 个人中心需要登录
+      if (to.name === 'Member') {
+        isLogin ? next() : next('/login')
+      } else {
+        next()
+      }
+    })
+    ```
+
 - 组件内守卫：beforeRouteEnter（根据用户从何而来，修改当前组件标题）
     ```js
     // 详情页组件
     beforeRouteEnter(to, from, next) {
-        let title = '';
-        title = from.name === 'news.list' ? '新闻详情' : '商品详情';
+        let title = ''
+        title = from.name === 'news.list' ? '新闻详情' : '商品详情'
         // 一定要调用 next ，否则无法从列表页跳转到详情页
         next(vm => vm.title = title) // 通过 vm 访问组件实例
     }
@@ -191,6 +204,15 @@ Vue 在修改数据后，视图不会立刻更新，而是等同一事件循环�
 nextTick的回调函数会等到同步任务执行完毕，DOM更新后才触发。
 
 阅读更多：[Vue.nextTick 的原理和用途](https://segmentfault.com/a/1190000012861862)
+
+## 在列表组件中添加 key 属性的作用？
+
+key的主要作用是为了高效的更新虚拟 DOM。另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
+
+阅读更多：
+
+- [写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/1)
+- [Vue2.0 v-for 中 :key 到底有什么用？](https://www.zhihu.com/question/61064119/answer/183717717)
 
 ## 其它
 

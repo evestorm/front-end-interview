@@ -1540,6 +1540,12 @@ asyncFunc().then(res => {
 })
 ```
 
+#### Promise 构造函数是同步执行还是异步执行，那么 then 方法呢？
+
+```js
+Promise new的时候会立即执行里面的代码 then是微任务 会在本次任务执行完的时候执行 setTimeout是宏任务 会在下次任务执行的时候执行
+```
+
 ### Async / Await
 
 #### 是什么

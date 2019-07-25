@@ -439,6 +439,47 @@ function fn(arr) {
 console.log(fn(arr))
 ```
 
+### 将数组扁平化并去除其中重复数据，最终得到一个升序且不重复的数组
+
+> 已知如下数组：
+>
+> var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
+>
+> 编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组
+
+```js
+// ES6
+// 扁平化数组
+Array.prototype.flat = function() {
+  return [].concat(...this.map(item => Array.isArray(item) ? item.flat() : [item]))
+}
+// 数组去重
+Array.prototype.unique = function() {
+  return [...new Set(this)]
+}
+// 数组排序
+const sort = (a, b) => a - b
+console.log(arr.flat().unique().sort(sort))
+
+// ===========================================
+
+// ES5
+Array.prototype.flat = function() {
+  return this.toString().split(',')
+}
+Array.prototype.unique = function() {
+  var obj = {}
+  return this.filter((item, index) => {
+    var tempItem = typeof item + JSON.stringify(item)
+    return obj.hasOwnProperty(tempItem) ?
+      false :
+    	obj[tempItem] = true
+  })
+}
+const sort = (a, b) => a - b
+console.log(arr.flat().unique().sort(sort))
+```
+
 ### 买卖股票的最佳时机
 
 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
@@ -848,6 +889,14 @@ var num =4.345678
 num = num.toFixed(4) // 4.3457 第四位小数位以四舍五入计算
 ```
 
+### 前端价格展示，保留2位小数。位数不够补零
+
+```js
+function priceFormat(price) {
+  return parseFloat(Math.round(price * 100) / 100).toFixed(2)
+}
+```
+
 ### 如何将字符串转化为数字，例如'12.3b'？
 
 ```js
@@ -1012,6 +1061,27 @@ function myInstanceOf(leftValue, rightValue) {
 
 参考：[浅谈 instanceof 和 typeof 的实现原理](https://juejin.im/post/5b0b9b9051882515773ae714)
 
+### 实现一个 new
+
+```js
+function _new(fn, ...args) {
+  const obj = Object.create(fn.prototype)
+  const ret = fn.apply(obj, args)
+  return ret instanceOf Object ? ret : obj
+}
+
+// 测试
+function Person(name, age) {
+  this.name = name
+  this.age = age
+  this.sayHi = function() {}
+}
+Person.prototype.run = function() {}
+
+console.log(_new(Person, 'Lance', 19))
+console.log(new Person('Jerry', 20))
+```
+
 ### 实现一个单例
 
 ```js
@@ -1049,6 +1119,40 @@ console.log(i1.name)  // 结果是escapist3
 ### Event Loop
 
 有关 Event Loop 相关的概念和面试题可参考我的博客：[Event Loop 学习笔记](https://evestorm.github.io/posts/10505/)
+
+### 自我测验
+
+上面两篇文章阅读完毕后可以自我测验下：
+
+```js
+//请写出输出内容
+async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+async function async2() {
+	console.log('async2');
+}
+
+console.log('script start');
+
+setTimeout(function() {
+    console.log('setTimeout');
+}, 0)
+
+async1();
+
+new Promise(function(resolve) {
+    console.log('promise1');
+    resolve();
+}).then(function() {
+    console.log('promise2');
+});
+console.log('script end');
+```
+
+题目出处和答案参考：[从一道题浅说 JavaScript 的事件循环](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/7)
 
 ## DOM
 
@@ -1124,3 +1228,11 @@ document.addEventListener("mouseup", function() {
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
 
 - [常见排序算法](https://evestorm.github.io/posts/59937/)
+
+## 非常规题
+
+### ['1', '2', '3'].map(parseInt)的结果
+
+正确答案：[1, NaN, NaN]
+
+答案解析：[['1', '2', '3'].map(parseInt) what & why ?](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/4)
