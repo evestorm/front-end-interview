@@ -214,6 +214,10 @@ key的主要作用是为了高效的更新虚拟 DOM。另外如果给列表组�
 - [写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/1)
 - [Vue2.0 v-for 中 :key 到底有什么用？](https://www.zhihu.com/question/61064119/answer/183717717)
 
+## 在 Vue 中，子组件为何不可以修改父组件传递的 Prop
+
+因为 prop 的传递是单向数据流，这样易于监测数据的流动，出现了错误可以更加迅速的定位到错误发生的位置。另外 props 传入的值如果对象的话，是可以直接在子组件里更改的，因为是同一个引用。
+
 ## 其它
 
 ### 谈谈你对 MVVM 开发模式的理解

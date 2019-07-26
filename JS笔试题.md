@@ -480,6 +480,37 @@ const sort = (a, b) => a - b
 console.log(arr.flat().unique().sort(sort))
 ```
 
+### 使用迭代的方式实现 flatten 函数
+
+> 迭代实现
+
+```js
+let arr = [1, 2, [3, 4, 5, [6, 7], 8], 9, 10, [11, [12, 13]]]
+
+const flatten = function(arr) {
+  while (arr.some(v => Array.isArray(v))) {
+     arr = [].concat(...arr)
+  }
+  return arr
+}
+```
+
+> 递归实现
+
+```js
+const flatten = function(arr) {
+  return [].concat(...arr.map(v => Array.isArray(v) ? flatten(v) : [v]))
+}
+```
+
+> 字符串转换
+
+```js
+function flatten(arr) {
+  return arr.join(',').split(',').map(v => Number(v))
+}
+```
+
 ### 买卖股票的最佳时机
 
 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
@@ -833,6 +864,31 @@ function toThousands(num) {
   })
 }
 ```
+
+### 两个数组合并成一个数组
+
+请把两个数组 `['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2']` 和 `['A', 'B', 'C', 'D']`，合并为 `['A1', 'A2', 'A', 'B1', 'B2', 'B', 'C1', 'C2', 'C', 'D1', 'D2', 'D']`。
+
+> 考察点：假设有一种情况，让你在一个列表中插入一个广告，不光是数组，对象依然有这种需求，这道题其实就是平常经常需要用到的一个小功能。
+
+```js
+let arr1 = ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2"]
+let arr2 = ["A", "B", "C", "D"]
+
+console.log(
+	[...arr1, ...arr2].sort((v2, v1) => (
+  	v2.codePointAt(0) - v1.codePointAt(0) ||
+    v1.length - v2.length ||
+    v2.codePointAt(1) - v1.codePointAt(1)
+  ))
+)
+```
+
+- 第一个条件v2.codePointAt(0) - v1.codePointAt(0) 保证了所有已A开头的字符串会放在最前边，然后依次是B和C。
+- 第二个条件v1.length - v2.length保证A会被放在A1和A2之后。
+- 第三个条件v2.codePointAt(1) - v1.codePointAt(1)保证了A1会被放在A2前边。
+
+这是我挑的一个比较好的答案，更多解法可[在此](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/39)查看
 
 ## 随机数 / 数字
 
@@ -1222,6 +1278,64 @@ document.addEventListener("mouseup", function() {
     flag = false
 })
 ```
+
+## 预测执行结果
+
+### 下面代码打印结果是什么？为什么?
+
+```js
+var b = 10;
+(function b() {
+  b = 20;
+  console.log(b)
+})()
+```
+
+答案：
+
+- 非严格模式：[Function b]
+- 严格模式：`Uncaught TypeError: Assignment to constant variable`
+
+解析：
+
+```js
+var b = 10;
+(function b() {
+   // 内部作用域，会先去查找是有已有变量b的声明，有就直接赋值20，确实有了呀。发现了具名函数 function b(){}，拿此b做赋值；
+   // IIFE的函数无法进行赋值（内部机制，类似const定义的常量），所以无效。
+  // （这里说的“内部机制”，想搞清楚，需要去查阅一些资料，弄明白IIFE在JS引擎的工作方式，堆栈存储IIFE的方式等）
+    b = 20;
+    console.log(b); // [Function b]
+    console.log(window.b); // 10，不是20
+})();
+// 严格模式下能看到错误：Uncaught TypeError: Assignment to constant variable
+```
+
+其他情况例子：
+
+有`window`：
+
+```
+var b = 10;
+(function b() {
+    window.b = 20; 
+    console.log(b); // [Function b]
+    console.log(window.b); // 20是必然的
+})();
+```
+
+有`var`:
+
+```
+var b = 10;
+(function b() {
+    var b = 20; // IIFE内部变量
+    console.log(b); // 20
+   console.log(window.b); // 10 
+})();
+```
+
+[解析来源 ←](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/48#issuecomment-472695263)
 
 ## 算法题
 

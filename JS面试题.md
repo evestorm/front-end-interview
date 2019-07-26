@@ -1,5 +1,23 @@
 # JS面试题
 
+## ES6
+
+### let / const
+
+#### 全局作用域中，用 const 和 let 声明的变量不在 window 上，那到底在哪里？如何去获取？
+
+ES6规定，var 命令和 function 命令声明的全局变量，依旧是顶层对象的属性，但 let、const、class命令声明的全局变量，不属于顶层对象的属性。只在一个块级作用域（Script）中，获取时不加 `window/global` 就好：
+
+```js
+let aa = 1;
+const bb = 2;
+
+console.log(aa); // 1
+console.log(bb); // 2
+```
+
+答案链接：[关于 const 和 let 声明的变量不在 window 上](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/30)
+
 ## 讲一下 JS 垃圾回收机制
 
 这部分可参考我的博客：[JS垃圾回收机制](https://evestorm.github.io/posts/20229/)
