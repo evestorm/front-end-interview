@@ -3,9 +3,9 @@
 ## watch 和 computed 区别
 
 - watch 是监听动作，computed 是计算属性
-- computed 有缓存，只在属性变化的时候才去计算。watch 没缓存，只要数据变化就执行
-- watch 可以执行异步操作，而computed不能
-- watch 一个数据影响多个数据，computed是多个数据影响一个数据
+- watch 没缓存，只要数据变化就执行。computed 有缓存，只在属性变化的时候才去计算。
+- watch 可以执行异步操作，而 computed 不能
+- watch 常用于一个数据影响多个数据，computed 则常用于多个数据影响一个数据
 
 ## 讲一下 Vue 的生命周期？
 
