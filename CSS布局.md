@@ -871,3 +871,36 @@ span { font-size: 1.5em; }
 ```html
  <div style="height:1px;overflow:hidden;background:red"></div>
 ```
+
+### 已知如下代码，如何修改才能让图片宽度为 300px ？注意下面代码不可修改
+
+```html
+<img src="1.jpg" style="width:480px!important;">
+```
+
+答案：
+
+```html
+<!-- 方法一：max-width覆盖 -->
+<img src="1.jpg" style="width:480px!important; max-width: 300px">
+<!-- 方法二：scale按比例缩放 -->
+<img src="1.jpg" style="width:480px!important; transform: scale(0.625, 1);" >
+<!-- 方法三：相同属性直接覆盖 -->
+<img src="1.jpg" style="width:480px!important; width:300px!important;">
+<!-- 方法四：css动画样式优先级高于important特性 -->
+<style>
+img {
+    animation: test 0s forwards;
+}
+@keyframes test {
+    from {
+        width: 300px
+    }
+    to {
+        width: 300px;
+    }
+}
+</style>
+```
+
+题目来源：[Daily-Interview-Question 第60题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/105)

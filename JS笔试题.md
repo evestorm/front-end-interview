@@ -324,32 +324,55 @@ function myDistinct(arr) {
 ### 两个数组比较，判断是否有相同元素（交集）
 
 ```js
-var a = [1, 2, 3, 4, 5, NaN]
-var b = [2, 4, 6, 8, 10, NaN]
+var nums1 = [1, 2, 3, NaN, {}]
+var nums2 = [2, 2, 8, 10, NaN, {}]
 
-// 方法1：filter + indexOf（支持 NaN）
-var c = a.filter(v => b.indexOf(v) > -1) // []
-var aHasNaN = a.some(v => isNaN(v))
-var bHasNaN = b.some(v => isNaN(v))
-var c = a.filter(v => b.indexOf(v) > -1)
-          .concat(aHasNaN && bHasNaN ? [NaN] : [])
+// 方法1：filter + indexOf（不支持 NaN 和 {}）
+function intersect(nums1, nums2) {
+  return nums1.filter(v => {
+    const index = nums2.indexOf(v)
+    if (index > -1) {
+      nums2.splice(index, 1)
+      return v
+    }
+  })
+}
+console.log(intersect(nums1, nums2))
 
-// 若下面 a、b 情况，上面方法会导致结果为 [2, 2]，但按正常逻辑预期应该是 [2] )
-var a = [1, 2, 2, 1, NaN]
-var b = [2, NaN]
+// 方法2：filter + indexOf（支持 NaN，不支持 {}）
+function intersect(nums1, nums2) {
+  const aHasNaN = nums1.some(v => isNaN(v))
+  const bHasNaN = nums2.some(v => isNaN(v))
+  return nums1.filter(v => {
+    const index = nums2.indexOf(v)
+    if (index > -1) {
+      nums2.splice(index, 1)
+      return v
+    }
+  }).concat(aHasNaN && bHasNaN ? [NaN] : [])
+}
+console.log(intersect(nums1, nums2))
 
-var aHasNaN = a.some(v => isNaN(v))
-var bHasNaN = b.some(v => isNaN(v))
-return a.filter(v => {
-        var index = b.indexOf(v)
-        if (index > -1) {
-            b.splice(index, 1)
-            return true
-        }
-    }).concat(aHasNaN && bHasNaN ? [NaN] : [])
-
-// 方法2：es7 includes
-var c = a.filter(v => b.includes(v))
+// 方法3：哈希表（支持 NaN，{}）
+function intersect(nums1, nums2) {
+  const map = {}
+  const res = []
+  for (let n of nums1) {
+    if (map[n]) {
+      map[n]++
+    } else {
+      map[n] = 1
+    }
+  }
+  for (let n of nums2) {
+    if (map[n] > 0) {
+      res.push(n)
+      map[n]--
+    }
+  }
+  return res
+}
+console.log(intersect(nums1, nums2))
 ```
 
 ### 如何实现数组的随机排序？
@@ -711,6 +734,29 @@ var moveZeroes = function (nums) {
     return nums
 }
 console.log(moveZeroes(arr))
+```
+
+### 某公司 1 到 12 月份的销售额存在一个对象里面
+
+如下：{1:222, 2:123, 5:888}，请把数据处理为如下结构：[222, 123, null, null, 888, null, null, null, null, null, null, null]。
+
+```js
+// for循环
+let obj = {1:222, 2:123, 5:888};
+function fn(obj) {
+  let arr = []
+  for (let i = 1; i <= 12; i++) {
+    obj[i] ? arr.push(obj[i]) : arr.push(null)
+  }
+  return arr
+}
+console.log(fn(obj))
+
+
+// Array.from
+let obj = {1:222, 2:123, 5:888};
+const result = Array.from({ length: 12 }).map((_, index) => obj[index + 1] || null);
+console.log(result);
 ```
 
 ### 两数之和
@@ -1117,13 +1163,97 @@ function myInstanceOf(leftValue, rightValue) {
 
 参考：[浅谈 instanceof 和 typeof 的实现原理](https://juejin.im/post/5b0b9b9051882515773ae714)
 
+### 要求设计 LazyMan 类，实现以下功能
+
+```js
+LazyMan('Tony');
+// Hi I am Tony
+
+LazyMan('Tony').sleep(10).eat('lunch');
+// Hi I am Tony
+// 等待了10秒...
+// I am eating lunch
+
+LazyMan('Tony').eat('lunch').sleep(10).eat('dinner');
+// Hi I am Tony
+// I am eating lunch
+// 等待了10秒...
+// I am eating diner
+
+LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(10).eat('junk food');
+// Hi I am Tony
+// 等待了5秒...
+// I am eating lunch
+// I am eating dinner
+// 等待了10秒...
+// I am eating junk food
+```
+
+答案：
+
+```js
+class LazyManClass {
+    constructor (name) {
+        this.name = name
+        this.task = []
+        console.log('Hi I am', name)
+        setTimeout(() => {
+            this.next()
+        }, 0)
+    }
+    eat (str) {
+        this.task.push(() => {
+            console.log('I am eating', str)
+            this.next()
+        })
+        return this
+    }
+    sleep (n) {
+        this.task.push(() => {
+            setTimeout(() => {
+                console.log('等待了' + n + 's')
+                this.next()
+            }, n * 1000)
+        })
+        return this
+    }
+    sleepFirst (n) {
+        this.task.unshift(() => {
+            setTimeout(() => {
+                console.log('等待了' + n + 's')
+                this.next()
+            }, n * 1000)
+        })
+        return this
+    }
+    next () {
+        let fn = this.task.shift()
+        fn && fn()
+    }
+};
+
+let LazyMan = function (name) {
+    return new LazyManClass(name)
+};
+```
+
+解析：
+
+这道题的关键点有如下几个：
+
+- 链式调用，通过返回 this 实现
+- 内部需要维护一个 taskList ，根据不同逻辑，向 taskList 中push 、shift、unshift 执行函数
+- 每执行一个task，需要继续执行后续 task，这通过 next 函数实现。
+
+题目来源：[Daily-Interview-Question 第56题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/98)
+
 ### 实现一个 new
 
 ```js
 function _new(fn, ...args) {
   const obj = Object.create(fn.prototype)
   const ret = fn.apply(obj, args)
-  return ret instanceOf Object ? ret : obj
+  return ret instanceof Object ? ret : obj
 }
 
 // 测试
@@ -1162,6 +1292,42 @@ var i1=new SingleTest({name:"lance1"})
 var i2=new SingleTest({name:"lance2"})
 console.log(i1===i2)  // 结果是true
 console.log(i1.name)  // 结果是escapist3
+```
+
+## ES6
+
+### 实现一个 sleep 函数
+
+比如 sleep(1000) 意味着等待1000毫秒，可从 Promise、Generator、Async/Await 等角度实现。
+
+```js
+// Promise
+const sleep = delay => new Promise(resolve => setTimeout(resolve, delay))
+sleep(1000).then(() => console.log('Done'))
+
+// Generator
+function* sleepGenerator(delay) {
+  yield new Promise(resolve => setTimeout(resolve, delay))
+}
+sleepGenerator(1000).next().value.then(() => console.log('Done'))
+
+// async / await
+const sleep = delay => new Promise(resolve => setTimeout(resolve, delay))
+async function output() {
+  await sleep(1000)
+  console.log('Done')
+}
+output()
+
+// ES5
+function sleep(cb, delay) {
+  if (typeof cb === 'function')
+    setTimeout(cb, delay)
+}
+function output() {
+  console.log('Done')
+}
+sleep(output, 1000)
 ```
 
 ## Event Loop & setTimeout
@@ -1315,7 +1481,7 @@ var b = 10;
 
 有`window`：
 
-```
+```js
 var b = 10;
 (function b() {
     window.b = 20; 
@@ -1326,7 +1492,7 @@ var b = 10;
 
 有`var`:
 
-```
+```js
 var b = 10;
 (function b() {
     var b = 20; // IIFE内部变量
@@ -1336,6 +1502,60 @@ var b = 10;
 ```
 
 [解析来源 ←](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/48#issuecomment-472695263)
+
+### 输出以下代码执行的结果并解释为什么
+
+```js
+var obj = {
+    '2': 3,
+    '3': 4,
+    'length': 2,
+    'splice': Array.prototype.splice,
+    'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj)
+```
+
+结果：
+
+![screenshots](https://user-images.githubusercontent.com/26674103/55368589-3605a000-5525-11e9-8c20-c5aeea6b1880.png)
+
+解析参考：
+
+> 结果最后变为一个稀疏数组[,,1,2]。
+> 因为在对象中加入splice属性方法，和length属性后。这个对象变成一个类数组。属性名称可转换为数字时，会映射成为索引下标。所以对象实际可这样描述：[,,3,4],然后继续执行length 属性复制，length 原来值为4，length：2 语句将数组截断成为长度为2的数组。此时数组为[,,]。接着push（1）、push (2)。数组追加两个值，[,,1,2]。小菜看法，有错望指正！！！
+
+参考来源：
+
+- [Daily-Interview-Question 第 46 题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/76)
+- [小菜解析](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/75)
+
+### 输出以下代码的执行结果并解释为什么
+
+```js
+var a = {n: 1};
+var b = a;
+a.x = a = {n: 2};
+
+console.log(a.x)
+console.log(b.x)
+```
+
+答案：
+
+```js
+a.x   // --> undefined
+b.x   // --> {n: 2}
+```
+
+解析：
+
+- 1、优先级。`.`的优先级高于`=`，所以先执行`a.x`，堆内存中的`{n: 1}`就会变成`{n: 1, x: undefined}`，改变之后相应的`b.x`也变化了，因为指向的是同一个对象。
+- 2、赋值操作是`从右到左`，所以先执行`a = {n: 2}`，`a`的引用就被改变了，然后这个返回值又赋值给了`a.x`，**需要注意**的是这时候`a.x`是第一步中的`{n: 1, x: undefined}`那个对象，其实就是`b.x`，相当于`b.x = {n: 2}`
+
+题目来源：[Daily-Interview-Question 第53题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/93)
 
 ## 算法题
 

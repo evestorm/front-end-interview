@@ -65,10 +65,13 @@ border padding margin width height
 - `:enabled/:disabled` 控制表单控件的禁用状态。
 - `:checked` 单选框或复选框被选中。
 
-## display: none 与 visibility: hidden 的区别？
+## display:none、visibility：hidden和opacity: 0的区别？
 
-- `display: none` 不显示对应的元素，在文档布局中不再分配空间（重排+重绘）
-- `visibility: hidden` 隐藏对应元素，在文档布局中仍保留原来的空间（重绘）
+- display：none （不占空间，不能点击）（回流+重绘）
+- visibility：hidden （占据空间，不可点击）（重绘）
+- opacity: 0（占据空间，可以点击）（重建图层，性能较高）
+
+更多：[分析比较 opacity: 0、visibility: hidden、display: none 优劣和适用场景](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/100)
 
 ## position 跟 display 、 overflow 、float 这些特性相互叠加后会怎么样？
 

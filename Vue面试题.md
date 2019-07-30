@@ -82,6 +82,14 @@ Vue.set(this.obj, 'b', 233) or this.$set(this.obj, 'b', 233)
 
 当你在对象上新加了一个属性 newProperty ，当前新加的这个属性并没有加入 vue 检测数据更新的机制（因为是在初始化之后添加的）, vue.$set 是能让 vue 知道你添加了属性, 它会给你做处理。
 
+### Vue 的响应式原理中 Object.defineProperty 有什么缺陷？为什么在 Vue3.0 采用了 Proxy，抛弃了 Object.defineProperty？
+
+1. Object.defineProperty无法监控到数组下标的变化，导致通过数组下标添加元素，不能实时响应；
+2. Object.defineProperty只能劫持对象的属性，从而需要对每个对象，每个属性进行遍历，如果，属性值是对象，还需要深度遍历。Proxy可以劫持整个对象，并返回一个新的对象。
+3. Proxy不仅可以代理对象，还可以代理数组。还可以代理动态增加的属性。
+
+答案参考：[Daily-Interview-Question - 第51题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/90)
+
 ## Vuex 用过吗？
 
 Vuex 是专为 Vue 应用程序开发的状态管理工具，相当于共享仓库，方便任何组件直接获取和修改。
