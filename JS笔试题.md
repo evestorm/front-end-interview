@@ -238,6 +238,25 @@ function getRandomStr(len) {
 }
 ```
 
+### 如何把一个字符串的大小写取反（大写变小写小写变大写），例如 ’AbC' 变成 'aBc'
+
+```js
+// 方法一：常规
+function transformStr(str) {
+    let tempArr = str.split('')
+    let result = tempArr.map(char => {
+        return char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()
+    })
+    return result.join('')
+}
+console.log(transformStr('aBc'))
+
+// 方法二：正则
+'aBc'.replace(/[A-Za-z]/g, char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase())
+```
+
+题目来源：[Daily-Interview-Question 第69题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/116)
+
 ## 数组
 
 ### 判断数组的方法
@@ -935,6 +954,63 @@ console.log(
 - 第三个条件v2.codePointAt(1) - v1.codePointAt(1)保证了A1会被放在A2前边。
 
 这是我挑的一个比较好的答案，更多解法可[在此](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/39)查看
+
+### 随机生成一个长度为 10 的整数类型的数组，例如 [2, 10, 3, 4, 5, 11, 10, 11, 20]，将其排列成一个新数组，要求新数组形式如下，例如 [[2, 3, 4, 5], [10, 11], [20]]。
+
+解析：由于题意没有说清楚，到底是按「数字区间」排还是按照「连续数字」排，所以两种都写出来供参考
+
+答案：
+
+```js
+// 随机整数
+function randomArr(min, max) {
+  return Math.round(Math.random() * (max - min) + min)
+}
+
+// 初始化数组
+let initArr = Array.from({length: 10}, () => randomArr(20, 100))
+
+// 数组去重
+initArr = [...new Set(initArr)]
+
+// 数组排序
+initArr.sort((a, b) => a - b)
+
+// 1. 区间分类解法：
+function createTargetArr(initArr) {
+  let obj = {}
+  initArr.map((num) => {
+    const initNum = Math.floor(num / 10)
+    if (!obj[initNum]) obj[initNum] = []
+    obj[initNum].push(num)
+  })
+
+  let result = []
+  for (const key in obj) {
+    result.push(obj[key])
+  }
+  return result
+}
+console.log(createTargetArr(initArr))
+
+// 2. 连续数字分类解法：
+function createTargetArr(initArr) {
+  let continueArr = [],
+    tempArr = []
+  console.log(initArr)
+  initArr.map((e, index) => {
+    tempArr.push(e)
+    if (initArr[index + 1] !== ++e) {
+      continueArr.push(tempArr)
+      tempArr = []
+    }
+  });
+  return continueArr
+}
+console.log(createTargetArr(initArr))
+```
+
+题目来源：[Daily-Interview-Question 第67题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/113)
 
 ## 随机数 / 数字
 

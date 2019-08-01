@@ -864,6 +864,85 @@ span { font-size: 1.5em; }
     <!- 以上布局共同点：元素只能做到宽度的适配（排除图片）->
 4. rem布局 宽度和高度都能做到适配（等比适配）
 
+## 如何解决移动端 Retina 屏 1px 像素问题
+
+### 原理：媒体查询 + 变换缩放
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <style type="text/css">
+      * { margin: 0; padding: 0; }
+      #test {
+        width: 100%;
+        height: 1px;
+        margin-top: 50px;
+        background: black;
+      }
+      @media only screen and (-webkit-device-pixel-ratio:2 ) {
+        #test {
+          transform: scaleY(.5);
+        }
+      }
+      @media only screen and (-webkit-device-pixel-ratio:3 ) {
+        #test {
+          transform: scaleY(.333333333333333333);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="test"></div>
+  </body>
+</html>
+```
+
+### stylus 实现方案
+
+> stylus
+```css
+/* 给 dpr 1.5 的设备设置 0.7 的缩放 */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5)
+  .border1px
+    &::after
+      -webkit-transform: scaleY(.7)
+      transform: scaleY(.7)
+/* 给 dpr 2.0 的设备设置 0.5 的缩放 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+  .border1px
+    &::after
+      -webkit-transform: scaleY(.5)
+      transform: scaleY(.5)
+
+/* 给需要1px下边框的元素添加一个伪元素，
+使其宽100%；高为用户自定义 */
+border1px($color)
+  position: relative
+  &:after
+    display: block
+    position: absolute
+    left: 0
+    bottom: 0
+    width: 100%
+    border-top: 1px solid $color
+    content: ' '
+```
+
+> html
+
+```html
+<!-- 1. 给需要添加1像素边框的元素设置一个类作为标识，让媒体查询能够识别 -->
+<header class="border1px"></header>
+
+<style lang="stylus" scoped>
+header
+  ...
+  border1px(black) /* 2. 通过border1px设置边框 */
+</style>
+```
+
 ## 其它
 
 ### 实现不使用 border 画出 1px 高的线，在不同浏览器的标准模式与怪异模式下都能保持一致的效果。

@@ -241,3 +241,36 @@ M 数据改变 =>VM => 触发 View 更新
 V 用户操作 => VM => M 数据同步更新
 
 开发者只需要专注对数据的维护操作即可，而不需要自己操作 dom 。
+
+### 请你讲一下Vue项目中使用token登录的具体流程
+
+对 token 完全不了解的同学可以查看我博客中转载的 [这篇文章](https://evestorm.github.io/posts/29493/) 。
+
+不想看长篇大论的我这里简单描述下基于 token 身份验证的整个流程：
+
+1. 用户通过账户名和密码发送登录请求
+2. 服务端对账户的有效性进行验证
+3. 验证成功后再利用「密钥」和「加密算法」（如：HMAC-SHA256）对「用户数据」（如账号信息）做一个签名的 token 返回给客户端
+4. 客户端本地存储 token ，并在每次请求的 header 中带上 token
+5. 服务端验证 token 并返回数据
+
+对于 Vue 项目来说，具体流程如下：
+
+1. 客户端：登录页带上用户名和密码请求登录接口
+2. 服务端：接收请求并在数据库中查询账户的有效性
+3. 服务端：查询通过后利用「密钥」和「加密算法」对「用户数据」做签名 token 并返回给客户端此 token （此 token 有时效性）
+4. 客户端：本地存储 token（如 localStorage + Vuex）
+5. 客户端：每次路由跳转前都要判断 localStorage 是否存在 token ，有则正常跳转，无则跳转回登录页
+6. 客户端：每次发送请求时，在 Axios 请求头里携带上 token
+7. 服务端：接收请求并判断请求头有无 token ，有且 token 没有过期，正常返回数据；无或 token 失效返回 401 状态码
+8. 客户端：一旦发现 401 则重定向到登录页
+
+一般回答完毕后面试官还会追问一些细节，这里列举两个常问的：
+
+1. 你是如何利用 Axios 实现携带 token 以及 401 状态码判定的？
+
+    利用 Axios 的请求/响应拦截。使用 `axios.interceptors.request.use` 进行请求拦截，判断 localStorage 是否有 token ，有则在请求头里携带 token 。使用 `axios.interceptors.response.use` 进行响应拦截，判断 response.status 是否为 401 ，是则代表 token 失效，清空本地 token ，跳转登录页
+
+2. 你是如何监控路由跳转，并在没有 token 时跳转回登录页的？
+
+    使用 Vue Router 的全局路由守卫 router.beforeEach ，该方法接收三个参数：to、from 和 next ，如果用户访问的是不需要登录就能访问的页面（如 to.path === '/login'），则直接跳转。否则判断本地是否有 token ，有则调用 next() ，无则 next('/login') 跳转回登录页
