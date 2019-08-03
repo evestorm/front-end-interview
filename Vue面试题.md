@@ -28,6 +28,19 @@
 - beforeDestroy：实例销毁之前调用。在这一步，实例仍然完全可用。
 - destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。
 
+### Vue 的父组件和子组件生命周期钩子执行顺序是什么
+
+1. 加载渲染过程
+   `父beforeCreate->父created->父beforeMount->子beforeCreate->子created->子beforeMount->子mounted->父mounted`
+2. 子组件更新过程
+   `父beforeUpdate->子beforeUpdate->子updated->父updated`
+3. 父组件更新过程
+   `父beforeUpdate->父updated`
+4. 销毁过程
+   `父beforeDestroy->子beforeDestroy->子destroyed->父destroyed`
+
+总结：从外到内，再从内到外
+
 ### 更多阅读
 
 - [包你理解---vue 的生命周期](https://segmentfault.com/a/1190000014640577)

@@ -257,6 +257,18 @@ console.log(transformStr('aBc'))
 
 题目来源：[Daily-Interview-Question 第69题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/116)
 
+### 实现一个字符串匹配算法，从长度为 n 的字符串 S 中，查找是否存在字符串 T，T 的长度是 m，若存在返回所在位置。
+
+```js
+const find = (S, T) => {
+  if (S.length < T.length) return -1
+  for (let i = 0; i < S.length; i++) {
+    if (S.slice(i, i + T.length) === T) return i
+  }
+  return -1
+}
+```
+
 ## 数组
 
 ### 判断数组的方法
@@ -1012,6 +1024,125 @@ console.log(createTargetArr(initArr))
 
 题目来源：[Daily-Interview-Question 第67题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/113)
 
+### 打印出 1 - 10000 之间的所有对称数 例如：121、1331 等
+
+```js
+// 遍历 10000 次
+function symmetry() {
+  let arr = []
+  for (let i = begin >= 10 ? begin : 11; i < end; i++) {
+    let str = '' + i
+    if (str.split('').join('') === str.split('').reverse().join('')) {
+      arr.push(str)
+    }
+  }
+  return arr
+}
+console.log(symmetry(1, 10000))
+
+// 利用对称数
+function symmetry() {
+  var arr = []
+  for (let i = 1; i < 10; i++) {
+    arr.push(i * 11); // 两位数的对称数
+    for (let j = 0; j < 10; j++) {
+      arr.push(i * 101 + j * 10) //  三位数的对称数
+      arr.push(i * 1001 + j * 110) // 四位数的对称数，当i和j均为9是值为9999
+    }
+  }
+  return arr
+}
+
+console.log(symmetry());
+```
+
+题目来源：[Daily-Interview-Question 第81题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/131)
+
+### 实现 convert 方法，把原始 list 转换成树形结构，要求尽可能降低时间复杂度
+
+以下数据结构中，id 代表部门编号，name 是部门名称，parentId 是父部门编号，为 0 代表一级部门，现在要求实现一个 convert 方法，把原始 list 转换成树形结构，parentId 为多少就挂载在该 id 的属性 children 数组下，结构如下：
+
+```javascript
+// 原始 list 如下
+let list = [
+    {id:1,name:'部门A',parentId:0},
+    {id:2,name:'部门B',parentId:0},
+    {id:3,name:'部门C',parentId:1},
+    {id:4,name:'部门D',parentId:1},
+    {id:5,name:'部门E',parentId:2},
+    {id:6,name:'部门F',parentId:3},
+    {id:7,name:'部门G',parentId:2},
+    {id:8,name:'部门H',parentId:4}
+];
+const result = convert(list, ...);
+
+// 转换后的结果如下
+let result = [
+    {
+      id: 1,
+      name: '部门A',
+      parentId: 0,
+      children: [
+        {
+          id: 3,
+          name: '部门C',
+          parentId: 1,
+          children: [
+            {
+              id: 6,
+              name: '部门F',
+              parentId: 3
+            }, {
+              id: 16,
+              name: '部门L',
+              parentId: 3
+            }
+          ]
+        },
+        {
+          id: 4,
+          name: '部门D',
+          parentId: 1,
+          children: [
+            {
+              id: 8,
+              name: '部门H',
+              parentId: 4
+            }
+          ]
+        }
+      ]
+    },
+  ···
+];
+```
+
+解答：
+
+```js
+function convert(list) {
+    const res = []
+    const map = list.reduce((res, v) => {
+        res[v.id] = v
+        return res
+    }, {})
+    for (const item of list) {
+        if (item.parentId === 0) {
+            res.push(item)
+            continue
+        }
+        if (item.parentId in map) {
+            const parent = map[item.parentId]
+            parent.children = parent.children || []
+            parent.children.push(item)
+        }
+    }
+    return res
+}
+```
+
+题目来源：[Daily-Interview-Question 第88题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/139)
+
 ## 随机数 / 数字
 
 ### 如何获取0-9的随机数
@@ -1632,6 +1763,82 @@ b.x   // --> {n: 2}
 - 2、赋值操作是`从右到左`，所以先执行`a = {n: 2}`，`a`的引用就被改变了，然后这个返回值又赋值给了`a.x`，**需要注意**的是这时候`a.x`是第一步中的`{n: 1, x: undefined}`那个对象，其实就是`b.x`，相当于`b.x = {n: 2}`
 
 题目来源：[Daily-Interview-Question 第53题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/93)
+
+### 输出以下代码运行结果
+
+```js
+// example 1
+var a={}, b='123', c=123;  
+a[b]='b';
+a[c]='c';  
+console.log(a[b]);
+
+---------------------
+// example 2
+var a={}, b=Symbol('123'), c=Symbol('123');  
+a[b]='b';
+a[c]='c';  
+console.log(a[b]);
+
+---------------------
+// example 3
+var a={}, b={key:'123'}, c={key:'456'};  
+a[b]='b';
+a[c]='c';  
+console.log(a[b]);
+```
+
+分析：这题考察的是对象的键名的转换。
+
+- 对象的键名只能是字符串和 Symbol 类型。
+- 其他类型的键名会被转换成字符串类型。
+- 对象转字符串默认会调用 toString 方法。
+
+解答：
+
+```js
+// example 1
+var a={}, b='123', c=123;
+a[b]='b';
+
+// c 的键名会被转换成字符串'123'，这里会把 b 覆盖掉。
+a[c]='c';  
+
+// 输出 c
+console.log(a[b]);
+```
+
+```js
+// example 2
+var a={}, b=Symbol('123'), c=Symbol('123');  
+
+// b 是 Symbol 类型，不需要转换。
+a[b]='b';
+
+// c 是 Symbol 类型，不需要转换。任何一个 Symbol 类型的值都是不相等的，所以不会覆盖掉 b。
+a[c]='c';
+
+// 输出 b
+console.log(a[b]);
+```
+
+```js
+// example 3
+var a={}, b={key:'123'}, c={key:'456'};  
+
+// b 不是字符串也不是 Symbol 类型，需要转换成字符串。
+// 对象类型会调用 toString 方法转换成字符串 [object Object]。
+a[b]='b';
+
+// c 不是字符串也不是 Symbol 类型，需要转换成字符串。
+// 对象类型会调用 toString 方法转换成字符串 [object Object]。这里会把 b 覆盖掉。
+a[c]='c';  
+
+// 输出 c
+console.log(a[b]);
+```
+
+题目来源：[Daily-Interview-Question 第76题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/125)
 
 ## 算法题
 
