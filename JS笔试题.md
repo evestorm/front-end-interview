@@ -269,6 +269,23 @@ const find = (S, T) => {
 }
 ```
 
+### 用 JavaScript 写一个函数，输入 int 型，返回整数逆序后的字符串。如：输入整型 1234，返回字符串“4321”。要求必须使用递归函数调用，不能用全局变量，输入函数必须只有一个参数传入，必须返回字符串。
+
+```js
+function test(num) {
+  var str = num + "";
+  if (str.length > 1) {
+    var newStr = str.substring(str.length - 1);
+    var oldStr = str.substring(0, str.length - 1);
+    return newStr + test(oldStr);
+  } else {
+    return num;
+  }
+}
+
+console.log(test(123));
+```
+
 ## 数组
 
 ### 判断数组的方法
@@ -1143,6 +1160,39 @@ function convert(list) {
 
 题目来源：[Daily-Interview-Question 第88题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/139)
 
+### 编程题，请写一个函数，完成以下功能
+
+```js
+输入：'1,2,3,5,7,8,10'
+输出：'1~3,5,7~8,10'
+```
+
+解答：
+
+```js
+function fn(str) {
+  let tempArr = str.split(',')
+  if (tempArr.length < 2) return str
+  let resultArr = []
+  let tempNum = tempArr[0]
+  for (let i = 0; i < tempArr.length; i++) {
+    const curNum = tempArr[i];
+    const nextNum = tempArr[i + 1]
+    if (nextNum - curNum !== 1) {
+      if (tempNum !== curNum) {
+        resultArr.push(tempNum + '~' + curNum)
+      } else {
+        resultArr.push(curNum)
+      }
+      tempNum = nextNum
+    }
+  }
+  return resultArr.join(',')
+}
+
+console.log(fn('1,2,3,5,7,8,10,11'));
+```
+
 ## 随机数 / 数字
 
 ### 如何获取0-9的随机数
@@ -1840,6 +1890,87 @@ console.log(a[b]);
 
 题目来源：[Daily-Interview-Question 第76题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/125)
 
+### 请写出如下代码的打印结果
+
+```js
+function Foo() {
+    Foo.a = function() {
+        console.log(1)
+    }
+    this.a = function() {
+        console.log(2)
+    }
+}
+Foo.prototype.a = function() {
+    console.log(3)
+}
+Foo.a = function() {
+    console.log(4)
+}
+Foo.a();
+let obj = new Foo();
+obj.a();
+Foo.a();
+```
+
+解答：
+
+```js
+function Foo() {
+    Foo.a = function() {
+        console.log(1)
+    }
+    this.a = function() {
+        console.log(2)
+    }
+}
+// 以上只是 Foo 的构建方法，没有产生实例，此刻也没有执行
+
+Foo.prototype.a = function() {
+    console.log(3)
+}
+// 现在在 Foo 上挂载了原型方法 a ，方法输出值为 3
+
+Foo.a = function() {
+    console.log(4)
+}
+// 现在在 Foo 上挂载了直接方法 a ，输出值为 4
+
+Foo.a();
+// 立刻执行了 Foo 上的 a 方法，也就是刚刚定义的，所以
+// # 输出 4
+
+let obj = new Foo();
+/* 这里调用了 Foo 的构建方法。Foo 的构建方法主要做了两件事：
+1. 将全局的 Foo 上的直接方法 a 替换为一个输出 1 的方法。
+2. 在新对象上挂载直接方法 a ，输出值为 2。
+*/
+
+obj.a();
+// 因为有直接方法 a ，不需要去访问原型链，所以使用的是构建方法里所定义的 this.a，
+// # 输出 2
+
+Foo.a();
+// 构建方法里已经替换了全局 Foo 上的 a 方法，所以
+// # 输出 1
+```
+
+题目来源：[Daily-Interview-Question 第100题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/155)
+
+### 分别写出如下代码的返回值
+
+```js
+String('11') == new String('11');
+String('11') === new String('11');
+```
+
+解析：
+
+返回 true 和 false
+`new String()` 返回的是对象
+`==` 的时候，实际运行的是：
+`String('11') == new String('11').toString();`
+
 ## 算法题
 
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
@@ -1853,3 +1984,51 @@ console.log(a[b]);
 正确答案：[1, NaN, NaN]
 
 答案解析：[['1', '2', '3'].map(parseInt) what & why ?](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/4)
+
+## 其它
+
+### 修改以下 print 函数，使之输出 0 到 99，或者 99 到 0
+
+```js
+function print(n){
+  setTimeout(() => {
+    console.log(n);
+  }, Math.floor(Math.random() * 1000));
+}
+for(var i = 0; i < 100; i++){
+  print(i);
+}
+```
+
+解答：
+
+```js
+function print0(n){
+  setTimeout(() => {
+    console.log(n);
+  }, 0, Math.floor(Math.random() * 1000));//关闭延迟
+}
+
+function print1(n) {
+  setTimeout(
+    (() => {
+      console.log(n);
+    })(),
+    Math.floor(Math.random() * 1000) //自执行
+  );
+}
+
+function print2(n) {
+  setTimeout(() => {
+    console.log(--i);
+  }, Math.floor(Math.random() * 1000)); //全局i
+}
+
+function print3(n) {
+  // setTimeout(() => {
+  console.log(n);
+  //}, Math.floor(Math.random() * 1000)); //注释
+}
+```
+
+题目来源：[Daily-Interview-Question 第101题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/158)
