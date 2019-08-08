@@ -286,6 +286,46 @@ function test(num) {
 console.log(test(123));
 ```
 
+### 找出字符串中连续出现最多的字符和个数
+
+```js
+'abcaakjbb' => {'a':2,'b':2}
+'abbkejsbcccwqaa' => {'c':3}
+```
+
+解答：
+
+```js
+const str = "abcaakjbb";
+
+function findLongest(str) {
+  if (!str || typeof str !== "string") return {};
+  let obj = {},
+    tempCount = 0,
+    maxCount = 0,
+    tempChar = str[0];
+  for (let i = 0; i < str.length; i++) {
+    const curChar = str[i];
+    if (tempChar === curChar) {
+      tempCount++;
+      if (tempCount > maxCount) {
+        obj = { [curChar]: tempCount };
+        maxCount = tempCount;
+      }
+      if (tempCount === maxCount) {
+        obj[curChar] = tempCount;
+      }
+    } else {
+      tempCount = 1;
+      tempChar = curChar;
+    }
+  }
+  return obj;
+}
+
+console.log(findLongest(str));
+```
+
 ## 数组
 
 ### 判断数组的方法
@@ -1390,6 +1430,52 @@ console.log(newObj) // { a: 'old', b: { c: 'new' } }
 - [浅探js深拷贝和浅拷贝](https://segmentfault.com/a/1190000016970483)
 - [深拷贝的终极探索](http://www.cnblogs.com/zhangycun/p/9799787.html)
 
+#### 拓展：编程题，写个程序把 entry 转换成如下对象
+
+```js
+var entry = {
+a: {
+ b: {
+   c: {
+     dd: 'abcdd'
+   }
+ },
+ d: {
+   xx: 'adxx'
+ },
+ e: 'ae'
+}
+}
+
+// 要求转换成如下对象
+var output = {
+'a.b.c.dd': 'abcdd',
+'a.d.xx': 'adxx',
+'a.e': 'ae'
+}
+```
+
+解答：
+
+```js
+function fn(obj, parentKey = "", result = {}) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const ele = obj[key];
+      const keyName = `${parentKey}${key}`
+      if (typeof ele === 'object' && !Array.isArray(ele)) {
+        fn(ele, keyName+'.', result)
+      } else {
+        result[keyName] = ele
+      }
+    }
+  }
+  return result
+}
+
+console.log(fn(entry))
+```
+
 ### JavaScript 中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
 
 **hasOwnProperty**
@@ -1970,6 +2056,46 @@ String('11') === new String('11');
 `new String()` 返回的是对象
 `==` 的时候，实际运行的是：
 `String('11') == new String('11').toString();`
+
+### 输出以下代码运行结果
+
+```js
+1 + "1"
+
+2 * "2"
+
+[1, 2] + [2, 1]
+
+"a" + + "b"
+```
+
+解析：
+
+- 1 + "1"
+
+加性操作符：如果只有一个操作数是字符串，则将另一个操作数转换为字符串，然后再将两个字符串拼接起来
+
+所以值为：“11”
+
+- 2 * "2"
+
+乘性操作符：如果有一个操作数不是数值，则在后台调用 Number()将其转换为数值
+
+- [1, 2] + [2, 1]
+
+Javascript中所有对象基本都是先调用`valueOf`方法，如果不是数值，再调用`toString`方法。
+
+所以两个数组对象的toString方法相加，值为："1,22,1"
+
+- "a" + + "b"
+
+后边的“+”将作为一元操作符，如果操作数是字符串，将调用Number方法将该操作数转为数值，如果操作数无法转为数值，则为NaN。
+
+所以值为："aNaN"
+
+以上均参考：《Javascript高级程序设计》
+
+题目来源：[Daily-Interview-Question 第116题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/229)
 
 ## 算法题
 
