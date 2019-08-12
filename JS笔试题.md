@@ -576,7 +576,7 @@ console.log(arr.flat().unique().sort(sort))
 
 // ES5
 Array.prototype.flat = function() {
-  return this.toString().split(',')
+  return this.toString().split(',').map(v => +v)
 }
 Array.prototype.unique = function() {
   var obj = {}
@@ -1233,6 +1233,97 @@ function fn(str) {
 console.log(fn('1,2,3,5,7,8,10,11'));
 ```
 
+### 补全代码，实现数组按姓名、年纪、任意字段排序。
+
+```js
+var users = [
+  { name: "John", age: 20, company: "Baidu" },
+  { name: "Pete", age: 18, company: "Alibaba" },
+  { name: "Ann", age: 19, company: "Tecent" }
+]
+users.sort(byField('age'))
+users.sort(byField('company'))
+```
+
+解答：
+
+```js
+var users = [
+  { name: "John", age: 20, company: "Baidu" },
+  { name: "Pete", age: 18, company: "Alibaba" },
+  { name: "Ann", age: 19, company: "Tecent" }
+]
+var byField = function (key) {
+  return (a, b) => a[key] > b[key]
+}
+users.sort(byField('age'))
+console.log(users)
+users.sort(byField('company'))
+console.log(users)
+```
+
+**题目来源：**[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6) 「JavaScript 基础」部分编号 js_12
+
+### 取数组的最大值
+
+```js
+// ES5写法
+function max(arr) {
+  if (arr.length < 1) return undefined
+  return Math.max.apply(null, arr)
+}
+// ES6写法
+function max(arr) {
+  if (arr.length < 1) return undefined
+  return Math.max(...arr)
+}
+// or
+function max(arr) {
+  if (arr.length < 1) return undefined
+  return arr.reduce((previous, current) => {
+    return previous > current ? previous : current
+  })
+}
+
+console.log(max([1, 22, 3435, 321, 9990, 100001, 2133]))
+```
+
+### 实现一个 reduce 函数
+
+解析：reduce是归并方法，它并不对每一项执行目标函数，简单来说概括为如下步骤：
+
+- 不断地对数组的前两项“取出”，对其执行目标函数，计算得到的返回值
+- 把上述返回值“填回”数组首部，作为新的 array[0]
+- 持续循环执行这个过程，直到数组中每一项都访问了一次
+- 返回最终结果
+
+举个例子🌰
+
+对数组 [1，2，3] 归并执行 `(prev, cur) => prev + cur`，流程如图：
+
+```js
+[1, 2, 3] // 取出 1 + 2 ，填回 3
+[3, 3] // 取出 3 + 3 ，填回 6
+[6] // 最终结果为 6
+```
+
+答案：
+
+```js
+function reduce(arr, fn, initValue) {
+  const tempArr = (initValue === undefined ? [] : [initValue]).concat(arr)
+  while (tempArr.length > 1) {
+    tempArr.splice(0, 2, fn(tempArr[0], tempArr[1]))
+  }
+  return tempArr[0]
+}
+
+var sum = reduce([1, 2, 3], function (previous, current) {
+  return previous + current
+}, 0)
+console.log(sum)
+```
+
 ## 随机数 / 数字
 
 ### 如何获取0-9的随机数
@@ -1348,6 +1439,100 @@ console.log(formatNum(a)) //0.3
 - [0.1 + 0.2不等于0.3？为什么JavaScript有这种“骚”操作？](https://juejin.im/post/5b90e00e6fb9a05cf9080dff)
 - [JavaScript的设计缺陷?浮点运算：0.1 + 0.2 != 0.3](https://blog.csdn.net/nineteen73/article/details/51184387)
 
+### 写一个函数，生成一个随机颜色字符串，合法的颜色为 #000000 ~ #ffffff
+
+```js
+function getRandColor() {
+  //补全
+  const dict = '0123456789abcdef'
+  let result = '#'
+  for (let i = 0; i < 6; i++) {
+    result += dict[Math.floor(Math.random() * dict.length)]
+  }
+  return result
+}
+var color = getRandColor()
+console.log(color)
+```
+
+### 写一个函数，生成一个随机 IP 地址，一个合法的 IP 地址为 0.0.0.0 ~ 255.255.255.255。
+
+```js
+function getRandIP() {
+  return Array.from({length: 4})
+    .reduce((ip, cur, idx) => {
+      const randomIdx = Math.floor(Math.random() * 256)
+      return idx === 3 ? ip + randomIdx : ip + randomIdx + '.'
+    }, '')
+}
+var ip = getRandIP()
+console.log(ip)
+
+// or
+function getRandIP() {
+  let ip = ''
+  for (let i = 0; i < 3; i++) {
+    ip = ip + Math.floor(Math.random() * 256) + "."
+  }
+  return ip + Math.floor(Math.random() * 256)
+}
+var ip = getRandIP()
+console.log(ip)
+```
+
+题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6)「《JS 提供的对象：④ Math》[编号：js_19]」
+
+## 闭包
+
+### 如下代码输出多少？如果想输出 3，那如何改造代码？
+
+```js
+var fnArr = [];
+for (var i = 0; i < 10; i ++) {
+  fnArr[i] =  function(){
+    return i
+  };
+}
+console.log(fnArr[3]())
+```
+
+答案：
+
+```js
+//方法一
+var fnArr = []
+for(var i=0; i<10; i++) {
+  fnArr[i] =  (function(j) {
+    return function() {
+      return j
+    } 
+  })(i)
+}
+console.log(fnArr[3]())  //-->3
+
+//方法二
+var fnArr = []
+for(var i=0; i<10; i++) {
+  (function(i) {
+    fnArr[i] =  function() {
+      return i
+    } 
+  })(i)
+}
+console.log(fnArr[3]())  //-->3
+
+//方法三
+var fnArr = []
+for(let i=0; i<10; i++) {
+  fnArr[i] =  function() {
+    return i
+  } 
+}
+console.log(fnArr[3]())  //-->3
+```
+
+**题目来源：** [2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-5) 的 「JavaScript 基础」部分，编号[js_11]中第5题。
+
 ## 对象 & 原型 & 原型链
 
 ### 写一下浅/深拷贝
@@ -1405,6 +1590,10 @@ function copy(obj) {
     var newObj = obj.constructor === Array ? [] : {}
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
+            // 避免相互引用对象导致死循环，如 obj.a = obj（其实下面三行不写也没事儿，系统会自动把 obj.a 设为 undefined）
+            if (curProp === obj) {
+               continue
+            }
             // 如果是数组或者对象
             if (typeof obj[key] === 'object') {
                 // 递归
@@ -2102,6 +2291,61 @@ Javascript中所有对象基本都是先调用`valueOf`方法，如果不是数�
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
 
 - [常见排序算法](https://evestorm.github.io/posts/59937/)
+
+### 使用递归完成 1 到 100 的累加？
+
+```js
+function fn(num) {
+  if(num === 1) return 1
+  return num + fn(num - 1)
+}
+
+console.log(fn(100))
+```
+
+## 正则
+
+### 写一个函数 isValidUsername(str)，判断用户输入的是不是合法的用户名（长度 6-20 个字符，只能包括字母、数字、下划线）？
+
+```js
+function isValidUsername(str) {
+  return /^\w{6,20}$/.test(str)
+}
+
+console.log(isValidUsername('swlance'))
+```
+
+### 写一个函数 isPhoneNum(str)，判断用户输入的是不是手机号？
+
+```js
+function isPhoneNum(str) {
+  return /^1[3578]\d{9}$/g.test(str)
+}
+
+console.log(isPhoneNum('13871455497'))
+```
+
+### 写一个函数 isEmail(str)， 判断用户输入的是不是邮箱？（e.g. xxx@gmail.com 或者 xxx@swlance.com.cn）
+
+```js
+function isEmail(str) {
+  return /^\w+@\w+(\.\w+){1,2}$/.test(str)
+}
+
+console.log(isEmail('xxx@swlance.com.cn'))
+```
+
+### 写一个函数 trim(str)，去除字符串两边的空白字符？
+
+```js
+function trim(str) {
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+console.log(trim('     xxxswlance.cn        '))
+```
+
+上述正则题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6) 「《JS 提供的对象：② 正则表达式》[编号：js_17]」
 
 ## 非常规题
 

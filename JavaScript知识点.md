@@ -949,6 +949,7 @@ var F = function (){}
 // 核心：因为是对父类原型的复制，所以不包含父类的构造函数，也就不会调用两次父类的构造函数造成浪费
 F.prototype = Person.prototype // 创建了父类原型的浅复制
 Student.prototype = new F();
+// 上面三段js代码也可以用 Student.prototype = Object.create(Person.prototype) 代替
 Student.prototype.constructor = Student // 修正原型的构造函数
 
 var stu1 = new Student("Lance", 19, 120)
@@ -1043,15 +1044,24 @@ function Person(name, age) {
 
 #### new 操作符具体干了什么呢？
 
-1. 创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型。
-2. 属性和方法被加入到 this 引用的对象中。
-3. 新创建的对象由 this 所引用，并且最后隐式的返回 this 。
+1. 创建一个新对象，如：var obj = {};
+2. 新对象的 `__proto__` 属性指向构造函数的原型对象。
+3. 将构造函数的作用域赋值给新对象。（也所以this对象指向新对象）
+4. 执行构造函数内部的代码，将属性添加给obj中的this对象。
+5. 返回新对象obj。
 
 ```js
-var obj  = {}
-obj.__proto__ = Base.prototype
-Base.call(obj)
+function _new(fn, ...args) {
+  const obj = Object.create(fn.prototype)
+  const ret = fn.apply(obj, args)
+  return ret instanceof Object ? ret : obj
+}
 ```
+
+#### 通过 new 的方式创建对象和通过字面量创建有什么区别？
+
+1. 字面量创建对象，不会调用 Object 构造函数, 简洁且性能更好;
+2. new Object() 方式创建对象本质上是方法调用，涉及到在 proto 链中遍历该方法，当找到该方法后，又会生产方法调用必须的 堆栈信息，方法调用结束后，还要释放该堆栈，性能不如字面量的方式
 
 ## 事件
 
@@ -1064,6 +1074,14 @@ Base.call(obj)
 ### 事件流
 
 ![事件阶段.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/260235/1550160415749-0297296f-0559-485f-bfe4-05859bdc757a.jpeg)
+
+### 什么是DOM事件模型
+
+主要有三种 DOM 事件模型：
+
+1. **事件冒泡**：元素先监听到这个事件，往外传播；
+2. **事件捕获**：Document 最先监听到这个事件；
+3. **DOM 事件流**：先捕获，再冒泡。允许在某些地方监听事件，假设在某个元素两阶段都绑定一个事件监听器，看你是决定在左边捕获阶段监听，还是右边冒泡阶段监听，哪一边有响应，哪一边事件就被触发。即可以在任一阶段、任意时机监听事件。
 
 ### 事件绑定的三种方式
 
@@ -1086,6 +1104,21 @@ document.getElementById("xxx").addEventListener("click", function(e){}, false)
 // 如果绑定在捕获阶段，监听函数就只在捕获阶段触发
 // 如果绑定在冒泡阶段，监听函数只在冒泡阶段触发。
 ```
+
+### DOM2 事件传播机制
+
+DOM 作为事件处理的一个基本标准，DOM2 级事件为 DOM 事件的升级；
+
+DOM2 级事件定义用于处理指定和删除事件处理程序的操作：
+
+- addEventListener
+- removeEventListener
+
+所有的 DOM 节点都包含这两个方法，并且它们都接受三个参数：
+
+1. 事件类型；
+2. 事件处理方法；
+3. 布尔参数。如果是 true 表示在捕获阶段调用事件处理程序；如果是 false，则是在事件冒泡阶段处理。
 
 ### 事件的执行顺序
 
@@ -1140,6 +1173,26 @@ $("ul").on("click", "li", function(e) {
 // 这个 on 事件是绑定在 ul 上面的，li 是目标元素，
 // on 事件内部是通过 e.target 来判断点击元素是不是 li 的
 ```
+
+### 解释以下概念：事件传播机制、阻止传播、取消默认事件、事件代理？
+
+**1. 事件传播机制主要有三种：**
+
+- 事件冒泡：事件开始时由最具体的元素接收，然后逐级向上传播到较为不具体的元素（从小到大）；
+- 事件捕获：不太具体的节点更早接收事件，而最具体的元素最后接收事件，和事件冒泡相反（从大到小）；
+- DOM事件流：DOM2 级事件规定事件流包括三个阶段，事件捕获阶段，处于目标阶段，事件冒泡阶段，首先发生的是事件捕获，为截取事件提供机会，然后是实际目标接收事件，最后是冒泡阶段（标准浏览器现在都使用 DOM 事件流，IE 不支持事件流，只支持事件冒泡）。
+
+**2. 阻止传播**
+
+stopPropagation() 取消事件进一步捕获或冒泡。
+
+**3. 取消默认事件**
+
+preventDefault() 取消事件默认行为。
+
+**4. 事件代理**
+
+通过事件冒泡（或者事件捕获）给父元素添加事件监听，e.target 指向引发触发事件的元素。
 
 ### 什么是节流和防抖
 
@@ -1222,6 +1275,20 @@ sw.addEventListener("click", throttle(function(e) {
   相对应 `mouseleave` 事件。
 
 参考：[JavaScript中的 mouseover 与 mouseenter ，mouseout 和 mouseleave 的区别](https://blog.csdn.net/u010297791/article/details/57412796)
+
+### window.onload 和 document.onDOMContentLoaded 有什么区别？
+
+```js
+//当页面所有资源加载完成，则触发（涉及到所有资源，所以触发时机较晚）。
+window.onload = function() {
+  console.log("window loaded");
+};
+
+//DOM 结构解析完成（并不是页面上资源加载完成，而是 dom 结构渲染完成）。
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("DOMContentLoaded");
+});
+```
 
 ## ES6相关
 
