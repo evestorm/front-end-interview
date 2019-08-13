@@ -68,7 +68,7 @@ null == undefined // true
 null === undefined // false
 ```
 
-## DOM操作
+## DOM
 
 ### DOM 操作——怎样添加、移除、移动、复制、创建和查找节点？
 
@@ -88,6 +88,77 @@ null === undefined // false
     getElementsByClassName()
     getElementById()
 ```
+
+### DOM树操作
+
+```js
+// 添加新节点
+var p1 = document.createElement('p')
+p1.innerHTML = 'this is p1'
+div1.appendChild(p1) // 添加新创建的元素
+
+// 移动已有节点。注意，这里是“移动”，并不是拷贝
+var p2 = document.getElementById('p2')
+div1.appendChild(p2)
+
+// 获取父元素
+var div1 = document.getElementById('div1')
+var parent = div1.parentElement
+
+// 获取子元素
+var div1 = document.getElementById('div1')
+var child = div1.childNodes
+
+// 删除节点
+var div1 = document.getElementById('div1')
+var child = div1.childNodes
+div1.removeChild(child[0])
+```
+
+### offsetWidth/offsetHeight，clientWidth/clientHeight 与 scrollWidth/scrollHeight 的区别
+
+- **offsetWidth/offsetHeight** 返回值包含 content + padding + border，效果与 e.getBoundingClientRect() 相同；
+- **clientWidth/clientHeight** 返回值只包含 content + padding，如果有滚动条，也不包含滚动条；
+- **scrollWidth/scrollHeight** 返回值包含 content + padding + 溢出内容的尺寸。
+
+### 什么是 Virtual DOM，为何要用 Virtual DOM？
+
+Virtual DOM 的概念有很多解释，分别是：一个对象，两个前提，三个步骤。
+
+**一个对象**指的是 Virtual DOM 是一个基本的 JavaScript 对象，也是整个 Virtual DOM 树的基本。
+
+**两个前提**分别是 JavaScript 很快和直接操作 DOM 很慢，这是 Virtual DOM 得以实现的两个基本前提。
+
+得益于 V8 引擎的出现，让 JavaScript 可以高效地运行，在性能上有了极大的提高。
+
+直接操作 DOM 的低效和 JavaScript 的高效相对比，为 Virtual DOM 的产生提供了大前提。
+
+**三个步骤**指的是 Virtual DOM 的三个重要步骤，分别是：生成 Virtual DOM 树、对比两棵树的差异、更新视图。
+
+1.生成 Virtual DOM 树：
+
+ DOM 是前端工程师最常接触的内容之一，一个 DOM 节点包含了很多的内容，但是抽象出一个 DOM 节点却只需要三部分：**节点类型，节点属性、子节点**。所以围绕这三个部分，我们可以使用 JavaScript 简单地实现一棵 DOM 树，然后给节点实现渲染方法，就可以实现虚拟节点到真实 DOM 的转化。
+
+![img](https://gitee.com/evestorm/various_resources/raw/master/dom/%E8%99%9A%E6%8B%9Fdom1.webp)
+
+2.对比两棵树的差异：
+
+比较两棵 DOM 树的差异是 Virtual DOM 算法最核心的部分，这也是我们常说的的  Virtual DOM 的 diff 算法。在比较的过程中，我们只比较同级的节点，非同级的节点不在我们的比较范围内，这样既可以满足我们的需求，又可以简化算法实现。
+
+![img](https://gitee.com/evestorm/various_resources/raw/master/dom/%E8%99%9A%E6%8B%9Fdom2.webp)
+
+比较“树”的差异，首先是要对树进行遍历，常用的有两种遍历算法，分别是深度优先遍历和广度优先遍历，一般的 diff 算法中都采用的是深度优先遍历。对新旧两棵树进行一次深度优先的遍历，这样每个节点都会有一个唯一的标记。在遍历的时候，每遍历到一个节点就把该节点和新的树的同一个位置的节点进行对比，如果有差异的话就记录到一个对象里面。
+
+例如，上面的 div 和新的 div 有差异，当前的标记是 0，那么：patches[0] = [{difference}, {difference}, ...]。同理 p 是 patches[1]，ul 是 patches[3]，以此类推。这样当遍历完整棵树的时候，就可以获得一个完整的差异对象。
+
+![img](https://gitee.com/evestorm/various_resources/raw/master/dom/%E8%99%9A%E6%8B%9Fdom3.webp)
+
+在这个差异对象中记录了有改变的节点，每一个发生改变的内容也不尽相同，但也是有迹可循，常见的差异包括四种，分别是：
+
+- 替换节点
+- 增加/删除子节点
+- 修改节点属性
+- 改变文本内容
 
 ## 对象的原生方法
 
@@ -682,6 +753,42 @@ console.log(anyString.substring(NaN,3))
 #### toLowerCase / toUpperCase 转换字母大小写
 
 字母转为全小写或全大写
+
+#### includes
+
+> includes() 返回布尔值：表示是否找到了参数字符。
+
+```js
+let str = "qdywxs"
+console.log(str.includes("y"))  //-->true
+```
+
+#### repeat
+
+> 获取字符串重复 n 次。
+
+```js
+let s = "qdywxs"
+console.log(s.repeat(3))  //-->qdywxsqdywxsqdywxs
+```
+
+#### startsWith
+
+> 返回布尔值：表示参数字符串是否在源字符串的头部。
+
+```js
+console.log("swlance".startsWith("s"));  //-->true
+console.log("swlance".startsWith("l"));  //-->false
+```
+
+#### endsWith
+
+> 返回布尔值，表示参数字符串是否在源字符串的尾部。
+
+```js
+console.log("swlance".endsWith("e"));  //-->true
+console.log("swlance".endsWith("o"));  //-->false
+```
 
 ## 什么是 JavaScript 作用链域？
 
@@ -1381,6 +1488,95 @@ function Person() {
 var p = new Person()
 ```
 
+#### 箭头函数与普通函数的区别
+
+1. 箭头函数是匿名函数，不能作为构造函数，不能使用 new。
+
+```javascript
+var B = () => {
+  value:1;
+}
+var b = new B();  //-->TypeError: B is not a constructor
+```
+
+2. 箭头函数不绑定 arguments，取而代之用 rest 参数 ... 解决。
+
+```javascript
+function A(a) {
+  console.log(arguments);
+}
+
+var B = (b) => {
+  console.log(arguments);
+}
+
+//...c 即为 rest 参数
+var C = (...c) => {
+  console.log(c);
+}
+A(1);  //-->[object Arguments] {0: 1}
+B(2);  //-->ReferenceError: arguments is not defined
+C(3);  //-->[3]
+```
+
+3. 箭头函数不绑定 this，会捕获其所在的上下文的 this 值，作为自己的 this 值。
+
+```javascript
+var obj = {
+  a: 10,
+  b: function() {
+    console.log(this.a);
+  },
+  c: function() {
+     return () => {
+       console.log(this.a);
+     }
+  }
+}
+obj.b();  //-->10
+obj.c()();  //-->10
+```
+
+4. 箭头函数通过 call()  或  apply() 方法调用一个函数时，只传入了一个参数，对 this 并没有影响。
+
+```javascript
+var obj = {
+  a: 10,
+  b: function(n) {
+    var f = (v) => v + this.a;
+    return f(n);
+  },
+  c: function(n) {
+    var f = (v) => v + this.a;
+    var m = {a:20};
+    return f.call(m,n);
+  }
+}
+
+console.log(obj.b(1));  //-->11
+console.log(obj.c(1));  //-->11
+```
+
+5. 箭头函数没有原型属性。
+
+```javascript
+var a = () => {
+  return 1;
+}
+function b() {
+  return 2;
+}
+console.log(a.prototype);  //-->undefined
+console.log(b.prototype);  //-->object{...}
+```
+
+6. 箭头函数不能当做 Generator 函数,不能使用 yield 关键字。箭头函数不能换行。
+
+```javascript
+var a = ()
+          => 1;  //-->SyntaxError: Unexpected token =>
+```
+
 ### Set 和 Map
 
 #### 概念
@@ -1485,6 +1681,18 @@ Promise 是异步编程的一种解决方案，比传统的异步解决方案【
 - pending: 初始状态，既不是成功，也不是失败状态。
 - fulfilled: 意味着操作成功完成。
 - rejected: 意味着操作失败。
+
+#### 优缺点
+
+**Promise 的优点:**
+
+- 一旦状态改变，就不会再变，任何时候都可以得到这个结果；
+- 可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。
+
+**Promise 的缺点:**
+
+- 无法取消 Promise，错误需要通过回调函数来捕获；
+- 当处于 pending 状态时，无法得知目前进展到哪一个阶段。
 
 #### 基本用法
 
@@ -1979,10 +2187,14 @@ var module1 = (function(){
 var xhr = new XMLHttpRequest()
 
 // 2. 打开与一个网址之间的连接 —— 相当于在地址栏输入访问地址
-xhr.open('GET', './time.php')
+xhr.open('GET', 'news/list?type=gn')
 
 // 3. 通过连接发送一次请求 —— 相当于回车或者点击访问发送请求
 xhr.send(null)
+
+// POST请求：
+// xhr.open('POST', 'login', true)
+// xhr.send('username=admin&password=admin')
 
 // 4. 指定 xhr 状态变化事件处理函数 —— 相当于处理网页呈现后的操作
 xhr.onreadystatechange = function () {
@@ -1994,6 +2206,12 @@ xhr.onreadystatechange = function () {
     }
 }
 ```
+
+#### Ajax 原理
+
+Ajax 的原理简单来说是在用户和服务器之间加了—个中间层（Ajax 引擎），通过 XMLHttpRequest 对象来向服务器发异步请求，从服务器获得数据，然后用 JavaScript 来操作 DOM 而更新页面。使用户操作与服务器响应异步化。这其中最关键的一步就是从服务器获得请求数据
+
+Ajax 的过程只涉及 JavaScript、XMLHttpRequest 和 DOM。XMLHttpRequest 是 Ajax 的核心机制。
 
 #### Ajax 解决浏览器缓存问题？
 
@@ -2057,9 +2275,47 @@ header('Access‐Control‐Allow‐Origin: *');
 
 除此之外，还可以通过前端设置代理实现跨域，原理是利用后端不存在跨域问题。比如可以在 `@vue/cli` 项目中新建 `vue.config.js` 文件来配置代理。如果你想了解更多这方面的设置，可以阅读我的这篇博客 [Axios异步请求跨域解决方案](https://evestorm.github.io/posts/15391/)
 
+### JSON 和 JSONP 的区别
+
+JSON 返回的是一串 JSON 格式数据；而 JSONP 返回的是脚本代码（包含一个函数调用）。
+
+JSONP 的全名叫做 JSON with padding，就是把 JSON 对象用符合 JS 语法的形式包裹起来以使其他的网站可以请求到，也就是将 JSON 封装成 JS 文件传过去。
+
 ### defer 和 async 的区别
 
 参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
+
+### setTimeout、setInterval、requestAnimationFrame 各有什么特点？
+
+`setTimeout` 和 `setInterval` 都不精确。它们的内在运行机制决定了时间间隔参数实际上只是指定了把动画代码添加到浏览器 UI 线程队列中以等待执行的时间。如果队列前面已经加入了其他任务，那动画代码就要等前面的任务完成后再执行。
+
+`requestAnimationFrame` 采用系统时间间隔，保持最佳绘制效率，不会因为间隔时间过短，造成过度绘制，增加开销；也不会因为间隔时间太长，使动画卡顿不流畅，让各种网页动画效果能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果。
+
+### setTimeout 倒计时为什么会出现误差？
+
+`setTimeout()` 只是将事件插入了“任务队列”，必须等当前代码（执行栈）执行完，主线程才会去执行它指定的回调函数。要是当前代码消耗时间很长，也有可能要等很久，所以并没办法保证回调函数一定会在 setTimeout() 指定的时间执行。所以， `setTimeout()` 的第二个参数表示的是最少时间，并非是确切时间。
+
+HTML5 标准规定了 `setTimeout()` 的第二个参数的最小值不得小于 4 毫秒，如果低于这个值，则默认是 4 毫秒。在此之前。老版本的浏览器都将最短时间设为 10 毫秒。另外，对于那些 DOM 的变动（尤其是涉及页面重新渲染的部分），通常是间隔 16 毫秒执行。这时使用 `requestAnimationFrame()` 的效果要好于 `setTimeout()`。
+
+### 简单解释单线程、任务队列的概念？
+
+**单线程：**
+
+JavaScript 是浏览器用来与用户进行交互、进行 DOM 操作的，这也使得了它必须是单线程这一特性。
+
+所谓单线程也就是只有一条线，一步一步走。
+
+**任务队列：**
+
+任务（消息）队列是一个先进先出的队列，它里面存放着各种任务（消息）。
+
+在 JavaScript 中任务有两种，一种是同步任务，一种是异步任务。
+
+1. 同步任务：各个任务按照文档定义的顺序一一推入“执行栈”中，当前一个任务执行完毕，才会开始执行下一个任务。
+
+2. 异步任务：各个任务推入“任务队列”中，只有在当前的所有同步任务执行完毕，才会将队列中的任务“出队”执行。
+
+当线程中没有执行任何同步代码的前提下才会执行异步代码。
 
 ## 其它
 

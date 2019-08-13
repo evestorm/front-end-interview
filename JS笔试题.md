@@ -1862,6 +1862,178 @@ function output() {
 sleep(output, 1000)
 ```
 
+### Promise 和 setTimeout 的区别？
+
+Promise 是微任务，setTimeout 是宏任务，同一个事件循环中，promise.then 总是先于 setTimeout 执行。
+
+### Promise 构造函数是同步还是异步执行？then 呢？Promise 如何实现 then 处理？
+
+Promise 的构造函数是同步执行的；then 中的方法是异步执行的。
+
+Promise 实现 then 处理：
+
+```javascript
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
+function Promise(executor) {
+  let self = this;
+  self.status = PENDING;
+
+  //成功的回调
+  self.onFulfilled = [];  
+
+  //失败的回调
+  self.onRejected = [];  
+
+  //PromiseA+ 2.1
+  function resolve(value) {
+    if(self.status === PENDING) {
+      self.status = FULFILLED;
+      self.value = value;
+
+      //PromiseA+ 2.2.6.1
+      self.onFulfilled.forEach(fn => fn());  
+    }
+   }
+
+  function reject(reason) {
+    if(self.status === PENDING) {
+      self.status = REJECTED;
+      self.reason = reason;
+
+      //PromiseA+ 2.2.6.2
+      self.onRejected.forEach(fn => fn());  
+    }
+  }
+
+  try {
+    executor(resolve, reject);
+  } catch (e) {
+    reject(e);
+  }
+}
+
+Promise.prototype.then = function (onFulfilled, onRejected) {
+
+  //PromiseA+ 2.2.1 / PromiseA+ 2.2.5 / PromiseA+ 2.2.7.3 / PromiseA+ 2.2.7.4
+  onFulfilled = typeof onFulfilled === "function" ? onFulfilled : value => value;
+  onRejected = typeof onRejected === "function" ? onRejected : reason => {throw reason};
+  let self = this;
+
+  //PromiseA+ 2.2.7
+  let promise2 = new Promise((resolve, reject) => {
+    if(self.status === FULFILLED) {
+
+      //PromiseA+ 2.2.2
+      //PromiseA+ 2.2.4 --- setTimeout
+      setTimeout(() => {
+        try {
+
+          //PromiseA+ 2.2.7.1
+          let x = onFulfilled(self.value);
+          resolvePromise(promise2, x, resolve, reject);
+        } catch (e) {
+
+          //PromiseA+ 2.2.7.2
+          reject(e);
+        }
+      });
+    }else if (self.status === REJECTED) {
+
+      //PromiseA+ 2.2.3
+      setTimeout(() => {
+        try {
+          let x = onRejected(self.reason);
+          resolvePromise(promise2, x, resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }else if (self.status === PENDING) {
+      self.onFulfilled.push(() => {
+        setTimeout(() => {
+          try {
+            let x = onFulfilled(self.value);
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
+      self.onRejected.push(() => {
+        setTimeout(() => {
+          try {
+            let x = onRejected(self.reason);
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
+    }
+  });
+  return promise2;
+}
+```
+
+### 如何实现 Promise.all()
+
+首先，需要知道 Promise.all() 的功能：
+
+- 如果传入的参数是一个空的可迭代对象，那么此promise 对象回调完成（resolve），只有此情况，是同步执行的，其它都是异步返回的。
+- 如果传入的参数不包含任何 promise，则返回一个异步完成。promises 中所有的 promise 都“完成”时或参数中不包含 promise 时回调完成。
+- 如果参数中有一个 promise 失败，那么 Promise.all 返回的 promise 对象失败。
+- 在任何情况下，Promise.all 返回的 promise 的完成状态的结果都是一个数组。
+
+```javascript
+Promise.all = function (promises) {
+  return new Promise((resolve, reject) => {
+    let index = 0;
+    let result = [];
+    if(promises.length === 0) {
+      resolve(result);
+    }else {
+      function processValue(i, data) {
+        result[i] = data;
+        if(++index === promises.length) {
+          esolve(result);
+        }
+      }
+      for(let i = 0; i < promises.length; i++) {
+        //promises[i] 可能是普通值
+        Promise.resolve(promises[i]).then((data) => {
+          processValue(i, data);
+        }, (err) => {
+          reject(err);
+          return;
+        });
+      }
+    }
+  });
+}
+```
+
+### 如何实现 Promise.prototype.finally() ？
+
+不管成功还是失败，都会走到 finally 中,并且 finally 之后，还可以继续 then。并且会将值原封不动的传递给后面的 then。
+
+```javascript
+Promise.prototype.finally = function (callback) {
+  return this.then((value) => {
+    return Promise.resolve(callback()).then(() => {
+      return value;
+    });
+  }, (err) => {
+    return Promise.resolve(callback()).then(() => {
+      throw err;
+    });
+  });
+}
+```
+
+题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://mp.weixin.qq.com/s/9T6ebHhof4DIQw3pXHytdQ)「《ES6 速学：⑤ Promise 对象》[编号：es6_05]」
+
 ## Event Loop & setTimeout
 
 ### setTimeout 的机制
