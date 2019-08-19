@@ -67,11 +67,15 @@
 
 ## 数据响应式（双向绑定）怎么做到的？
 
-原理：采用 数据劫持 + 发布/订阅者模式的方式
+原理：Vue 采用 **数据劫持** 结合 **发布者-订阅者** 模式的方式，通过 `Object.defineProperty()` 来劫持各个属性的 setter 以及 getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
 
-- 创建 vm 实例时深度遍历 data 下所有属性，利用 Object.defineProperty() 把属性转为 setter，getter
-- 在数据变动时利用消息订阅器（Dep）发消息给订阅者（Watcher），触发相应的监听回调。
-- 创建 vm 实例时有一个指令解析的过程，会对每个元素节点的指令进行扫描和解析（e.g. v-if, v-model），根据指令模板替换数据，以及绑定相应的更新函数，并且在遇到 v-model 指令时，监听用户的输入，以便更新 data 下相应的属性。
+1. 第一步：需要 Observe 的数据对象进行递归遍历，包括子属性对象的属性，都加上 setter 和 getter。这样的话，给这个对象的某个值赋值，就会触发 setter，那么就能监听到了数据变化。
+2. 第二步：Compile 解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新数据。
+3. 第三步：Watcher 订阅者是 Observer 和 Compile 之间通信的桥梁，主要做的事情有：
+   1. 在自身实例化时往属性订阅器（dep）里面添加自己。
+   2. 自身必须有一个 update() 方法
+   3. 待属性变动 `dep.notice()` 通知时，能调用自身的 `update()` 方法，并触发 Compile 中绑定的回调，则功成身退。
+4. 第四步：MVVM 作为数据绑定的入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compile 之间的桥梁，达到数据变化 -> 视图更新；视图交互变化（input） -> 数据 model 变更的双向绑定效果。
 
 参考：
 
@@ -97,13 +101,45 @@ Vue.set(this.obj, 'b', 233) or this.$set(this.obj, 'b', 233)
 
 当你在对象上新加了一个属性 newProperty ，当前新加的这个属性并没有加入 vue 检测数据更新的机制（因为是在初始化之后添加的）, vue.$set 是能让 vue 知道你添加了属性, 它会给你做处理。
 
+### js 实现简单的双向绑定
+
+```html
+<body>
+  <div id="app">
+    <input type="text" id="txt">
+    <p id="show"></p>
+  </div>
+
+  <script>
+    window.onload = function () {
+      let obj = {};
+      window.obj = obj
+      Object.defineProperty(obj, "txt", {
+        get: function () {
+          return obj;
+        },
+        set: function (newValue) {
+          document.getElementById("txt").value = newValue;
+          document.getElementById("show").innerHTML = newValue;
+        }
+      })
+      document.addEventListener("keyup", function (e) {
+        obj.txt = e.target.value;
+      })
+    }
+  </script>
+</body>
+```
+
 ### Vue 的响应式原理中 Object.defineProperty 有什么缺陷？为什么在 Vue3.0 采用了 Proxy，抛弃了 Object.defineProperty？
 
-1. Object.defineProperty无法监控到数组下标的变化，导致通过数组下标添加元素，不能实时响应；
-2. Object.defineProperty只能劫持对象的属性，从而需要对每个对象，每个属性进行遍历，如果，属性值是对象，还需要深度遍历。Proxy可以劫持整个对象，并返回一个新的对象。
-3. Proxy不仅可以代理对象，还可以代理数组。还可以代理动态增加的属性。
+1. Vue 中使用 Object.defineProperty 进行双向数据绑定时，告知使用者是可以监听数组的，但是只是监听了数组的 push()、pop()、shift()、unshift()、splice()、sort()、reverse() 这八种方法，其他数组的属性检测不到。
+2. Object.defineProperty 无法监控到数组**下标**的变化，导致通过数组下标添加元素，不能实时响应；
+3. Object.defineProperty 只能劫持对象的属性，因此对每个对象的属性进行遍历时，如果属性值也是对象需要深度遍历，那么就比较麻烦了，所以在比较 Proxy 能完整劫持对象的对比下，选择 Proxy。
+4. Proxy 不仅可以代理对象，还可以代理数组。还可以代理动态增加的属性。
 
 答案参考：[Daily-Interview-Question - 第51题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/90)
+更多阅读：[实现双向绑定Proxy比defineproperty优劣如何](https://www.jianshu.com/p/2df6dcddb0d7)
 
 ## Vuex 用过吗？
 
@@ -230,7 +266,9 @@ nextTick的回调函数会等到同步任务执行完毕，DOM更新后才触发
 
 ## 在列表组件中添加 key 属性的作用？
 
-key的主要作用是为了高效的更新虚拟 DOM。另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
+key的主要作用就是在更新组件时判断两个节点是否相同。相同就复用，不相同就删除旧的创建新的。这样可以更高效的更新虚拟 DOM。
+
+另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
 
 阅读更多：
 

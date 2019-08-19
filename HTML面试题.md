@@ -63,3 +63,17 @@ header, nav, aside, main, section, article, footer, canvas, video, audio
 - **[在移动浏览器中使用viewport元标签控制布局](https://developer.mozilla.org/zh-CN/docs/Mozilla/Mobile/Viewport_meta_tag)**
 - **[HTML 具有视口元标记](https://developers.google.cn/web/tools/lighthouse/audits/has-viewport-meta-tag?hl=zh-cn)**
 - **[移动端web开发——视口](https://www.cnblogs.com/chunyangji/p/5795487.html)**
+
+## 关于图片，你了解哪些形式，你觉得哪种场合用哪种？它们优劣如何？然后这些图片的应用场景能说说不？
+
+| 格式     | 特点                                | 使用场景                                     |
+| -------- | ----------------------------------- | -------------------------------------------- |
+| JPG/JPEG | 有损压缩 体积小 不支持透明          | 1. 大的背景图； 2. 轮播图； 3. Banner 图     |
+| PNG      | 无损压缩 质量高 体积大 支持透明     | 1. 小 Logo； 2. 透明背景                     |
+| GIF      | 支持动画                            | 动态图片                                     |
+| SVG      | 文本文件 体积小 不失真 兼容性好     | 能适应不同设备且画质不能损坏的图片           |
+| Base64   | 文本文件 依赖编码 小图标解决方案    | 大小不超过 2KB，且更新率低的图片             |
+| webp     | 细节丰富 支持透明 支持动画 兼容性差 | Chrome UC 等浏览器支持，局限性大，一般不考虑 |
+| 雪碧图   | 一次加载多处使用                    | 小图太多的时候，集中成一张图片减少 HTTP 请求 |
+
+更多阅读：[面试知识点 - 图片](https://github.com/LiangJunrong/document-library/blob/master/other-library/interview/personal-experience/other-%E5%9B%BE%E7%89%87.md)

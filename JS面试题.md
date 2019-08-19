@@ -111,15 +111,72 @@ Javascript 具有自动垃圾回收机制（GC：Garbage Collecation），也就
 
 - [JS垃圾回收机制](https://evestorm.github.io/posts/20229/)
 
-## 那些操作会造成内存泄漏？❌
+## 哪些操作会造成内存泄漏？
 
-内存泄漏指任何对象在您不再拥有或需要它之后仍然存在。
+### 意外的全局变量引起的内存泄漏
 
-垃圾回收器定期扫描对象，并计算引用了每个对象的其他对象的数量。如果一个对象的引用数量为 0（没有其他对象引用过该对象），或对该对象的惟一引用是循环的，那么该对象的内存即可回收。
+```js
+function foo(arg) {
+  bar = "this is a hidden global variable"; // 没有用var
+}
+```
 
-setTimeout 的第一个参数使用字符串而非函数的话，会引发内存泄漏。
+原因：全局变量，不会被回收。
 
-闭包、控制台日志、循环（在两个对象彼此引用且彼此保留时，就会产生一个循环）
+为什么不能泄漏到全局？平时不都会定义一些全局变量么：
+全局变量根据定义无法被垃圾回收机制收集。需要特别注意用于临时存储和处理大量信息的全局变量。如果必须使用全局变量来存储数据，请确保将其指定为null或在完成后重新分配它。
+
+解决：使用严格模式避免，函数内使用var定义，块内使用let、const。
+
+### 闭包引起的内存泄漏
+
+```js
+function bindEvent(){
+    var obj=document.createElement("XXX")
+    obj.onclick=function() {/* */}
+}
+// 解决
+function bindEvent(){
+    var obj=document.createElement("XXX")
+    obj.onclick=function() {/* */}
+    obj=null
+}
+```
+
+原因：闭包可以维持函数内局部变量，使其得不到释放。
+
+解决：将事件处理函数定义在外部，解除闭包，或者在定义事件处理函数的外部函数中，删除对dom的引用。
+
+### 被遗忘的定时器和回调函数
+
+```js
+var someResource = getData();
+setInterval(function() {
+    var node = document.getElementById('Node');
+    if(node) {
+        node.innerHTML = JSON.stringify(someResource));
+        // 定时器也没有清除
+    }
+    // node、someResource 存储了大量数据 无法回收
+}, 1000);
+```
+
+原因：定时器中有dom的引用，即使dom删除了，但是定时器还在，所以内存中还是有这个dom。
+
+解决：在定时器完成工作的时候，手动清除定时器
+
+### DOM 引用
+
+```js
+var refA = document.getElementById('refA');
+document.body.removeChild(refA); // dom删除了
+console.log(refA, "refA");  // 但是还存在引用
+能console出整个div 没有被回收
+```
+
+原因: 保留了DOM节点的引用,导致GC没有回收
+
+解决：refA = null
 
 ### 写一个函数判断是否存在循环引用 ❌
 
