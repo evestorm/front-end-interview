@@ -49,14 +49,16 @@ header, nav, aside, main, section, article, footer, canvas, video, audio
 写法：
 
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 ```
 
 解释：
 
 - 使用 `viewport` 来控制浏览器视口的宽度和缩放比例
 - 添加 `width=device-width` 以便让视口的宽度与设备一致
-- 添加 `initial-scale=1` 以便让页面的默认缩放比例与PC端一致
+- 添加 `initial-scale=1.0` 设置初始缩放比例为1.0
+- 添加 `user-scalable=no` 使得用户不能放大或缩小网页
+   - 添加 `minimum-scale=1.0, maximum-scale=1.0` 是为了兼容 iOS10 不支持 `user-scalable` 导致用户仍可缩放
 
 参考阅读：
 

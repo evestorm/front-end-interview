@@ -73,7 +73,7 @@ border padding margin width height
 
 更多：[分析比较 opacity: 0、visibility: hidden、display: none 优劣和适用场景](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/100)
 
-## position 跟 display 、 overflow 、float 这些特性相互叠加后会怎么样？
+## position 跟 display 、float 这些特性相互叠加后会怎么样？
 
 - position 属性规定元素的定位类型
 - display 属性规定元素应该生成的框的类型
@@ -509,7 +509,7 @@ height:40px;
 line-height:40px; /* 行高==高 */
 ```
 
-### 多行文本垂直居中：（父容器table，子容器table-cell+vertical-align:center）
+### 多行文本垂直居中：（父容器table，子容器table-cell+vertical-align:middle）
 
 ```css
 <div>

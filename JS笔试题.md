@@ -2458,6 +2458,39 @@ Javascript中所有对象基本都是先调用`valueOf`方法，如果不是数�
 
 题目来源：[Daily-Interview-Question 第116题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/229)
 
+### 下方js执行后的打印值为？
+
+```js
+function demo() {
+  this.length = 10;
+  var fn = function() {
+    console.log(this.length); // 输出多少？
+  }
+  arr = [fn, 'hello layui'];
+  fn.length = 100;
+  arr[0]();
+}
+demo()
+```
+
+答案：2
+
+解析：this指向问题一般看谁在调用就OK了，在上述函数中，fn的拥有者是arr并且也是它调用的，所以this指向arr，arr中有两个成员，length为2。
+
+#### 延伸
+
+```js
+function fn() {}
+fn.length = 2
+console.log(fn.length) // length 为多少？
+```
+
+答案：0
+
+解析：length 是js函数对象的一个属性值，该值是指 “该函数有多少个必须要传入的参数”，即形参的个数。形参的数量不包括剩余参数个数，仅包括 “第一个具有默认值之前的参数个数”，然而fn不需要传递参数，length为0。
+
+拓展阅读：[JS 中函数的 length 属性](https://www.cnblogs.com/go4it/p/9678028.html)
+
 ## 算法题
 
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：

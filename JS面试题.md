@@ -107,17 +107,17 @@ Javascript 具有自动垃圾回收机制（GC：Garbage Collecation），也就
 
      这个方案的思想很简单，就是“每次处理一点，下次再处理一点”，如此类推。
 
-### 更多阅读
+**更多阅读：**
 
 - [JS垃圾回收机制](https://evestorm.github.io/posts/20229/)
 
-## 哪些操作会造成内存泄漏？
+### 哪些操作会造成内存泄漏？
 
-### 意外的全局变量引起的内存泄漏
+#### 意外的全局变量引起的内存泄漏
 
 ```js
 function foo(arg) {
-  bar = "this is a hidden global variable"; // 没有用var
+  bar = '全局变量'; // 没有声明变量 实际上是全局变量=>window.bar
 }
 ```
 
@@ -128,26 +128,24 @@ function foo(arg) {
 
 解决：使用严格模式避免，函数内使用var定义，块内使用let、const。
 
-### 闭包引起的内存泄漏
+#### 闭包引起的内存泄漏
 
 ```js
-function bindEvent(){
-    var obj=document.createElement("XXX")
-    obj.onclick=function() {/* */}
-}
-// 解决
-function bindEvent(){
-    var obj=document.createElement("XXX")
-    obj.onclick=function() {/* */}
-    obj=null
+function bindEvent() {
+  var obj = document.createElement("XXX");
+  var unused = function () {
+      console.log(obj,'闭包内引用obj obj不会被释放');
+  };
+  // obj = null;
 }
 ```
 
-原因：闭包可以维持函数内局部变量，使其得不到释放。
+原因：闭包可以维持函数内局部变量，使其得不到释放，造成内存泄漏。
 
-解决：将事件处理函数定义在外部，解除闭包，或者在定义事件处理函数的外部函数中，删除对dom的引用。
+解决：将事件处理函数定义在外部，解除闭包，或者在定义事件处理函数的外部函数中，删除对dom的引用。例如上述案例，手动解除引用 `obj = null`
+ 。
 
-### 被遗忘的定时器和回调函数
+#### 被遗忘的定时器和回调函数
 
 ```js
 var someResource = getData();
@@ -161,22 +159,120 @@ setInterval(function() {
 }, 1000);
 ```
 
-原因：定时器中有dom的引用，即使dom删除了，但是定时器还在，所以内存中还是有这个dom。
+原因：当**不需要** `setInterval` 或者 `setTimeout` 时，**定时器没有被clear**，定时器的**回调函数以及内部依赖的变量都不能被回收**，造成内存泄漏。
 
 解决：在定时器完成工作的时候，手动清除定时器
 
-### DOM 引用
+#### 没有清理 DOM 元素引用
 
 ```js
 var refA = document.getElementById('refA');
 document.body.removeChild(refA); // dom删除了
-console.log(refA, "refA");  // 但是还存在引用
-能console出整个div 没有被回收
+console.log(refA, "refA");  // 但是还存在引用能console出整个div 没有被回收
+refA = null;
+console.log(refA, "refA");  // 解除引用
 ```
 
 原因: 保留了DOM节点的引用,导致GC没有回收
 
 解决：refA = null
+
+#### IE9以下浏览器环境导致的循环引用
+
+```js
+var element = document.getElementById('something');
+var myObject = new Object();
+myObject.element = element; // element属性指向dom
+element.someThing = myObject; // someThing回指myObject 出现循环引用(两个对象一直互相包含 一直存在计数)。
+```
+
+原因：IE9以下 BOM 和 DOM 对象使用 C++ 以 COM 对象的形式实现的。COM 的垃圾收集机制采用的是引用计数策略，这种机制在出现循环引用的时候永远都释放不掉内存。
+
+解决：不使用它们的时候，手动切断链接：`myObject.element = null; element.someThing = null;`
+
+## 闭包
+
+### 能讲下 JavaScript 的闭包么？
+
+一个函数包含了另一个函数或另一个对象，里面这个对象或函数都可以使用外部函数的变量或参数，此时就形成了闭包。
+
+### 你平常怎么用闭包的？
+
+#### 匿名自执行函数避免全局污染（模块化开发）
+
+创建了一个匿名立即执行函数，由于外部无法引用它内部的变量，因此在函数执行完后会立刻释放资源，不污染全局对象。
+
+```js
+const msg = (function () {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const today = new Date()
+  const msg = 'Today is ' + days[today.getDay()] + ', ' + today.getDate()
+  return {
+    getMsg() {
+      return msg
+    }
+  }
+}())
+
+console.log(msg.getMsg())
+```
+
+#### 缓存数据
+
+有时候我们需要获取一个处理过程很耗时的对象，并且往往会把这个复杂的处理过程封装成一个方法。但每次需要用到它时都需要调用它从而花费很长时间，那么我们就需要将计算出来的值存储起来，当调用这个函数的时候，首先在缓存中查找，如果找不到，则进行计算，然后更新缓存并返回值，如果找到了，直接返回查找到的值即可。闭包就可以做到这一点，因为它不会释放外部的引用，从而函数内部的值可以得以保留。
+
+```js
+var CachedSearchBox = (function () {
+  var cache = {},
+    count = [];
+  return {
+    attachSearchBox: function (dsid) {
+      if (dsid in cache) { //如果结果在缓存中
+        return cache[dsid]; //直接返回缓存中的对象
+      }
+      var fsb = new uikit.webctrl.SearchBox(dsid); //新建
+      cache[dsid] = fsb; //更新缓存
+      if (count.length > 100) { //保正缓存的大小<=100
+        delete cache[count.shift()];
+      }
+      return fsb;
+    },
+    clearSearchBox: function (dsid) {
+      if (dsid in cache) {
+        cache[dsid].clearSelection();
+      }
+    }
+  };
+})();
+```
+
+#### 拿到正确的值
+
+```js
+for(var i = 0; i < 10; i++) {
+  setTimeout(function(){
+    console.log(i) //10个10
+  }, 1000)
+}
+```
+
+解决方案：for循环中声明10个自执行函数，保存当时的值到内部
+
+```js
+for (var i = 0; i < 10; i++) {
+  (function(j) {
+    setTimeout(() => {
+      console.log(j)
+    }, 1000);
+  })(i)
+}
+```
+
+### 闭包会产生哪些问题？
+
+闭包会使函数中的变量不能及时释放，造成内存消耗过大，从而导致网页的性能问题。不过目前浏览器引擎都基于 V8，而 V8 引擎有个 gc 回收机制，不用太过担心变量不会被回收。
+
+## 其他
 
 ### 写一个函数判断是否存在循环引用 ❌
 

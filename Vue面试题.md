@@ -58,12 +58,31 @@
     - 广播者：VueEvent.$emit("事件名", data)
     - 缺点：消息容易重名，同一个状态分散在不同地方，不容易管理
 
-## v-if vs v-show
+## vue 指令
+
+### 能讲下 v-if 和 v-show 的区别吗？
 
 - v-if: 是否加载这个元素（一次性的）
 - v-show：控制显示方式block or none（需要切换的，侧边栏）
 
 因此：如果需要频繁切换 v-show 较好，如果在运行时条件不大可能改变 v-if 较好
+
+### `v-for` 你使用过程中，有遇到什么问题或者关注点吗？
+
+1. 避免将 `v-if` 和 `v-for` 放在同一个元素上，因为 `v-for` 优先级比 `v-if` 更高。例如要渲染 todo 列表中未完成的任务，给 li 标签同时写上 v-for 和 v-if 后会导致每次重新渲染都得遍历整个列表。优化方案是把需要遍历的 todoList 更换为在计算属性上遍历过滤。（Vue文档有详细说明，具体见下方「阅读更多」）
+2. 给 `v-for` 设置键绑定键值 `key`。理由见下。
+
+### 在列表组件中添加 key 属性的作用？
+
+key的主要作用就是在更新组件时判断两个节点是否相同。相同就复用，不相同就删除旧的创建新的。这样可以更高效的更新虚拟 DOM。
+
+另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
+
+阅读更多：
+
+- [避免 v-if 和 v-for 用在一起](https://cn.vuejs.org/v2/style-guide/#%E9%81%BF%E5%85%8D-v-if-%E5%92%8C-v-for-%E7%94%A8%E5%9C%A8%E4%B8%80%E8%B5%B7-%E5%BF%85%E8%A6%81)
+- [写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/1)
+- [Vue2.0 v-for 中 :key 到底有什么用？](https://www.zhihu.com/question/61064119/answer/183717717)
 
 ## 数据响应式（双向绑定）怎么做到的？
 
@@ -263,17 +282,6 @@ Vue 在修改数据后，视图不会立刻更新，而是等同一事件循环�
 nextTick的回调函数会等到同步任务执行完毕，DOM更新后才触发。
 
 阅读更多：[Vue.nextTick 的原理和用途](https://segmentfault.com/a/1190000012861862)
-
-## 在列表组件中添加 key 属性的作用？
-
-key的主要作用就是在更新组件时判断两个节点是否相同。相同就复用，不相同就删除旧的创建新的。这样可以更高效的更新虚拟 DOM。
-
-另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
-
-阅读更多：
-
-- [写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/1)
-- [Vue2.0 v-for 中 :key 到底有什么用？](https://www.zhihu.com/question/61064119/answer/183717717)
 
 ## 在 Vue 中，子组件为何不可以修改父组件传递的 Prop
 

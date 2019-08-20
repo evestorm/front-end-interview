@@ -157,7 +157,7 @@ flex的默认值是：0 1 auto
   <div class="box box4">4</div>
   <div class="box box5">5</div>
 </div>
-<p>margin-left: auto</p>
+<p>margin-right: auto</p>
 ```
 
 > CSS
@@ -177,8 +177,8 @@ flex的默认值是：0 1 auto
   background-color: springgreen;
   border: 1px solid #333;
 }
-.box5 {
-  margin-left: auto;
+.box1 {
+  margin-right: auto;
 }
 p {
   width: 100%;
