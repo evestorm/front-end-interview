@@ -34,8 +34,8 @@ string, number, function, object, undefined, boolean, symbol（表独一无二�
 
 ### valueOf 和 toString
 
-- toString(): 返回对象的字符串表示。
-- valueOf(): 返回对象的字符串、数值或布尔值表示。
+- toString(): 返回一个反映这个对象的字符串。
+- valueOf(): 返回它相应的原始值。
 
 ## 字符串
 
@@ -279,7 +279,7 @@ function test(num) {
     var oldStr = str.substring(0, str.length - 1);
     return newStr + test(oldStr);
   } else {
-    return num;
+    return str;
   }
 }
 
@@ -301,21 +301,21 @@ const str = "abcaakjbb";
 function findLongest(str) {
   if (!str || typeof str !== "string") return {};
   let obj = {},
-    tempCount = 0,
-    maxCount = 0,
-    tempChar = str[0];
+    tempCount = 0, // 前一次连续次数
+    maxCount = 0, // 最大连续次数
+    tempChar = str[0]; // 前一次连续次数所对应的字符（从第一个字符开始）
   for (let i = 0; i < str.length; i++) {
     const curChar = str[i];
-    if (tempChar === curChar) {
+    if (tempChar === curChar) { // 当前一次连续字符与当前字符相等时，视为继续连续
       tempCount++;
-      if (tempCount > maxCount) {
+      if (tempCount > maxCount) { // 当此刻连续次数大于最大次数时，将当前连续次数对应的字符信息覆盖掉obj
         obj = { [curChar]: tempCount };
         maxCount = tempCount;
       }
-      if (tempCount === maxCount) {
+      if (tempCount === maxCount) { // 次数相等时添加新字符
         obj[curChar] = tempCount;
       }
-    } else {
+    } else { // 前一次连续字符与当前字符不相等时，视为连续终端，重复次数重新从1开始计数
       tempCount = 1;
       tempChar = curChar;
     }
@@ -1085,17 +1085,17 @@ console.log(createTargetArr(initArr))
 
 ```js
 // 遍历 10000 次
-function symmetry() {
-  let arr = []
-  for (let i = begin >= 10 ? begin : 11; i < end; i++) {
-    let str = '' + i
-    if (str.split('').join('') === str.split('').reverse().join('')) {
-      arr.push(str)
+function symmetry(begin, end) {
+  let result = []
+  for (let i = begin > 10 ? begin : 11; i < end; i++) {
+    let str = i + ""
+    if (str === str.split("").reverse().join("")) {
+      result.push(str)
     }
   }
-  return arr
+  return result
 }
-console.log(symmetry(1, 10000))
+console.log(symmetry(11, 100))
 
 // 利用对称数
 function symmetry() {
@@ -1210,27 +1210,35 @@ function convert(list) {
 解答：
 
 ```js
+let str = "1,2,3,5,7,8,10,11";
 function fn(str) {
-  let tempArr = str.split(',')
-  if (tempArr.length < 2) return str
-  let resultArr = []
-  let tempNum = tempArr[0]
-  for (let i = 0; i < tempArr.length; i++) {
-    const curNum = tempArr[i];
-    const nextNum = tempArr[i + 1]
+  let arr = str.split(',')
+  let tempNum = arr[0] // tempNum负责存储连续数字的起始
+  let result = []
+  for (let i = 0; i < arr.length; i++) {
+    let curNum = arr[i],
+      nextNum = arr[i + 1]
+    // 当前+1等于下一个数则跳过
+    // 不相等则处理
     if (nextNum - curNum !== 1) {
-      if (tempNum !== curNum) {
-        resultArr.push(tempNum + '~' + curNum)
+      // 分两种情况，
+      // 一开始就连续数字：[1,2,5,7] 当i为2时满足上方if条件，tempNum = 1，curNum = 2
+      // 一开始非连续数字：[3,5,7] 当i为1时就满足上方if条件，tempNum = 3，curNum = 3
+      if (curNum !== tempNum) {
+        // 连续数字打头的tempNum + ~ + 目前数字为止
+        result.push(tempNum + '~' + curNum)
       } else {
-        resultArr.push(curNum)
+        // 否则直接把当前数字推入数组
+        result.push(curNum)
       }
+      // 无论上述哪两种情况，结束后都把下一个数字当做连续数字的起始
       tempNum = nextNum
     }
   }
-  return resultArr.join(',')
+  return result
 }
 
-console.log(fn('1,2,3,5,7,8,10,11'));
+console.log(fn(str));
 ```
 
 ### 补全代码，实现数组按姓名、年纪、任意字段排序。
@@ -1591,7 +1599,7 @@ function copy(obj) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             // 避免相互引用对象导致死循环，如 obj.a = obj（其实下面三行不写也没事儿，系统会自动把 obj.a 设为 undefined）
-            if (curProp === obj) {
+            if (obj[key] === obj) {
                continue
             }
             // 如果是数组或者对象
@@ -1623,17 +1631,17 @@ console.log(newObj) // { a: 'old', b: { c: 'new' } }
 
 ```js
 var entry = {
-a: {
- b: {
-   c: {
-     dd: 'abcdd'
-   }
- },
- d: {
-   xx: 'adxx'
- },
- e: 'ae'
-}
+  a: {
+  b: {
+    c: {
+      dd: 'abcdd'
+    }
+  },
+  d: {
+    xx: 'adxx'
+  },
+  e: 'ae'
+  }
 }
 
 // 要求转换成如下对象
@@ -1803,27 +1811,44 @@ console.log(new Person('Jerry', 20))
 ### 实现一个单例
 
 ```js
-var SingleTest = (function () {
-    var _instance = null
-    SingleInstance.prototype._init = function(ops) {
-        for (let i in ops) {
-            this[i]=ops[i]
-        }
-    }
-    function SingleInstance(args) {
-        if (_instance == null) {
-            _instance=this
-        }
-        _instance._init(args)
-        return _instance
-    }
-    return SingleInstance
-})()
+// ES5
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
 
-var i1=new SingleTest({name:"lance1"})
-var i2=new SingleTest({name:"lance2"})
-console.log(i1===i2)  // 结果是true
-console.log(i1.name)  // 结果是escapist3
+let Singleton = function(Fn) {
+  let _instance = null;
+  Singleton = function(...args) {
+    if (_instance) return _instance;
+    return (_instance = new Fn(...args));
+  };
+  return Singleton;
+};
+
+var peopleSingleton = Singleton(Person);
+
+var ming = new peopleSingleton("ming", 18);
+var fang = new peopleSingleton("fang", 28);
+
+console.log(ming, fang);
+
+
+// ES6
+class People {
+  constructor(name, age) {
+    if (typeof People.instance === 'object') {
+      return People.instance
+    }
+    People.instance = this
+    this.name = name
+    this.age = age
+    return this
+  }
+}
+var ming = new People('ming', 20)
+var fang = new People('fang', 19)
+console.log(ming, fang)
 ```
 
 ## ES6
@@ -2116,7 +2141,7 @@ console.log('script end');
 > CSS
 
 ```css
-#sw { position: absolute; }
+#sw { position: absolute; width: 100px; height: 100px; background-color: yellow; }
 ```
 
 > JS
@@ -2256,7 +2281,7 @@ b.x   // --> {n: 2}
 
 解析：
 
-- 1、优先级。`.`的优先级高于`=`，所以先执行`a.x`，堆内存中的`{n: 1}`就会变成`{n: 1, x: undefined}`，改变之后相应的`b.x`也变化了，因为指向的是同一个对象。
+- 1、优先级`.`的优先级高于`=`，所以先执行`a.x`，堆内存中的`{n: 1}`就会变成`{n: 1, x: undefined}`，改变之后相应的`b.x`也变化了，因为指向的是同一个对象。
 - 2、赋值操作是`从右到左`，所以先执行`a = {n: 2}`，`a`的引用就被改变了，然后这个返回值又赋值给了`a.x`，**需要注意**的是这时候`a.x`是第一步中的`{n: 1, x: undefined}`那个对象，其实就是`b.x`，相当于`b.x = {n: 2}`
 
 题目来源：[Daily-Interview-Question 第53题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/93)
