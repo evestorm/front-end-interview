@@ -2283,7 +2283,24 @@ JSONP 的全名叫做 JSON with padding，就是把 JSON 对象用符合 JS 语�
 
 ### defer 和 async 的区别
 
+![一图胜千言](https://segmentfault.com/img/bVWhRl?w=801&h=814)
+
+两者都是异步加载，但 defer 是按照加载顺序执行脚本的；async 则是无序加载脚本，例如a.js写在b.js前面，但如果b.js先加载完，则立即执行，不会等a.js的加载。
+
 参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
+
+### preload 和 prefetch 的区别是什么？
+
+对当前页面需要的资源，使用 preload 进行预加载，对其它页面需要的资源进行 prefetch 空闲加载。
+
+```html
+<!-- 对sty1e.cs5和 index.js进行pre1oad预加载 -->
+<link rel="preload" href="style.css" as="style">
+<link rel="preload" href="index.js" as="script">
+<!--对资源进行 prefetch预加载-->
+<link rel="prefetch" href="next.css">
+<link rel="prefetch" href="next.js">
+```
 
 ### setTimeout、setInterval、requestAnimationFrame 各有什么特点？
 

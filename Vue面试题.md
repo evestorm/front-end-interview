@@ -45,7 +45,28 @@
 
 - [包你理解---vue 的生命周期](https://segmentfault.com/a/1190000014640577)
 
-## 组件间通信
+## 组件
+
+### 现在有个父子组件，我希望在父级中给子组件绑定一个原生click事件，这个事件会被触发吗？
+
+```html
+<div id='app'>
+  <my-button @click='change'></my-button>
+</div>
+<script>
+ export default {
+  methods: {
+    change() {
+      alert(1)
+    }
+  }
+ }
+</script>
+```
+
+答：不能，绑定的该click事件会被当做组件上的一个普通属性看待，如果想要使click事件生效，可以使用 `@click.native='change'` 的方式来实现。
+
+### 组件间如何通讯？
 
 - 父子组件
     - 父—>子：prop传递值、v-on绑定方法(@子属性名="父方法名") | 子主动获取 this.$parent.*
@@ -76,13 +97,60 @@
 
 key的主要作用就是在更新组件时判断两个节点是否相同。相同就复用，不相同就删除旧的创建新的。这样可以更高效的更新虚拟 DOM。
 
-另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。
+另外如果给列表组件设置了过渡效果，不添加key属性会导致过渡效果无法触发。因为不添加key会导致vue无法区分它们，导致只会替换节点内部属性而不会触发过渡效果。
+
+### 为什么不建议用 index 作为 key 呢？
+
+**更新DOM时会出现性能问题**
+
+例如我们在使用index作为key值时想要下面列表进行倒序排列：
+
+```html
+<li key='0'>React</li>
+<li key='1'>Vue</li>
+<li key='2'>Angular</li>
+<!-- 倒序后↓↓↓↓↓↓↓↓↓↓ -->
+<li key='0'>Angular</li>
+<li key='1'>Vue</li>
+<li key='2'>React</li>
+```
+
+vue这个时候仅会调换第一和第三项的文本，li元素则不会调换顺序，因为vue发现key值也就是index没变化。而这会导致li里面的文本重新渲染，影响性能。
+
+而如果采用 id 作为 key，则仅仅需要移动下DOM就OK了，并不需要重新渲染DOM：
+
+```html
+<li key='react'>React</li>
+<li key='vue'>Vue</li>
+<li key='angular'>Angular</li>
+<!-- 倒序后↓↓↓↓↓↓↓↓↓↓ -->
+<li key='angular'>Angular</li>
+<li key='vue'>Vue</li>
+<li key='react'>React</li>
+```
+
+**会发生一些状态bug**
+
+还是以上面例子为例，给每个li元素中加一个checkbox：
+
+```html
+<li key='react'><input type='checkbox'>React</li>
+<li key='vue'><input type='checkbox'>Vue</li>
+<li key='angular'><input type='checkbox'>Angular</li>
+```
+
+如果采用 index 作为 key，选中状态会出现bug（左边列表采用index，右边采用id形式）：
+
+![index-vs-id](https://gitee.com/evestorm/various_resources/raw/master/vue/checkbox.gif)
+
+原因也是 index 没有变化被复用了，导致选中状态永远都是 index=0 的第一项。
 
 阅读更多：
 
 - [避免 v-if 和 v-for 用在一起](https://cn.vuejs.org/v2/style-guide/#%E9%81%BF%E5%85%8D-v-if-%E5%92%8C-v-for-%E7%94%A8%E5%9C%A8%E4%B8%80%E8%B5%B7-%E5%BF%85%E8%A6%81)
 - [写 React / Vue 项目时为什么要在列表组件中写 key，其作用是什么？](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/1)
 - [Vue2.0 v-for 中 :key 到底有什么用？](https://www.zhihu.com/question/61064119/answer/183717717)
+- [Vue：为什么使用v-for时必须添加唯一的key？为什么不宜用index作为key？](https://juejin.im/post/5d3c7f25e51d45599e019ea6)
 
 ## 数据响应式（双向绑定）怎么做到的？
 
@@ -266,6 +334,21 @@ this.goodsId = this.$route.params.goodsId
         next(vm => vm.title = title) // 通过 vm 访问组件实例
     }
     ```
+
+#### 讲一下完整的Vue路由生命周期
+
+1. 导航被触发。
+2. 在失活的组件里调用离开守卫。
+3. 调用全局的 `beforeEach` 守卫。
+4. 在重用的组件里调用 `beforeRouteUpdate` 守卫 (2.2+)。
+5. 在路由配置里调用 `beforeEnter`。
+6. 解析异步路由组件。
+7. 在被激活的组件里调用 `beforeRouteEnter`。
+8. 调用全局的 `beforeResolve` 守卫 (2.5+)。
+9. 导航被确认。
+10. 调用全局的 `afterEach` 钩子。
+11. 触发 DOM 更新。
+12. 用创建好的实例调用 `beforeRouteEnter` 守卫中传给 `next` 的回调函数。
 
 ## 你是如何使用插槽的？
 

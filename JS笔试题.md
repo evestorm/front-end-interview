@@ -407,6 +407,11 @@ function myDistinct(arr) {
     }
     console.log(arr.myDistinct())
 }()
+
+// 方法5：ES6 Set去重（能应对NaN重复，对对象无效）
+function myDistinct(arr) {
+  return [...new Set(arr)]
+}
 ```
 
 ### 两个数组比较，判断是否有相同元素（交集）
@@ -1177,24 +1182,41 @@ let result = [
 解答：
 
 ```js
+// 常规
 function convert(list) {
-    const res = []
-    const map = list.reduce((res, v) => {
-        res[v.id] = v
-        return res
-    }, {})
-    for (const item of list) {
-        if (item.parentId === 0) {
-            res.push(item)
-            continue
-        }
-        if (item.parentId in map) {
-            const parent = map[item.parentId]
-            parent.children = parent.children || []
-            parent.children.push(item)
-        }
-    }
+  function fn(pid) {
+    return list.filter(dep => {
+      if (dep.parentId === pid) {
+        // 以自己为根节点，找儿子
+        let children = fn(dep.id)
+        dep.children = children.length ? children : null
+        return true
+      }
+    })
+  }
+  // 找最外层根节点0
+  return fn(0)
+}
+
+// map
+function convert(list) {
+  const res = []
+  const map = list.reduce((res, v) => {
+    res[v.id] = v
     return res
+  }, {})
+  for (const item of list) {
+    if (item.parentId === 0) {
+      res.push(item)
+      continue
+    }
+    if (item.parentId in map) {
+      const parent = map[item.parentId]
+      parent.children = parent.children || []
+      parent.children.push(item)
+    }
+  }
+  return res
 }
 ```
 
@@ -1210,35 +1232,35 @@ function convert(list) {
 解答：
 
 ```js
-let str = "1,2,3,5,7,8,10,11";
-function fn(str) {
-  let arr = str.split(',')
-  let tempNum = arr[0] // tempNum负责存储连续数字的起始
+let str = "1,2,3,5,7,8,10,11"
+ffunction fn(str) {
+  let arr = str.split(",").map(v => +v)
+  let continueNum = arr[0] // tempNum负责存储连续数字的起始
   let result = []
   for (let i = 0; i < arr.length; i++) {
     let curNum = arr[i],
       nextNum = arr[i + 1]
     // 当前+1等于下一个数则跳过
     // 不相等则处理
-    if (nextNum - curNum !== 1) {
+    if (curNum + 1 !== nextNum) {
       // 分两种情况，
       // 一开始就连续数字：[1,2,5,7] 当i为2时满足上方if条件，tempNum = 1，curNum = 2
       // 一开始非连续数字：[3,5,7] 当i为1时就满足上方if条件，tempNum = 3，curNum = 3
-      if (curNum !== tempNum) {
+      if (curNum !== continueNum) {
         // 连续数字打头的tempNum + ~ + 目前数字为止
-        result.push(tempNum + '~' + curNum)
+        result.push(continueNum + "~" + curNum)
       } else {
         // 否则直接把当前数字推入数组
         result.push(curNum)
       }
-      // 无论上述哪两种情况，结束后都把下一个数字当做连续数字的起始
-      tempNum = nextNum
+      // 无论连续还是不连续，都把下一项当做连续的起始
+      continueNum = nextNum
     }
   }
-  return result
+  return result.join(',')
 }
 
-console.log(fn(str));
+console.log(fn(str))
 ```
 
 ### 补全代码，实现数组按姓名、年纪、任意字段排序。
