@@ -268,6 +268,71 @@ for (var i = 0; i < 10; i++) {
 }
 ```
 
+#### 高级排他
+
+场景：一个ul li列表，鼠标移入时高亮当前li标签，移除之前li标签的高亮状态。
+
+常规写法：两层for循环，外层遍历li标签，给每个li添加 onmouseover 事件；里层for循环用来在高亮当前li标签之前，移除所有li标签高亮状态。
+
+闭包写法：定义一个preIndex变量存储上次高亮li标签的索引，for循环内部使用立即执行函数+闭包保存index索引，这样就使li标签与index索引一一对应，然后在onmouseover事件触发后，根据preIndex找到之前高亮标签并移除高亮状态，并设置当前标签高亮，最后将preIndex设置为当前高亮标签的index索引。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+  * { margin: 0; padding: 0; list-style: none; }
+  ul li { width: 100%; height: 20px; margin-bottom: 5px; background-color: grey; }
+  li.active { background-color: yellow; }
+  </style>
+</head>
+<body>
+  <ul>
+    <li class="active"></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <script>
+    window.onload = function() {
+      let list = document.querySelectorAll('li')
+      // 记录移动前选中li的对应索引
+      let preActiveIndex = 0
+      for (let i = 0; i < list.length; i++) {
+        (function(j) {
+          const li = list[i]
+          li.onmouseover = function() {
+            // 清除
+            list[preActiveIndex].className = ''
+            // 设置
+            this.className = 'active'
+            // 赋值
+            preActiveIndex = j
+          }
+        })(i)
+      }
+    }
+  // 常规写法
+  // window.onload = function() {
+  //   let list = document.querySelectorAll('li')
+  //   for (let i = 0; i < list.length; i++) {
+  //     const li = list[i]
+  //     li.onmouseover = function() {
+  //       for (let j = 0; j < list.length; j++) {
+  //         list[j].className = ''
+  //       }
+  //       this.className = 'active'
+  //     }
+  //   }
+  // }
+  </script>
+</body>
+</html>
+```
+
 ### 闭包会产生哪些问题？
 
 闭包会使函数中的变量不能及时释放，造成内存消耗过大，从而导致网页的性能问题。不过目前浏览器引擎都基于 V8，而 V8 引擎有个 gc 回收机制，不用太过担心变量不会被回收。
@@ -281,9 +346,3 @@ for (var i = 0; i < 10; i++) {
 而发布订阅模式可以看做是顾客通过「商城平台」关注了商家的商品，商家一旦上新就通过「商城平台」向关注了自己的顾客**群发**消息，这里的顾客就是订阅者，「商城平台」就是事件总线，商家就是发布者。
 
 通过上面两个例子就能看出，观察者模式的模型跟发布/订阅者模型里，差距就差在有没有一个**中央的事件总线**。如果有这个事件总线，我们就可以认为是个发布订阅模型。如果没有，那么就可以认为是个观察者模型。因为其实它们都实现了一个关键的功能：发布事件-订阅事件并触发事件。
-
-## 其他
-
-### 写一个函数判断是否存在循环引用 ❌
-
-### 如何统计用户的点击量 ❌

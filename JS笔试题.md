@@ -298,29 +298,28 @@ console.log(test(123));
 ```js
 const str = "abcaakjbb";
 
-function findLongest(str) {
-  if (!str || typeof str !== "string") return {};
-  let obj = {},
-    tempCount = 0, // 前一次连续次数
+function findLongest (str) {
+  if (!str || typeof str !== 'string') return {}
+  var obj = {},
     maxCount = 0, // 最大连续次数
-    tempChar = str[0]; // 前一次连续次数所对应的字符（从第一个字符开始）
+    curChar = '', // 当前字符
+    curCount = 1  // 当前连续次数（默认最小连续次数为1）
   for (let i = 0; i < str.length; i++) {
-    const curChar = str[i];
-    if (tempChar === curChar) { // 当前一次连续字符与当前字符相等时，视为继续连续
-      tempCount++;
-      if (tempCount > maxCount) { // 当此刻连续次数大于最大次数时，将当前连续次数对应的字符信息覆盖掉obj
-        obj = { [curChar]: tempCount };
-        maxCount = tempCount;
+    curChar = str[i]
+    if (curChar === str[i + 1]) { // 如果连续
+      ++curCount // 当前连续次数+1
+      if (maxCount < curCount) {
+        maxCount = curCount
+        obj = { [curChar]: maxCount } // 只要当前连续次数比之前的大，就直接覆盖obj
       }
-      if (tempCount === maxCount) { // 次数相等时添加新字符
-        obj[curChar] = tempCount;
+      if (maxCount === curCount) { // 有可能若干字符连续次数相同，那么追加到obj
+        obj[curChar] = maxCount
       }
-    } else { // 前一次连续字符与当前字符不相等时，视为连续终端，重复次数重新从1开始计数
-      tempCount = 1;
-      tempChar = curChar;
+    } else { // 如果不连续
+      curCount = 1 // 重置连续次数
     }
   }
-  return obj;
+  return obj
 }
 
 console.log(findLongest(str));
@@ -672,7 +671,6 @@ console.log(maxProfit(arr))
 var arr = [1, 2, 3, 4, 5, 6, 7]
 
 function rotate(arr, k) {
-    var len = arr.length
     for (var i = 0; i < k; i++) {
         var temp = arr.pop()
         arr.unshift(temp)
@@ -1199,24 +1197,26 @@ function convert(list) {
 }
 
 // map
-function convert(list) {
-  const res = []
-  const map = list.reduce((res, v) => {
-    res[v.id] = v
-    return res
-  }, {})
-  for (const item of list) {
+function convert (arr) {
+  // 数组转对象
+  var obj = {}
+  for (const item of arr) {
+    obj[item.id] = item
+  }
+  var result = []
+  // 循环数组，如果是父部门则装进结果数组然后跳过本次循环，再根据剩下的子部门找相应父部门，把自己挂载到父部们下
+  for (const item of arr) {
     if (item.parentId === 0) {
-      res.push(item)
+      result.push(item)
       continue
     }
-    if (item.parentId in map) {
-      const parent = map[item.parentId]
+    if (item.parentId in obj) {
+      let parent = obj[item.parentId]
       parent.children = parent.children || []
       parent.children.push(item)
     }
   }
-  return res
+  return result
 }
 ```
 
@@ -1233,7 +1233,7 @@ function convert(list) {
 
 ```js
 let str = "1,2,3,5,7,8,10,11"
-ffunction fn(str) {
+function fn(str) {
   let arr = str.split(",").map(v => +v)
   let continueNum = arr[0] // tempNum负责存储连续数字的起始
   let result = []
