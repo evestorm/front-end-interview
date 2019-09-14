@@ -54,6 +54,53 @@ function newFunc(father, ...rest) {
 
 题目来源：[Daily-Interview-Question 第58题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/101)
 
+### Promise
+
+#### 10 个 Ajax 同时发起请求，全部返回展示结果，并且至多允许三次失败，说出设计思路
+
+这个问题相信很多人会第一时间想到 `Promise.all` ，但是这个函数有一个局限在于如果失败一次就返回了，直接这样实现会有点问题，需要变通下。以下是两种实现思路
+
+```js
+// 以下是不完整代码，着重于思路 非 Promise 写法
+let successCount = 0
+let errorCount = 0
+let datas = []
+ajax(url, (res) => {
+     if (success) {
+         success++
+         if (success + errorCount === 10) {
+             console.log(datas)
+         } else {
+             datas.push(res.data)
+         }
+     } else {
+         errorCount++
+         if (errorCount > 3) {
+            // 失败次数大于3次就应该报错了
+             throw Error('失败三次')
+         }
+     }
+})
+// Promise 写法
+let errorCount = 0
+let p = new Promise((resolve, reject) => {
+    if (success) {
+         resolve(res.data)
+     } else {
+         errorCount++
+         if (errorCount > 3) {
+            // 失败次数大于3次就应该报错了
+            reject(error)
+         } else {
+             resolve(error)
+         }
+     }
+})
+Promise.all([p]).then(v => {
+  console.log(v);
+});
+```
+
 ## JS 垃圾回收机制
 
 ### 谈谈垃圾回收机制的方式及内存管理？

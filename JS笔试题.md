@@ -302,10 +302,9 @@ function findLongest (str) {
   if (!str || typeof str !== 'string') return {}
   var obj = {},
     maxCount = 0, // 最大连续次数
-    curChar = '', // 当前字符
     curCount = 1  // 当前连续次数（默认最小连续次数为1）
   for (let i = 0; i < str.length; i++) {
-    curChar = str[i]
+    var curChar = str[i] // 当前字符
     if (curChar === str[i + 1]) { // 如果连续
       ++curCount // 当前连续次数+1
       if (maxCount < curCount) {
@@ -2024,6 +2023,51 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 }
 ```
 
+### 实现一个基本的 Promise
+
+```js
+// 未添加异步处理等其他边界情况
+// ①自动执行函数，②三个状态，③then
+class Promise {
+  constructor (fn) {
+    // 三个状态
+    this.state = 'pending'
+    this.value = undefined
+    this.reason = undefined
+    let resolve = value => {
+      if (this.state === 'pending') {
+        this.state = 'fulfilled'
+        this.value = value
+      }
+    }
+    let reject = value => {
+      if (this.state === 'pending') {
+        this.state = 'rejected'
+        this.reason = value
+      }
+    }
+    // 自动执行函数
+    try {
+      fn(resolve, reject)
+    } catch (e) {
+      reject(e)
+    }
+  }
+  // then
+  then(onFulfilled, onRejected) {
+    switch (this.state) {
+      case 'fulfilled':
+        onFulfilled()
+        break
+      case 'rejected':
+        onRejected()
+        break
+      default:
+    }
+  }
+}
+```
+
 ### 如何实现 Promise.all()
 
 首先，需要知道 Promise.all() 的功能：
@@ -2088,6 +2132,16 @@ Promise.prototype.finally = function (callback) {
 等到当前脚本的同步任务和 "任务队列" 中已有的事件，全部处理完以后，才会执行 setTimeout 指定的任务。
 
 参考：[JavaScript 运行机制详解：再谈Event Loop](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)
+
+### 使用setTimeout模拟setInterval
+
+```js
+// 可避免setInterval因执行时间导致的间隔执行时间不一致
+setTimeout (function () {
+  // do something
+  setTimeout (arguments.callee, 500)
+}, 500)
+```
 
 ### Event Loop
 
@@ -2598,6 +2652,20 @@ console.log(trim('     xxxswlance.cn        '))
 ```
 
 上述正则题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6) 「《JS 提供的对象：② 正则表达式》[编号：js_17]」
+
+### 转化为驼峰命名
+
+```js
+var s1 = "get-element-by-id"
+// 转化为 getElementById
+```
+
+```js
+function fn(str) {
+  return str.replace(/-\w/g, x => x.slice(1).toUpperCase())
+}
+console.log(fn(s1))
+```
 
 ## 非常规题
 
