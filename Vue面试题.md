@@ -291,6 +291,12 @@ Vuex 是专为 Vue 应用程序开发的状态管理工具，相当于共享仓�
     - increment(context, num) {context.commit()}
     - this.$store.dispatch('',arg)
 
+### 使用 Vuex 管理数据，与直接在全局window下定义变量相比，有什么区别或者说优势？
+
+全局作用域下定义的数据是静态的，只能通过手动修改，修改后数据变了，但使用这些数据的组件并不会重新渲染，也必须得手动渲染。而且全局作用域下定义太多变量还容易造成变量污染。
+
+Vuex 只要 store 中的数据更新，就会立即渲染所有使用 store 数据的组件。Vuex 使用单向数据流，要想修改 store 数据需要经过 action 层，mutation 层，层次划分明确，便于管理。
+
 ### Vuex 是通过什么方式提供响应式数据的？
 
 在 Store 构造函数中通过 new Vue({}}) 实现的。利用 Vue 来监听 state 下的数据变化，给状态添加 getter、setter。
@@ -428,6 +434,25 @@ class Route{
 }
 ```
 
+### vue脚手架生成的 router.js 中，有一段 `base: process.env.BASE_URL` 配置，你知道它引用了谁的路径么？
+
+```js
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL, // <-
+  ...
+```
+
+它会和 vue.config.js 中的 publicPath 选项相符，即你的应用会部署到的线上/开发环境的基础路径：
+
+```js
+const path = require('path')
+module.exports = {
+  // 旧版叫做baseURL
+  // 线上/开发环境的路径配置
+  publicPath: process.env.NODE_ENV === 'production' ? 'http://你的线上环境' : '/',
+```
+
 ## 你是如何使用插槽的？
 
 - 默认插槽：父<child>html模板</child> | 子<slot></slot>
@@ -506,6 +531,72 @@ if (process.env.NODE_ENV !== 'production') {
 - 无法进行极致优化: 在一些性能要求极高的应用中虚拟DOM无法进行针对性的极致优化,比如VScode采用直接手动操作DOM的方式进行极端的性能优化
 
 ## 其它
+
+平时开发中，经常会用到这样一个语句：
+
+```javascript
+import Vue from 'vue';
+```
+
+由于浏览器兼容性问题，通常这个语法是在 webpack 的构建流搭建的项目中执行的，那么这个语句到底做了什么呢？
+
+其实在 nodejs 中，执行 `import` 就相当于执行了 `require`，而 `require` 被调用，其实会用到 `require.resolve` 这个函数来查找包的路径，而这个函数在 nodejs 中会有一个关于优先级的算法。先看一下 `import Vue from 'vue'` 这一句做了什么：
+
+1. `import Vue from 'vue'` 解析为 `const Vue = require('vue')`。
+2. `require` 判断 vue 是否未 nodejs 核心包，如我们常用的：path，fs 等，是则直接导入，否则继续往下走。
+3. vue 非 nodejs 核心包，判断 vue 是否未 '/' 根目录开头，显然不是，继续往下走。
+4. vue 是否为 './'、'/' 或者 '../' 开头，显然不是，继续往下走。
+5. 以上条件都不符合，读取项目目录下 node_modules 包里的包。
+
+到了第五步，`import Vue from 'vue'` 就找到了 vue 所在的实际位置了，那么问题来了，node_modules 下的 vue 是一个文件夹，而引入的 Vue 是一个 javascript 对象，那它是怎么取到这个对象呢？
+
+其实对于一个 npm 包，内部还有一个文件输出的规则，先看下 node_modules/vue 下的文件结构是怎么样的：
+
+```bash
+├── LICENSE
+├── README.md
+├── dist
+├── package.json
+├── src
+└── types
+```
+
+是不是看起来很笼统，其实对于 npm 包，`require` 的规则是这样的：
+
+1. 查找 package.json 下是否定义了 main 字段，是则读取 main 字段下定义的入口。
+2. 如果没有 package.json 文件，则读取文件夹下的 index.js 或者 index.node。
+3. 如果都 package.json、index.js、index.node 都找不到，抛出错误 `Error: Cannot find module 'some-library'`。
+
+那么看一下 vue 的 package.json 文件有这么一句：
+
+```json
+{
+    ...
+    "main": "dist/vue.runtime.common.js",
+    ...
+}
+```
+
+到这里就很清晰了：
+
+```javascript
+import vue from 'vue';
+
+// 最后转换为
+const vue = require('./node_modules/vue/dist/vue.runtime.common.js');
+```
+
+而 vue.runtime.common.js 文件的最后一行是：`module.exports = Vue;`，就正好跟我们平时使用时的 `new Vue({})` 是一致的，这就是 `import vue from 'vue'` 的过程了。
+
+当然，这个是我们平时使用得最多的导入方式，还有其他一些导入规则，都可以在 [nodejs 的文档](https://nodejs.org/api/modules.html#modules_all_together) 中找到。
+
+**文章来源**：https://www.jianshu.com/p/fad3688cbd81
+
+### Vue 和 jQuery 有什么区别？
+
+jQuery是使用选择器（$）选取DOM对象，对其进行赋值、取值、事件绑定等操作，其实和原生的HTML的区别只在于可以更方便的选取和操作DOM对象，而数据和界面是在一起的。比如需要获取label标签的内容：$("label").val();,它还是依赖DOM元素的值。
+
+Vue则是通过Vue对象将数据和View完全分离开来了。对数据进行操作不再需要引用相应的DOM对象，可以说数据和View是分离的，他们通过Vue对象这个vm实现相互的绑定，也就是MVVM。
 
 ### 谈谈你对 MVVM 开发模式的理解
 

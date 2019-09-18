@@ -385,7 +385,76 @@ p {
 }
 ```
 
-## rem布局的优缺点
+## rem布局知道吗？原理是什么？
+
+rem是个相对单位，相对的是html根元素的font-size大小。这样一来我们就可以通过html上的字体大小来控制页面上所有以rem为单位的元素尺寸。
+
+**示例代码**
+
+例如在vue项目的index.html页中动态计算根元素字体大小
+
+> index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    ...
+  </head>
+  <body>
+    <noscript>
+      ...
+    </noscript>
+    <div id="app"></div>
+    <script>
+    ;(function(doc, win) {
+      const docEl = doc.documentElement
+      const resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
+      const recalc = () => {
+        const clientWidth = docEl.clientWidth
+        // 把屏幕宽度划分成10份，那么每一份的宽度就等于1rem
+        docEl.style.fontSize = clientWidth / 10 + 'px'
+      }
+      if (!doc.addEventListener) return
+      win.addEventListener(resizeEvt, recalc, false)
+      doc.addEventListener('DOMContentLoaded', recalc, false)
+      recalc()
+    })(document, window)
+    </script>
+  </body>
+</html>
+```
+
+然后利用css预处理器定义一个mixin函数（下方用的stylus），用来将设计稿上的px转为对应的rem值
+
+计算公式为：
+
+页面元素的rem值 = 设计稿元素值（px）/（屏幕宽度 / 划分的份数）
+
+> mixin.stylus
+
+```css
+/* 把px转为rem */
+px2rem(designpx)
+  $rem = 750 / 10;
+  return (designpx / $rem)rem
+```
+
+最后在css中使用
+
+> 某vue组件的style标签中
+
+```css
+/* 375设计稿上100%宽以及50高的导航条（iPhone6的dpr为2，所以px值得都乘以2） */
+header
+  width px2rem(750)
+  height px2rem(100)
+```
+
+### rem布局的优缺点
 
 优点：
 
@@ -863,6 +932,18 @@ span { font-size: 1.5em; }
 3. 响应式布局 媒体查询（超小屏设备时：流式布局）
     <!- 以上布局共同点：元素只能做到宽度的适配（排除图片）->
 4. rem布局 宽度和高度都能做到适配（等比适配）
+
+## Flex
+
+### flex布局和传统布局的优势？
+
+该布局模型的目的是提供一种更加高效的方式来对容器中的条目进行布局、对齐和分配空间。
+
+在传统的布局方式中:
+
+- block 布局是把块在垂直方向从上到下依次排列的
+- inline 布局则是在水平方向来排列
+- flex 弹性盒布局并没有这样内在的方向限制，可以由开发人员自由操作
 
 ## 如何解决移动端 Retina 屏 1px 像素问题
 

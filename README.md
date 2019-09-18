@@ -32,15 +32,33 @@
 
 ### 3 JavaScript
 
-这部分是面试重中之重，基本上啥都可能考。譬如最经典的一个面试题：
+这部分是面试重中之重，基本上啥都可能考。譬如比较经典的一个有关axios的面试题：
 
 - 问：a、b、c三个请求，希望c在a、b获取数据后再发请求，要是你你会怎么做？
-- 答：axios.all 先请求 a、b，再在 then 的 resolve 回调中请求 c，巴拉巴拉...
+- 答：axios.all 先请求 a、b，再在 then 的第一个回调中请求 c ，巴拉巴拉...
 - 问：那 axios.all 内部是通过什么实现的呢？
-- 答：promise.all，巴拉巴拉...
-- 问：如果不用 promise 该如何实现？
-- 答：可以用 setTimeout，巴拉巴拉...
-- 问：...
+- 答：Promise.all，巴拉巴拉...
+- 问：如果不用 Promise 该如何实现？
+- 答：可以用 高阶函数 ，巴拉巴拉...
+
+```js
+// 示例（使用node读取文件做场景来说明）
+let fs = require('fs')
+let arr = []
+function fn(data) {
+  arr.push(data)
+  if (arr.length === 2) {
+    // get ab
+    // todo c
+  }
+}
+fs.readFile('./a.txt', 'utf8', (err, data) => {
+  fn(data)
+})
+fs.readFile('./b.txt', 'utf8', (err, data) => {
+  fn(data)
+})
+```
 
 可以看出，往往 JS 面试题是层层深入的，需要你有坚实的基础，并且在平常开发时不仅满足会使用各种库和框架，还要深入了解原理。所以这一小节内容较多，各位做好抗压准备。
 
@@ -84,6 +102,14 @@ Vue没什么好说的，数据响应式（双向数据绑定）是一定会问�
 
 - [性能优化知识点](./性能优化知识点.md)
 - [web性能优化-实践](https://evestorm.github.io/posts/47143/)
+
+### 7 算法
+
+这部分目前是我薄弱项，暂时不能给到大家更多帮助。不过对于面一般普通前端来说，也就顶多问一下常见的排序算法了。
+
+这是我之前整理的常见排序算法：可以 [点击此处](https://evestorm.github.io/posts/59937/) 查看。
+
+其他算法面试题会在后续更新...
 
 ## 更多
 
