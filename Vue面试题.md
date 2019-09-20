@@ -301,6 +301,16 @@ Vuex 只要 store 中的数据更新，就会立即渲染所有使用 store 数�
 
 在 Store 构造函数中通过 new Vue({}}) 实现的。利用 Vue 来监听 state 下的数据变化，给状态添加 getter、setter。
 
+### Vuex 如何区分 state 是外部直接修改，还是通过 mutation 方法修改的？
+
+Vuex 中修改 state 的唯一渠道就是执行 commit('xx', payload) 方法，其底层通过执行 this._withCommit(fn) 设置_committing 标志变量为 true，然后才能修改 state，修改完毕还需要还原_committing 变量。外部修改虽然能够直接修改 state，但是并没有修改_committing 标志位，所以只要 watch 一下 state，state change 时判断是否_committing 值为 true，即可判断修改的合法性。
+
+### Vuex 原理
+
+vuex 仅仅是作为 vue 的一个插件而存在，不像 Redux,MobX 等库可以应用于所有框架，vuex 只能使用在 vue 上，很大的程度是因为其高度依赖于 vue 的 computed 依赖检测系统以及其插件系统，
+
+vuex 整体思想诞生于 flux,可其的实现方式完完全全的使用了 vue 自身的响应式设计，依赖监听、依赖收集都属于 vue 对对象 Property set get 方法的代理劫持。最后一句话结束 vuex 工作原理，vuex 中的 store 本质就是没有 template 的隐藏着的 vue 组件。
+
 ## VueRouter 是什么？你平常是怎么用的？
 
 - 是什么：Vue-Router 是 Vue 官方的路由管理器
@@ -532,6 +542,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 ## 其它
 
+### vue 的优点是什么？
+
+- 低耦合。视图（View）可以独立于 Model 变化和修改，一个 ViewModel 可以绑定到不同的"View"上，当 View 变化的时候 Model 可以不变，当 Model 变化的时候 View 也可以不变。
+- 可重用性。你可以把一些视图逻辑放在一个 ViewModel 里面，让很多 view 重用这段视图逻辑。
+- 独立开发。开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计，使用 Expression Blend 可以很容易设计界面并生成 xml 代码。
+- 可测试。界面素来是比较难于测试的，而现在测试可以针对 ViewModel 来写。
+
 平时开发中，经常会用到这样一个语句：
 
 ```javascript
@@ -655,13 +672,9 @@ V 用户操作 => VM => M 数据同步更新
 
 解决办法：
 
-- 1.**使用首屏SSR + 跳转SPA方式来优化**
-- 2.改单页应用为多页应用，需要修改webpack的entry
-- 3.改成多页以后使用应该使用**prefetch**的就使用
-- 4.处理加载的时间片，合理安排加载顺序，尽量不要有大面积空隙
-- 5.CDN资源还是很重要的，最好分开，也能减少一些不必要的资源损耗
-- 6.使用Quicklink，在网速好的时候 可以帮助你预加载页面资源
-- 7.**骨架屏**这种的用户体验的东西一定要上，最好借助stream先将这部分输出给浏览器解析
-- 8.合理使用web worker优化一些计算
-- 9.缓存一定要使用，但是请注意合理使用
-- 10.大概就这么多，最后可以借助一些工具进行性能评测，重点调优，例如使用performance自己实现下等
+- 1.将公用的JS库通过script标签外部引入，减小app.bundle的大小，让浏览器并行下载资源文件，提高下载速度；
+- 2.在配置路由时，页面和组件使用懒加载的方式引入，进一步缩小 app.bundle 的体积，在调用某个组件时再加载对应的js文件；
+- 3.上**骨架屏**或loading动画，提升用户体验；
+- 4.合理使用web worker优化一些计算
+- 5.缓存一定要使用，但是请注意合理使用
+- 6.最后可以借助一些工具进行性能评测，重点调优，例如chrome开发者工具的 performance 或 Google PageSpeed Insights 插件协助测试。

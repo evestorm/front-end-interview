@@ -111,6 +111,28 @@ Vue没什么好说的，数据响应式（双向数据绑定）是一定会问�
 
 其他算法面试题会在后续更新...
 
+## 简历模板
+
+网上的简历模板一搜一大堆，不过大都既不实用也不好看。所以最后我再分享几个觉得不错的模板给大家参考：
+
+### 纸质模板
+
+- https://www.resumeviking.com/wp-content/uploads/2018/01/Dwight-Kavanagh-Resume-IT-QA-Analyst-11.pdf
+  ![resume0](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume0.png)
+- https://www.resumeviking.com/wp-content/uploads/2019/04/Emily_Carter_-_Resume_-_English_Teacher-9.pdf
+  ![resume1](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume1.png)
+- https://www.resumeviking.com/wp-content/uploads/2018/09/Karen_Philips_-_Resume_-_Web_Designer-4.pdf
+  ![resume2](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume2.png)
+
+上面两份模板都来自 [此网站](https://www.resumeviking.com/templates/) ，想寻找更满意的版本可以进去逛逛。
+
+### 在线模板
+
+- http://zhangwenli.com/cv/
+  - 下载地址：https://github.com/Ovilia/cv
+- https://html5up.net/read-only
+  - 下载地址：上方链接右上角 Download
+
 ## 更多
 
 本项目整合了大量下方资源的面试题内容，但毕竟是按照我自己技术栈整合的，所以如果你还想查缺补漏（例如 react 相关面试题等），可以点击下方链接了解更多：
