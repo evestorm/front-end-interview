@@ -1353,6 +1353,81 @@ var sum = reduce([1, 2, 3], function (previous, current) {
 console.log(sum)
 ```
 
+写法2：
+
+```js
+function reduce(arr, reduceCallback, initialValue) {
+  // 首先，检查传递的参数是否正确。
+  if (!Array.isArray(arr) || !arr.length || typeof reduceCallback !== 'function') 
+  {
+    return [];
+  } else {
+    // 如果没有将initialValue传递给该函数，我们将使用第一个数组项作为initialValue
+    let hasInitialValue = initialValue !== undefined;
+    let value = hasInitialValue ? initialValue : arr[0];
+   、
+
+    // 如果有传递 initialValue，则索引从 1 开始，否则从 0 开始
+    for (let i = hasInitialValue ? 0 : 1, len = arr.length; i < len; i++) {
+      value = reduceCallback(value, arr[i], i, arr); 
+    }
+    return value;
+  }
+}
+```
+
+
+
+### 手动实现 Array.prototype.map 方法
+
+map() 方法创建一个新数组，其结果是该数组中的每个元素都调用一个提供的函数后返回的结果。
+
+```js
+function map(arr, mapCallback) {
+  // 首先，检查传递的参数是否正确。
+  if (!Array.isArray(arr) || !arr.length || typeof mapCallback !== 'function') { 
+    return [];
+  } else {
+    let result = [];
+    // 每次调用此函数时，我们都会创建一个 result 数组
+    // 因为我们不想改变原始数组。
+    for (let i = 0, len = arr.length; i < len; i++) {
+      result.push(mapCallback(arr[i], i, arr)); 
+      // 将 mapCallback 返回的结果 push 到 result 数组中
+    }
+    return result;
+  }
+}
+```
+
+### 手动实现Array.prototype.filter方法
+
+filter()方法创建一个新数组, 其包含通过所提供函数实现的测试的所有元素。
+
+```js
+function filter(arr, filterCallback) {
+  // 首先，检查传递的参数是否正确。
+  if (!Array.isArray(arr) || !arr.length || typeof filterCallback !== 'function') 
+  {
+    return [];
+  } else {
+    let result = [];
+     // 每次调用此函数时，我们都会创建一个 result 数组
+     // 因为我们不想改变原始数组。
+    for (let i = 0, len = arr.length; i < len; i++) {
+      // 检查 filterCallback 的返回值是否是真值
+      if (filterCallback(arr[i], i, arr)) { 
+      // 如果条件为真，则将数组元素 push 到 result 中
+        result.push(arr[i]);
+      }
+    }
+    return result; // return the result array
+  }
+}
+```
+
+
+
 ## 随机数 / 数字
 
 ### 如何获取0-9的随机数
@@ -2592,6 +2667,21 @@ console.log(fn.length) // length 为多少？
 
 拓展阅读：[JS 中函数的 length 属性](https://www.cnblogs.com/go4it/p/9678028.html)
 
+### {} 和 [] 的 valueOf 和 toString 的结果是什么？
+
+```html
+{} 的 valueOf 结果为 {} ，toString 的结果为 "[object Object]"
+[] 的 valueOf 结果为 [] ，toString 的结果为 ""
+```
+
+- toString是把对象转换为字符串；
+- valueOf是把对象转换du成一个基zhi本数据的值
+- valueOf偏向dao于运算，toString偏向于显示。
+
+1. 在进行对象转换时（例如:alert(a)）,将优先调用toString方法，如若没有重写toString将调用valueOf方法，如果两方法都没有重写，按Object的toString输出。
+2. 在进行强转字符串类型时将优先调用toString方法，强转为数字时优先调用valueOf。
+3. 在有运算操作符的情况下，valueOf的优先级高于toString。
+
 ## 算法题
 
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
@@ -2764,3 +2854,61 @@ function print3(n) {
 ```
 
 题目来源：[Daily-Interview-Question 第101题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/158)
+
+### 写一个通用的事件侦听器函数
+
+```js
+const EventUtils = {
+  // 视能力分别使用dom0||dom2||IE方式 来绑定事件
+  // 添加事件
+  addEvent: function(element, type, handler) {
+    if (element.addEventListener) {
+      element.addEventListener(type, handler, false);
+    } else if (element.attachEvent) {
+      element.attachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = handler;
+    }
+  },
+
+  // 移除事件
+  removeEvent: function(element, type, handler) {
+    if (element.removeEventListener) {
+      element.removeEventListener(type, handler, false);
+    } else if (element.detachEvent) {
+      element.detachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = null;
+    }
+  },
+
+  // 获取事件目标
+  getTarget: function(event) {
+    return event.target || event.srcElement;
+  },
+
+  // 获取 event 对象的引用，取到事件的所有信息，确保随时能使用 event
+  getEvent: function(event) {
+    return event || window.event;
+  },
+
+  // 阻止事件（主要是事件冒泡，因为 IE 不支持事件捕获）
+  stopPropagation: function(event) {
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    } else {
+      event.cancelBubble = true;
+    }
+  },
+
+  // 取消事件的默认行为
+  preventDefault: function(event) {
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
+  }
+};
+```
+

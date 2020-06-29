@@ -74,6 +74,8 @@
 - `$attrs/$listeners`: Vue2.4中加入的`$attrs/$listeners`可以进行跨级的组件通信
 - provide/inject：以允许一个祖先组件向其所有子孙后代注入一个依赖，不论组件层次有多深，并在起上下游关系成立的时间里始终生效，这成为了跨组件通信的基础
 
+[Vue 组件间通信六种方式](https://mp.weixin.qq.com/s/XZ3BmZLY4OwwGm2Hbbepbg)
+
 ### this.$emit 的返回值是什么？如果需要返回值该怎么办？
 
 this.$emit 的返回值就是 this ，即当前子组件 VueComponent 。
