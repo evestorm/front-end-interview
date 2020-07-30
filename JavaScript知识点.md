@@ -2,7 +2,7 @@
 
 ## JS类型
 
-string，number，boolean，undefined，null，symbol，object
+string，number，boolean，undefined，null，symbol（es6），BigInt（es10），object
 
 ### 值类型和引用类型的区别
 
@@ -49,6 +49,12 @@ string，number，boolean，undefined，null，symbol，object
 - `""`（空字符串）
 - `0`, `-0`, `NaN` （非法的 `number` ）
 - `null`, `undefined`
+
+### {} 和 [] 的 valueOf 和 toString 的结果是什么？
+
+{} 的 valueOf 结果为 {} ，toString 的结果为 "[object Object]"
+
+[] 的 valueOf 结果为 [] ，toString 的结果为 ""
 
 ### null，undefined 的区别？
 
