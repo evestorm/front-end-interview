@@ -68,7 +68,7 @@
 
 ### 为什么Vue实例对象中的data直接是个对象，而组件内的data是个函数，且返回一个对象？
 
-因为组件中的 `data:{}` 的话，这个 `{}` 是个对象，引用类型。如果多处地方引用同一个组件的话，则共享同一个data对象，这是不合理的。所以需要每次使用组件时，return一个新的对象，这样就不会共享了。
+因为组件中是 `data:{}` 的话，这个 `{}` 是个对象，引用类型。如果多处地方引用同一个组件的话，则共享同一个data对象，这是不合理的。所以需要每次使用组件时，return一个新的对象，这样就不会共享了。
 
 ### 组件间如何通讯？
 
@@ -131,6 +131,12 @@ export default {
 </script>
 ```
 
+## filter 过滤器
+
+### filter中的this是什么？
+
+this是undefined，在filter中拿不到vue实例。filter应该是个纯函数，不应该依赖外界或者对外界有所影响。如果需要用到this，可以用 computed 或者 method 代替。
+
 ## vue 指令
 
 ### 能讲下 v-if 和 v-show 的区别吗？
@@ -142,7 +148,7 @@ export default {
 
 ### `v-for` 你使用过程中，有遇到什么问题或者关注点吗？
 
-1. 避免将 `v-if` 和 `v-for` 放在同一个元素上，因为 `v-for` 优先级比 `v-if` 更高。例如要渲染 todo 列表中未完成的任务，给 li 标签同时写上 v-for 和 v-if 后会导致每次重新渲染都得遍历整个列表。优化方案是把需要遍历的 todoList 更换为在计算属性上遍历过滤。（Vue文档有详细说明，具体见下方「阅读更多」）
+1. 避免将 `v-if` 和 `v-for` 放在同一个元素上，因为 `v-for` 优先级比 `v-if` 更高。例如要渲染 todo 列表中未完成的任务，给 li 标签同时写上 v-for 和 v-if 后会导致每次重新渲染都得遍历整个列表。优化方案是把需要遍历的 todoList 更换为在计算属性上遍历过滤。（Vue文档有详细说明）
 2. 给 `v-for` 设置键绑定键值 `key`。理由见下。
 
 ### 在列表组件中添加 key 属性的作用？
@@ -211,7 +217,7 @@ vue这个时候仅会调换第一和第三项的文本，li元素则不会调换
 1. 第一步：需要 Observe 的数据对象进行递归遍历，包括子属性对象的属性，都加上 setter 和 getter。这样的话，给这个对象的某个值赋值，就会触发 setter，那么就能监听到了数据变化。
 2. 第二步：Compile 解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新数据。
 3. 第三步：Watcher 订阅者是 Observer 和 Compile 之间通信的桥梁，主要做的事情有：
-   1. 在自身实例化时往属性订阅器（dep）里面添加自己。
+   1. 在自身实例化时往属性订阅器（dep）里面添加自己
    2. 自身必须有一个 update() 方法
    3. 待属性变动 `dep.notice()` 通知时，能调用自身的 `update()` 方法，并触发 Compile 中绑定的回调，则功成身退。
 4. 第四步：MVVM 作为数据绑定的入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compile 之间的桥梁，达到数据变化 -> 视图更新；视图交互变化（input） -> 数据 model 变更的双向绑定效果。
@@ -305,7 +311,7 @@ Vuex 只要 store 中的数据更新，就会立即渲染所有使用 store 数�
 
 ### Vuex 是通过什么方式提供响应式数据的？
 
-在 Store 构造函数中通过 new Vue({}}) 实现的。利用 Vue 来监听 state 下的数据变化，给状态添加 getter、setter。
+在 Store 构造函数中通过 new Vue({}) 实现的。利用 Vue 来监听 state 下的数据变化，给状态添加 getter、setter。
 
 ### Vuex 如何区分 state 是外部直接修改，还是通过 mutation 方法修改的？
 
@@ -492,37 +498,137 @@ nextTick的回调函数会等到同步任务执行完毕，DOM更新后才触发
 
 ## 在 Vue 中，子组件为何不可以修改父组件传递的 Prop
 
-因为 prop 的传递是单向数据流，这样易于监测数据的流动，出现了错误可以更加迅速的定位到错误发生的位置。另外 props 传入的值如果对象的话，是可以直接在子组件里更改的，因为是同一个引用。
+为了保证数据的单向流动，便于对数据进行追踪，避免数据混乱。官网有详细的信息 [prop](https://cn.vuejs.org/v2/guide/components-props.html#单向数据流)
+
+>  所有的 prop 都使得其父子 prop 之间形成了一个**单向下行绑定**：父级 prop 的更新会向下流动到子组件中，但是反过来则不行。这样会**防止从子组件意外改变父级组件的状态**，从而导致你的应用的数据流向难以理解。
+
+设想一个场景，某个父组件下不只使用了一个子组件。而且都使用到了这份 prop 数据，那么一旦某个子组件更改了这个prop数据，会连带着其他子组件的prop数据也被更改。这会导致数据混乱，而且由于修改数据的源头不止一处，在出错后debug时难以定位错误原因。
+
+**所以我们需要将修改数据的源头统一为父组件，子组件想要改 prop 只能委托父组件帮它。从而保证数据修改源唯一**
+
+另外 props 传入的值如果对象的话，是可以直接在子组件里更改的，因为是同一个引用。
 
 ### 如果修改了，Vue 是如何监控到属性的修改并给出警告的
 
+下面的代码就是实现Vue提示修改props的操作，在组件 `initProps` 方法的时候，会对props进行defineReactive操作，传入的第四个参数是自定义的set函数，该函数会在触发props的set方法时执行，当props修改了，就会运行这里传入的第四个参数，然后进行判断，如果不是root根组件，并且不是更新子组件，那么说明更新的是props，所以会警告
+
 ```js
-if (process.env.NODE_ENV !== 'production') {
-  var hyphenatedKey = hyphenate(key);
-  if (isReservedAttribute(hyphenatedKey) ||
-      config.isReservedAttr(hyphenatedKey)) {
-    warn(
-      ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
-      vm
-    );
+// src/core/instance/state.js 源码路径
+function initProps (vm: Component, propsOptions: Object) {
+  const propsData = vm.$options.propsData || {}
+  const props = vm._props = {}
+  // cache prop keys so that future props updates can iterate using Array
+  // instead of dynamic object key enumeration.
+  const keys = vm.$options._propKeys = []
+  const isRoot = !vm.$parent
+  // root instance props should be converted
+  if (!isRoot) {
+    toggleObserving(false)
   }
-  defineReactive$$1(props, key, value, function () {
-    if (!isRoot && !isUpdatingChildComponent) {
-      warn(
-        "Avoid mutating a prop directly since the value will be " +
-        "overwritten whenever the parent component re-renders. " +
-        "Instead, use a data or computed property based on the prop's " +
-        "value. Prop being mutated: \"" + key + "\"",
-        vm
-      );
+  for (const key in propsOptions) {
+    keys.push(key)
+    const value = validateProp(key, propsOptions, propsData, vm)
+    /* istanbul ignore else */
+    if (process.env.NODE_ENV !== 'production') {
+      const hyphenatedKey = hyphenate(key)
+      if (isReservedAttribute(hyphenatedKey) ||
+          config.isReservedAttr(hyphenatedKey)) {
+        warn(
+          `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
+          vm
+        )
+      }
+      defineReactive(props, key, value, () => {
+        if (!isRoot && !isUpdatingChildComponent) {
+          warn(
+            `Avoid mutating a prop directly since the value will be ` +
+            `overwritten whenever the parent component re-renders. ` +
+            `Instead, use a data or computed property based on the prop's ` +
+            `value. Prop being mutated: "${key}"`,
+            vm
+          )
+        }
+      })
+    } else {
+      defineReactive(props, key, value)
     }
-  });
+    // static props are already proxied on the component's prototype
+    // during Vue.extend(). We only need to proxy props defined at
+    // instantiation here.
+    if (!(key in vm)) {
+      proxy(vm, `_props`, key)
+    }
+  }
+  toggleObserving(true)
+}
+
+// src/core/observer/index.js
+/**
+ * Define a reactive property on an Object.
+ */
+export function defineReactive (
+  obj: Object,
+  key: string,
+  val: any,
+  customSetter?: ?Function,
+  shallow?: boolean
+) {
+  const dep = new Dep()
+
+  const property = Object.getOwnPropertyDescriptor(obj, key)
+  if (property && property.configurable === false) {
+    return
+  }
+
+  // cater for pre-defined getter/setters
+  const getter = property && property.get
+  const setter = property && property.set
+  if ((!getter || setter) && arguments.length === 2) {
+    val = obj[key]
+  }
+
+  let childOb = !shallow && observe(val)
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get: function reactiveGetter () {
+      const value = getter ? getter.call(obj) : val
+      if (Dep.target) {
+        dep.depend()
+        if (childOb) {
+          childOb.dep.depend()
+          if (Array.isArray(value)) {
+            dependArray(value)
+          }
+        }
+      }
+      return value
+    },
+    set: function reactiveSetter (newVal) {
+      const value = getter ? getter.call(obj) : val
+      /* eslint-disable no-self-compare */
+      if (newVal === value || (newVal !== newVal && value !== value)) {
+        return
+      }
+      /* eslint-enable no-self-compare */
+      if (process.env.NODE_ENV !== 'production' && customSetter) {
+        customSetter()
+      }
+      // #7981: for accessor properties without setter
+      if (getter && !setter) return
+      if (setter) {
+        setter.call(obj, newVal)
+      } else {
+        val = newVal
+      }
+      childOb = !shallow && observe(newVal)
+      dep.notify()
+    }
+  })
 }
 ```
 
-在initProps的时候，在defineReactive时通过判断是否在开发环境，如果是开发环境，会在触发set的时候判断是否此key是否处于updatingChildren中被修改，如果不是，说明此修改来自子组件，触发warning提示。
-
-需要特别注意的是，当你从子组件修改的prop属于基础类型时会触发提示。 这种情况下，你是无法修改父组件的数据源的， 因为基础类型赋值时是值拷贝。你直接将另一个非基础类型（Object, array）赋值到此key时也会触发提示(但实际上不会影响父组件的数据源)， 当你修改object的属性时不会触发提示，并且会修改父组件数据源的数据。
+如果传入的props是基本数据类型，子组件修改父组件传的props会警告，并且修改不成功，如果传入的是引用数据类型，那么修改引用数据类型的某个属性值时，对应的props也会修改，并且vue不会报警告。
 
 ## 虚拟DOM
 
@@ -684,3 +790,4 @@ V 用户操作 => VM => M 数据同步更新
 - 4.合理使用web worker优化一些计算
 - 5.缓存一定要使用，但是请注意合理使用
 - 6.最后可以借助一些工具进行性能评测，重点调优，例如chrome开发者工具的 performance 或 Google PageSpeed Insights 插件协助测试。
+
