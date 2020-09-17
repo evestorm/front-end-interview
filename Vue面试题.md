@@ -652,6 +652,10 @@ export function defineReactive (
 
 - 无法进行极致优化: 在一些性能要求极高的应用中虚拟DOM无法进行针对性的极致优化,比如VScode采用直接手动操作DOM的方式进行极端的性能优化
 
+## Vue项目能进行哪些性能优化
+
+链接：https://juejin.im/post/6857856269488193549
+
 ## 其它
 
 ### vue 的优点是什么？
