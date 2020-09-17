@@ -496,6 +496,10 @@ nextTick的回调函数会等到同步任务执行完毕，DOM更新后才触发
 
 阅读更多：[Vue.nextTick 的原理和用途](https://segmentfault.com/a/1190000012861862)
 
+#### 让你自己实现一个nextTick,说说你的思路？（TODO）
+
+待续...
+
 ## 在 Vue 中，子组件为何不可以修改父组件传递的 Prop
 
 为了保证数据的单向流动，便于对数据进行追踪，避免数据混乱。官网有详细的信息 [prop](https://cn.vuejs.org/v2/guide/components-props.html#单向数据流)
