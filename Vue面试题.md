@@ -286,6 +286,18 @@ Vue.set(this.obj, 'b', 233) or this.$set(this.obj, 'b', 233)
 答案参考：[Daily-Interview-Question - 第51题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/90)
 更多阅读：[实现双向绑定Proxy比defineproperty优劣如何](https://www.jianshu.com/p/2df6dcddb0d7)
 
+## Vue模板渲染的原理是什么？
+
+vue中的模板template无法被浏览器解析并渲染，因为这不属于浏览器的标准，不是正确的HTML语法，所有需要将template转化成一个JavaScript函数，这样浏览器就可以执行这一个函数并渲染出对应的HTML元素，就可以让视图跑起来了，这一个转化的过程，就成为模板编译。
+
+模板编译又分三个阶段，解析parse，优化optimize，生成generate，最终生成可执行函数render。
+
+-  parse阶段：使用大量的正则表达式对template字符串进行解析，将标签、指令、属性等转化为抽象语法树AST。
+-  optimize阶段：遍历AST，找到其中的一些静态节点并进行标记，方便在页面重渲染的时候进行diff比较时，直接跳过这一些静态节点，优化runtime的性能。
+-  generate阶段：将最终的AST转化为render函数字符串。
+
+来源：https://juejin.im/post/6870374238760894472
+
 ## Vuex 用过吗？
 
 Vuex 是专为 Vue 应用程序开发的状态管理工具，相当于共享仓库，方便任何组件直接获取和修改。
@@ -636,6 +648,12 @@ export function defineReactive (
 
 ## 虚拟DOM
 
+### 什么是虚拟DOM
+
+Virtual DOM 是 DOM 节点在 JavaScript 中的一种抽象数据结构，之所以需要虚拟DOM，是因为浏览器中操作DOM的代价比较昂贵，频繁操作DOM会产生性能问题。虚拟DOM的作用是在每一次响应式数据发生变化引起页面重渲染时，Vue对比更新前后的虚拟DOM，匹配找出尽可能少的需要更新的真实DOM，从而达到提升性能的目的。
+
+来源：https://juejin.im/post/6870374238760894472
+
 ### 虚拟DOM实现原理?
 
 - 虚拟DOM本质上是JavaScript对象,是对真实DOM的抽象
@@ -798,4 +816,49 @@ V 用户操作 => VM => M 数据同步更新
 - 4.合理使用web worker优化一些计算
 - 5.缓存一定要使用，但是请注意合理使用
 - 6.最后可以借助一些工具进行性能评测，重点调优，例如chrome开发者工具的 performance 或 Google PageSpeed Insights 插件协助测试。
+
+### 说说Vue2.0和Vue3.0有什么区别
+
+1. 重构响应式系统，使用Proxy替换Object.defineProperty，使用Proxy优势：
+
+-  可直接监听数组类型的数据变化
+
+-  监听的目标为对象本身，不需要像Object.defineProperty一样遍历每个属性，有一定的性能提升
+-  可拦截apply、ownKeys、has等13种方法，而Object.defineProperty不行
+-  直接实现对象属性的新增/删除
+
+2. 新增Composition API，更好的逻辑复用和代码组织
+
+3. 重构 Virtual DOM
+
+-  模板编译时的优化，将一些静态节点编译成常量
+-  slot优化，将slot编译为lazy函数，将slot的渲染的决定权交给子组件
+-  模板中内联事件的提取并重用（原本每次渲染都重新生成内联函数）
+
+4. 代码结构调整，更便于Tree shaking，使得体积更小
+
+5. 使用 Typescript 替换 Flow
+
+### 为什么要新增Composition API，它能解决什么问题
+
+Vue2.0中，随着功能的增加，组件变得越来越复杂，越来越难维护，而难以维护的根本原因是Vue的API设计迫使开发者使用watch，computed，methods选项组织代码，而不是实际的业务逻辑。
+
+另外Vue2.0缺少一种较为简洁的低成本的机制来完成逻辑复用，虽然可以minxis完成逻辑复用，但是当mixin变多的时候，会使得难以找到对应的data、computed或者method来源于哪个mixin，使得类型推断难以进行。
+
+所以Composition API的出现，主要是也是为了解决Option API带来的问题，第一个是代码组织问题，Compostion API可以让开发者根据业务逻辑组织自己的代码，让代码具备更好的可读性和可扩展性，也就是说当下一个开发者接触这一段不是他自己写的代码时，他可以更好的利用代码的组织反推出实际的业务逻辑，或者根据业务逻辑更好的理解代码。
+
+第二个是实现代码的逻辑提取与复用，当然mixin也可以实现逻辑提取与复用，但是像前面所说的，多个mixin作用在同一个组件时，很难看出property是来源于哪个mixin，来源不清楚，另外，多个mixin的property存在变量命名冲突的风险。而Composition API刚好解决了这两个问题。
+
+## SSR有了解吗？原理是什么？
+
+在客户端请求服务器的时候，服务器到数据库中获取到相关的数据，并且在服务器内部将Vue组件渲染成HTML，并且将数据、HTML一并返回给客户端，这个在服务器将数据和组件转化为HTML的过程，叫做服务端渲染SSR。
+
+而当客户端拿到服务器渲染的HTML和数据之后，由于数据已经有了，客户端不需要再一次请求数据，而只需要将数据同步到组件或者Vuex内部即可。除了数据以外，HTML也结构已经有了，客户端在渲染组件的时候，也只需要将HTML的DOM节点映射到Virtual DOM即可，不需要重新创建DOM节点，这个将数据和HTML同步的过程，又叫做客户端激活。
+
+使用SSR的好处：
+
+-  有利于SEO：其实就是有利于爬虫来爬你的页面，因为部分页面爬虫是不支持执行JavaScript的，这种不支持执行JavaScript的爬虫抓取到的非SSR的页面会是一个空的HTML页面，而有了SSR以后，这些爬虫就可以获取到完整的HTML结构的数据，进而收录到搜索引擎中。
+-  白屏时间更短：相对于客户端渲染，服务端渲染在浏览器请求URL之后已经得到了一个带有数据的HTML文本，浏览器只需要解析HTML，直接构建DOM树就可以。而客户端渲染，需要先得到一个空的HTML页面，这个时候页面已经进入白屏，之后还需要经过加载并执行 JavaScript、请求后端服务器获取数据、JavaScript 渲染页面几个过程才可以看到最后的页面。特别是在复杂应用中，由于需要加载 JavaScript 脚本，越是复杂的应用，需要加载的 JavaScript 脚本就越多、越大，这会导致应用的首屏加载时间非常长，进而降低了体验感。
+
+更多详情查看[彻底理解服务端渲染 - SSR原理](https://github.com/yacan8/blog/issues/30)
 
