@@ -41,6 +41,90 @@
 
 总结：从外到内，再从内到外
 
+### **Vue 中父组件如何监听子组件的生命周期？**
+
+#### **v-on / $emit**
+
+```html
+<child-comp @child-event="handleChildEvent"></child-comp></div>
+```
+
+```js
+Vue.component('child-comp', {
+  template: '<div></div>',
+  data: function () {
+    return {
+      childMsg: 'Hello, I am Child'
+    };
+  },
+  methods: {},
+  mounted() {
+    this.$emit('child-event');
+  }
+});
+const app = new Vue({
+  el: '#app',
+  data: function () {
+    return {
+      parentData: 'parent Message'
+    };
+  },
+  beforeCreate: function () {
+    console.log('before created');
+  },
+  methods: {
+    handleChildEvent() {
+      console.log('child mounted');
+    }
+  }
+});
+```
+
+在子组件中的 `mounted` 钩子函数中调用 `this.$emit("child-event");` 向父组件发送 `child-event` 消息。 父组件 `@child-event="handleChildEvent"` 监听了此消息。
+
+#### **@hook**
+
+假如我们这里的子组件是外部的，是不可更改的。那我们父组件监听这个外部子组件中的生命周期钩子函数怎么办呢?
+
+```html
+<div id="app">
+  <child-comp @hook:mounted="handleChildEvent"></child-comp>
+</div>
+```
+
+```js
+Vue.component('child-comp', {
+  template: '<div></div>',
+  data: function () {
+    return {
+      childMsg: 'Hello, I am Child'
+    };
+  },
+  methods: {},
+  mounted() {
+    //this.$emit("child-event");
+  }
+});
+const app = new Vue({
+  el: '#app',
+  data: function () {
+    return {
+      parentData: 'parent Message'
+    };
+  },
+  beforeCreate: function () {
+    console.log('before created');
+  },
+  methods: {
+    handleChildEvent() {
+      console.log('child mounted');
+    }
+  }
+});
+```
+
+把子组件中的 `mounted` 钩子函数中的 `$emit` 方法去掉， 在父组件中使用 `@hook:mounted`
+
 ### 更多阅读
 
 - [包你理解---vue 的生命周期](https://segmentfault.com/a/1190000014640577)
@@ -686,6 +770,8 @@ Virtual DOM 是 DOM 节点在 JavaScript 中的一种抽象数据结构，之所
 - 可重用性。你可以把一些视图逻辑放在一个 ViewModel 里面，让很多 view 重用这段视图逻辑。
 - 独立开发。开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计，使用 Expression Blend 可以很容易设计界面并生成 xml 代码。
 - 可测试。界面素来是比较难于测试的，而现在测试可以针对 ViewModel 来写。
+
+### 当执行 import vue from ‘vue’ 时发生了什么？
 
 平时开发中，经常会用到这样一个语句：
 
