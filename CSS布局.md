@@ -930,7 +930,7 @@ span { font-size: 1.5em; }
 1. 伸缩布局 flex
 2. 流式布局 百分比
 3. 响应式布局 媒体查询（超小屏设备时：流式布局）
-    <!- 以上布局共同点：元素只能做到宽度的适配（排除图片）->
+   <!- 以上布局共同点：元素只能做到宽度的适配（排除图片）->
 4. rem布局 宽度和高度都能做到适配（等比适配）
 
 ## Flex
@@ -994,6 +994,7 @@ justify-content: center;
 ### stylus 实现方案
 
 > stylus
+
 ```css
 /* 给 dpr 1.5 的设备设置 0.7 的缩放 */
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5)
@@ -1074,4 +1075,5 @@ img {
 </style>
 ```
 
-题目来源：[Daily-Interview-Question 第60题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/105)
+题目来源：[Daily-Interview-Question 第 60 题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/105)
+
