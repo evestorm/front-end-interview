@@ -1873,6 +1873,10 @@ Promise new的时候会立即执行里面的代码 then是微任务 会在本次
 - async 用于声明一个异步的 function
 - await 用于等待一个异步方法执行完成
 
+Async/Await 是一种用于处理 JS 异步操作的语法糖，可以帮助我们摆脱回调地狱（callback hell），编写更加优雅的代码。
+
+通俗的理解，async 关键字的作用是告诉编译器对于标定的函数要区别对待。当编译器遇到标定的函数中的 await 关键字时，要暂时停止运行，等到 await 标定的函数处理完毕后，再进行相应操作。如果该函数 fulfiled 了，则返回值是 fulfillment value，否则得到的就是 reject value。
+
 #### Async
 
 async 函数会返回一个 Promise 对象，如果在函数中 `return` 一个直接量，async 会把这个直接量通过 `Promise.resolve()` 封装成 Promise 对象。
@@ -1940,6 +1944,91 @@ doIt()
 ```
 
 参考：[理解 JavaScript 的 async/await](https://segmentfault.com/a/1190000007535316)
+
+最后拿普通的 promise 写法来和 async/await 对比，便于理解：
+
+```js
+async function asyncFunc() {
+  const result = await otherAsyncFunc(); // otherAsyncFunc()返回一个Promise对象
+  console.log(result);
+}
+
+// 等同于:
+function asyncFunc() {
+  return otherAsyncFunc() // otherAsyncFunc()返回一个Promise对象
+    .then(*result* => {
+      console.log(result);
+    });
+}
+```
+
+按顺序处理多个异步函数的时候优势更为明显：
+
+```js
+async function asyncFunc() {
+    const result1 = await otherAsyncFunc1();// otherAsyncFunc1()返回一个Promise对象
+    console.log(result1);
+    const result2 = await otherAsyncFunc2();// otherAsyncFunc2()返回一个Promise对象
+    console.log(result2);
+}
+
+// 等同于:
+function asyncFunc() {
+    return otherAsyncFunc1()// otherAsyncFunc1()返回一个Promise对象
+    .then(result1 => {
+        console.log(result1);
+        return otherAsyncFunc2();// otherAsyncFunc2()返回一个Promise对象
+    })
+    .then(result2 => {
+        console.log(result2);
+    });
+}
+```
+
+并行处理多个异步函数：
+
+```js
+async function asyncFunc() {
+    const [result1, result2] = await Promise.all([
+        otherAsyncFunc1(),// otherAsyncFunc1()返回一个Promise对象
+        otherAsyncFunc2() // otherAsyncFunc2()返回一个Promise对象
+    ]);
+    console.log(result1, result2);
+}
+
+// 等同于:
+function asyncFunc() {
+    return Promise.all([
+        otherAsyncFunc1(),// otherAsyncFunc1()返回一个Promise对象
+        otherAsyncFunc2() // otherAsyncFunc2()返回一个Promise对象
+    ])
+    .then([result1, result2] => {
+        console.log(result1, result2);
+    });
+}
+```
+
+处理错误：
+
+```js
+async function asyncFunc() {
+    try {
+        await otherAsyncFunc();// otherAsyncFunc()返回一个Promise对象
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// 等同于:
+function asyncFunc() {
+    return otherAsyncFunc()// otherAsyncFunc()返回一个Promise对象
+    .catch(err => {
+        console.error(err);
+    });
+}
+```
+
+
 
 ### 解构赋值
 
