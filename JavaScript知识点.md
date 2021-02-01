@@ -233,11 +233,19 @@ console.log(Object.values(obj)); // ['bar', 42]
 // array like object
 var obj = { 0: 'a', 1: 'b', 2: 'c' };
 console.log(Object.values(obj)); // ['a', 'b', 'c']
+
+var obj = ['e', 's', '8']; // 等同于 { 0: 'e', 1: 's', 2: '8' };
+Object.values(obj); // ['e', 's', '8']
+
+//当把数字当做对象的键的时候，返回的数组以键的值升序排序
+var obj = { 10: 'xxx', 1: 'yyy', 3: 'zzz' };
+Object.values(obj); // ['yyy', 'zzz', 'xxx']
+Object.values('es8'); // ['e', 's', '8']
 ```
 
 ### Object.entries()
 
-`**Object.entries()**` 方法返回对象自身可枚举属性的键值对数组，其排列与使用 [`for...in`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/for...in) 循环遍历该对象时返回的顺序一致（区别在于 for-in 循环也枚举原型链中的属性）。
+**`Object.entries()`** 方法返回对象自身可枚举属性的键值对数组，其排列与使用 [`for...in`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/for...in) 循环遍历该对象时返回的顺序一致（区别在于 for-in 循环也枚举原型链中的属性）。
 
 ```js
 const obj = { foo: 'bar', baz: 42 };
@@ -248,6 +256,10 @@ const obj = { a: 5, b: 7, c: 9 };
 for (const [key, value] of Object.entries(obj)) {
   console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
 }
+
+const obj2 = { 10: 'xxx', 1: 'yyy', 3: 'zzz' };
+Object.entries(obj2); // [['1', 'yyy'], ['3', 'zzz'], ['10', 'xxx']]
+Object.entries('es8'); // [['0', 'e'], ['1', 's'], ['2', '8']]
 ```
 
 ## 数组
@@ -795,6 +807,33 @@ console.log("swlance".startsWith("l"));  //-->false
 console.log("swlance".endsWith("e"));  //-->true
 console.log("swlance".endsWith("o"));  //-->false
 ```
+
+#### padStart/padEnd
+
+在 ES 8 中String新增了两个实例函数`String.prototype.padStart`和`String.prototype.padEnd`，允许将空字符串或其他字符串添加到原始字符串的开头或结尾。
+
+- `String.padStart(targetLength,[padString])`
+  _targetLength：_当前字符串需要填充到的目标长度。如果这个数值小于当前字符串的长度，则返回当前字符串本身。
+
+  *padString：*(可选)填充字符串。如果字符串太长，使填充后的字符串长度超过了目标长度，则只保留最左侧的部分，其他部分会被截断，此参数的缺省值为空格。
+
+- `String.padEnd(targetLength,padString])` 参数释义同上。
+
+```
+'es8'.padStart(2);          // 'es8'
+'es8'.padStart(5);          // '  es8'
+'es8'.padStart(6, '1891');  // '189es8'
+'es8'.padStart(14, 'coffe');  // 'coffecoffeces8'
+'es8'.padStart(7, '0');     // '0000es8'
+
+'es8'.padEnd(2);            // 'es8'
+'es8'.padEnd(5);            // 'es8  '
+'es8'.padEnd(6, '1891');    // 'es8189'
+'es8'.padEnd(14, 'coffe');    // 'es8coffecoffec'
+'es8'.padEnd(7, '9');       // 'es89999'
+```
+
+
 
 ## 什么是 JavaScript 作用链域？
 
