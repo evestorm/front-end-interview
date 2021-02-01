@@ -2714,6 +2714,89 @@ console.log(fn.length) // length 为多少？
 2. 在进行强转字符串类型时将优先调用toString方法，强转为数字时优先调用valueOf。
 3. 在有运算操作符的情况下，valueOf的优先级高于toString。
 
+### 预测下面的输出是什么
+
+```js
+function Person(firstName, lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+}
+
+const member = new Person("Lydia", "Hallie");
+Person.getFullName = function () {
+  return `${this.firstName} ${this.lastName}`;
+}
+
+console.log(member.getFullName());
+```
+
+- A: `TypeError`
+- B: `SyntaxError`
+- C: `Lydia Hallie`
+- D: `undefined` `undefined`
+
+解析：
+
+答案是A
+
+1. getFullName函数是赋值给Person的，没有赋值给Person的原型，所以member并没有getFullName这个函数，这样运行会报错 
+2. 如果这里运行的是Person.getFullName()  那么会得到两个undefined
+3. 如果写了Person.prototype.getFullName = .... 此时调用member.getFullName函数 会得到答案C
+
+### 下面的输出是什么？
+
+```js
+class Chameleon {
+  static colorChange(newColor) {
+    this.newColor = newColor
+    return this.newColor
+  }
+
+  constructor({ newColor = 'green' } = {}) {
+    this.newColor = newColor
+  }
+}
+
+const freddie = new Chameleon({ newColor: 'purple' })
+freddie.colorChange('orange')
+```
+
+- A: `orange`
+- B: `purple`
+- C: `green`
+- D: `TypeError`
+
+解析：
+
+colorChange是静态方法不是实例方法，需要Chameleon.colorChange才能调用
+
+### 输出是什么？
+
+```js
+const shape = {
+  radius: 10,
+  diameter() {
+    return this.radius * 2
+  },
+  perimeter: () => 2 * Math.PI * this.radius
+}
+
+shape.diameter()
+shape.perimeter()
+
+```
+
+- A: `20` and `62.83185307179586`
+- B: `20` and `NaN`
+- C: `20` and `63`
+- D: `NaN` and `63`
+
+解析：
+
+1. shape定义所在环境，是window对象。
+2. diameter方法中的this指向方法调用者，即shape。
+3. perimeter方法中的this指向方法调用者**所在的环境**，即window对象。
+
 ## 算法题
 
 我面的都不是什么大公司，所以很少被问到算法，不过对于前端来说，了解一些基本的算法还是很有必要的，起码最常见的排序算法得掌握，例如冒泡和快排。这部分内容可参考我的博客：
