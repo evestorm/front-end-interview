@@ -123,6 +123,10 @@ Promise.all([p]).then(v => {
 
 所有的字符串都是大写字母开头的String对象的实例，当我们对字符串使用方法和属性时，其实字符串本身并没有对应的方法，这个时候，JavaScript会**沿着原型链往上寻找**，最终在对象 String 上找到了对应的方法和属性，而这个过程对于开发者是无感的，所以看上去像是调用了字符串本身的方法。
 
+### new 一个构造函数，如果函数返回 `return {}` 、 `return null` ， `return 1` ， `return true` 会发生什么情况？
+
+如果函数返回一个对象，那么new 这个函数调用返回这个函数的返回对象，否则返回 new 创建的新对象
+
 ### ES6中，promise能实现异步的原理是什么？我new一个promise,然后对这个promise实例使用typeof，结果是什么？promise实例接收的参数是一个函数，函数接收两个参数一个resolve,一个reject,为什么resolve后可以实现继续执行后续代码？（TODO）
 
 待续...
