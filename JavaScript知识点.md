@@ -1227,6 +1227,20 @@ function _new(fn, ...args) {
 
 ![事件阶段.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/260235/1550160415749-0297296f-0559-485f-bfe4-05859bdc757a.jpeg)
 
+事件流是网页元素接收事件的顺序，"DOM2级事件"规定的事件流包括三个阶段：
+
+- 事件捕获阶段
+- 处于目标阶段
+- 事件冒泡阶段
+
+首先发生的事件捕获，为截获事件提供机会。
+
+然后是实际的目标接受事件。
+
+最后一个阶段是时间冒泡阶段，可以在这个阶段对事件做出响应。
+
+虽然捕获阶段在规范中规定不允许响应事件，但是实际上还是会执行，所以有两次机会获取到目标对象。
+
 ### 什么是DOM事件模型
 
 主要有三种 DOM 事件模型：
@@ -1282,7 +1296,56 @@ DOM2 级事件定义用于处理指定和删除事件处理程序的操作：
 
 会执行两次事件，按代码执行顺序来
 
-**规律**：绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照[W3C](https://www.baidu.com/s?wd=W3C&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的标准，先发生捕获事件，后发生冒泡事件。所有事件的顺序是：其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件
+**规律**：绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照[W3C](https://www.baidu.com/s?wd=W3C&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的标准，先发生捕获事件，后发生冒泡事件。所有事件的顺序是：其他元素捕获阶段事件 -> **本元素代码顺序事件** -> 其他元素冒泡阶段事件
+
+#### 小练习
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件冒泡</title>
+</head>
+<body>
+    <div>
+        <p id="parEle">我是父元素    <span id="sonEle">我是子元素</span></p>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+var sonEle = document.getElementById('sonEle');
+var parEle = document.getElementById('parEle');
+
+parEle.addEventListener('click', function () {
+    alert('父级 冒泡');
+}, false);
+parEle.addEventListener('click', function () {
+    alert('父级 捕获');
+}, true);
+
+sonEle.addEventListener('click', function () {
+    alert('子级冒泡');
+}, false);
+sonEle.addEventListener('click', function () {
+    alert('子级捕获');
+}, true);
+
+</script>
+```
+
+上述代码父子事件的执行顺序是什么？
+
+解析：
+
+当容器元素及嵌套元素，即在`捕获阶段`又在`冒泡阶段`调用事件处理程序时：**事件按DOM事件流的顺序**执行事件处理程序：
+
+- 父级捕获
+- 子级冒泡
+- 子级捕获
+- 父级冒泡
+
+且当事件处于目标阶段时，事件调用顺序决定于绑定事件的**书写顺序**，按上面的例子为，先调用冒泡阶段的事件处理程序，再调用捕获阶段的事件处理程序。依次alert出“子集冒泡”，“子集捕获”。
 
 ### 事件委托
 

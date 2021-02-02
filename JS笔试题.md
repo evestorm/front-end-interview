@@ -1698,14 +1698,8 @@ function copy(obj) {
             if (obj[key] === obj) {
                continue
             }
-            // 如果是数组或者对象
-            if (typeof obj[key] === 'object') {
-                // 递归
-                newObj[key] = copy(obj[key])
-            } else {
-                // 否则直接返回
-                newObj[key] = obj[key]
-            }
+          	// 如果是数组或者对象: 递归；否则直接返回
+          	newObj[key] = typeof obj[key] === 'object' ? copy(obj[key]) : obj[key];
         }
     }
     return newObj
