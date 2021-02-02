@@ -553,6 +553,35 @@ function fn(arr) {
 console.log(fn(arr))
 ```
 
+### 数组扁平化
+
+```js
+function flatten(arr) {
+  let result = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (Array.isArray(arr[i])) {
+      result = result.concat(flatten(arr[i]));
+    } else {
+      result = result.concat(arr[i]);
+    }
+  }
+
+  return result;
+}
+
+// or
+Array.prototype.flat = function() {
+  return [].concat(...this.map(item => Array.isArray(item) ? item.flat() : [item]))
+}
+
+const a = [1, [2, [3, 4]]];
+console.log(flatten(a));
+console.log(a.flat())
+```
+
+
+
 ### 将数组扁平化并去除其中重复数据，最终得到一个升序且不重复的数组
 
 > 已知如下数组：
@@ -1585,6 +1614,34 @@ console.log(ip)
 ```
 
 题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6)「《JS 提供的对象：④ Math》[编号：js_19]」
+
+## 函数
+
+### 实现柯里化
+
+预先设置一些参数
+
+柯里化是什么：是指这样一个函数，它接收函数 A，并且能返回一个新的函数，这个新的函数能够处理函数 A 的剩余参数
+
+```js
+function createCurry(func, args) {
+  var argity = func.length;
+  var args = args || [];
+  
+  return function () {
+    var _args = [].slice.apply(arguments);
+    args.push(..._args);
+    
+    if (args.length < argity) {
+      return createCurry.call(this, func, args);
+    }
+    
+    return func.apply(this, args);
+  }
+}
+```
+
+
 
 ## this
 

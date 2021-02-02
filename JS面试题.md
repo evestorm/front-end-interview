@@ -101,6 +101,10 @@ Promise.all([p]).then(v => {
 });
 ```
 
+#### ES6中，promise能实现异步的原理是什么？我new一个promise,然后对这个promise实例使用typeof，结果是什么？promise实例接收的参数是一个函数，函数接收两个参数一个resolve,一个reject,为什么resolve后可以实现继续执行后续代码？（TODO）
+
+待续...
+
 ## 面向对象相关
 
 ### JS是一门面向对象的语言，说说面向对象语言的三大特征？
@@ -127,9 +131,9 @@ Promise.all([p]).then(v => {
 
 如果函数返回一个对象，那么new 这个函数调用返回这个函数的返回对象，否则返回 new 创建的新对象
 
-### ES6中，promise能实现异步的原理是什么？我new一个promise,然后对这个promise实例使用typeof，结果是什么？promise实例接收的参数是一个函数，函数接收两个参数一个resolve,一个reject,为什么resolve后可以实现继续执行后续代码？（TODO）
+### 如果一个构造函数，bind了一个对象，用这个构造函数创建出的实例会继承这个对象的属性吗？为什么？
 
-待续...
+不会继承，因为根据 this 绑定四大规则，new 绑定的优先级高于 bind 显示绑定，通过 new 进行构造函数调用时，会创建一个新对象，这个新对象会代替 bind 的对象绑定，作为此函数的 this，并且在此函数没有返回对象的情况下，返回这个新建的对象
 
 
 
@@ -425,6 +429,36 @@ for (var i = 0; i < 10; i++) {
 promise.then里的回调函数会放到相应宏任务的微任务队列里，等宏任务里面的同步代码执行完再执行；async函数表示函数里面可能会有异步方法，await后面跟一个表达式，async方法执行时，遇到await会立即执行表达式，然后把表达式后面的代码放到微任务队列里，让出执行栈让同步代码先执行。
 
 **题目来源**：https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/33
+
+### 你知道 Event Loop （事件循环）的机制吗？
+
+事件循环机制从整体上告诉了我们 JavaScript 代码的执行顺序`Event Loop`即事件循环，是指浏览器或`Node`的一种解决`javaScript`单线程运行时不会阻塞的一种机制，也就是我们经常使用**异步**的原理。
+
+先执行宏任务队列，然后执行微任务队列，然后开始下一轮事件循环，继续先执行宏任务队列，再执行微任务队列。
+
+- 宏任务：script/setTimeout/setInterval/setImmediate/ I/O / UI Rendering
+- 微任务：process.nextTick()/Promise
+
+上诉的 setTimeout 和 setInterval 等都是任务源，真正进入任务队列的是他们分发的任务。
+
+### 优先级
+
+- setTimeout = setInterval 一个队列
+- setTimeout > setImmediate
+- process.nextTick > Promise
+
+```js
+for (const macroTask of macroTaskQueue) {  
+  handleMacroTask();    
+  for (const microTask of microTaskQueue) {    
+   handleMicroTask(microTask);  
+  }
+}
+```
+
+### 参考链接
+
+- https://juejin.im/post/59e85eebf265da430d571f89
 
 ## 概念性问题
 

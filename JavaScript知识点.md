@@ -1051,13 +1051,7 @@ Function.prototype.bind = function (context, ...args) {
 
 ### 什么是原型链
 
-**精简版**
-
-原型链是一种关系，实例对象和原型对象之间的关系，关系是通过原型（__proto__）来联系的。
-
-**详细版**
-
-每个对象都会在其内部初始化一个属性 prototype（原型），当我们访问一个对象的属性时， 如果这个对象内部不存在这个属性，那么他就会去 prototype 里找这个属性，这个 prototype 又会有自己的 prototype ，于是就这样一直找下去，也就是我们平时所说的原型链的概念。
+当对象查找一个属性的时候，如果没有在自身找到，那么就会查找自身的原型，如果原型还没有找到，那么会继续查找原型的原型，直到找到 Object.prototype 的原型时，此时原型为 null，查找停止。这种通过 通过原型链接的逐级向上的查找链被称为原型链。
 
 **原型和原型链**
 ![prototype](https://cdn.nlark.com/yuque/0/2019/png/260235/1549711479179-356c282c-60db-41ea-82df-5ebfb9550785.png)
@@ -1551,6 +1545,10 @@ document.addEventListener("DOMContentLoaded", function() {
   console.log("DOMContentLoaded");
 });
 ```
+
+### <script src=’xxx’ ’xxx’/>外部js文件先加载还是onload先执行
+
+onload 是所有加载完成之后执行的
 
 ## ES6相关
 
