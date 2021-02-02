@@ -833,8 +833,6 @@ console.log("swlance".endsWith("o"));  //-->false
 'es8'.padEnd(7, '9');       // 'es89999'
 ```
 
-
-
 ## 什么是 JavaScript 作用链域？
 
 全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
@@ -978,6 +976,55 @@ apply, call, bind 方法都可以改变 this 的指向
 - apply，call 是调用的时候改变 this 指向，然后返回函数执行的结果。
     - 参数较多时用 apply ，参数较少时用 call
 - bind 是复制一份函数并返回，并且这个函数的 this 指向变成了传入的第一个参数。
+
+### 手写 bind、apply、call
+
+#### call
+
+```js
+Function.prototype.call = function (context, ...args) {
+  context = context || window;
+  
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  context[fnSymbol](...args);
+  delete context[fnSymbol];
+}
+```
+
+#### apply
+
+```js
+Function.prototype.apply = function (context, argsArr) {
+  context = context || window;
+  
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  context[fnSymbol](...argsArr);
+  delete context[fnSymbol];
+}
+```
+
+#### bind
+
+```js
+Function.prototype.bind = function (context, ...args) {
+  context = context || window;
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  return function (..._args) {
+    _args = _args.concat(args);
+    
+    context[fnSymbol](..._args);
+    delete context[fnSymbol];   
+  }
+}
+```
+
+
 
 ## JavaScript 原型
 
@@ -2485,6 +2532,11 @@ JSONP 的全名叫做 JSON with padding，就是把 JSON 对象用符合 JS 语�
 两者都是异步加载，但 defer 是按照加载顺序执行脚本的；async 则是无序加载脚本，例如a.js写在b.js前面，但如果b.js先加载完，则立即执行，不会等a.js的加载。
 
 参考：[https://segmentfault.com/q/1010000000640869](https://segmentfault.com/q/1010000000640869)
+
+#### 技巧
+
+- 如果依赖其他脚本和 DOM 结果，使用 defer
+- 如果与 DOM 和其他脚本依赖不强时，使用 async
 
 ### preload 和 prefetch 的区别是什么？
 

@@ -1586,6 +1586,57 @@ console.log(ip)
 
 题目来源：[2019 前端面试 | “HTML + CSS + JS”专题](https://juejin.im/post/5ce4171ff265da1bd04eb4f3#heading-6)「《JS 提供的对象：④ Math》[编号：js_19]」
 
+## this
+
+### 手写 bind、apply、call
+
+#### call
+
+```js
+Function.prototype.call = function (context, ...args) {
+  context = context || window;
+  
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  context[fnSymbol](...args);
+  delete context[fnSymbol];
+}
+```
+
+#### apply
+
+```js
+Function.prototype.apply = function (context, argsArr) {
+  context = context || window;
+  
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  context[fnSymbol](...argsArr);
+  delete context[fnSymbol];
+}
+```
+
+#### bind
+
+```js
+Function.prototype.bind = function (context, ...args) {
+  context = context || window;
+  const fnSymbol = Symbol("fn");
+  context[fnSymbol] = this;
+  
+  return function (..._args) {
+    _args = _args.concat(args);
+    
+    context[fnSymbol](..._args);
+    delete context[fnSymbol];   
+  }
+}
+```
+
+
+
 ## 闭包
 
 ### 如下代码输出多少？如果想输出 3，那如何改造代码？
@@ -2127,43 +2178,49 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 ### 实现一个基本的 Promise
 
 ```js
-// 未添加异步处理等其他边界情况
-// ①自动执行函数，②三个状态，③then
-class Promise {
-  constructor (fn) {
-    // 三个状态
-    this.state = 'pending'
-    this.value = undefined
-    this.reason = undefined
-    let resolve = value => {
-      if (this.state === 'pending') {
-        this.state = 'fulfilled'
-        this.value = value
-      }
-    }
-    let reject = value => {
-      if (this.state === 'pending') {
-        this.state = 'rejected'
-        this.reason = value
-      }
-    }
-    // 自动执行函数
-    try {
-      fn(resolve, reject)
-    } catch (e) {
-      reject(e)
+class MyPromise {
+  constructor(fn) {
+    this.resolvedCallbacks = [];
+    this.rejectedCallbacks = [];
+    
+    this.state = 'PENDING';
+    this.value = '';
+    
+    fn(this.resolve.bind(this), this.reject.bind(this));
+    
+  }
+  
+  resolve(value) {
+    if (this.state === 'PENDING') {
+      this.state = 'RESOLVED';
+      this.value = value;
+      
+      this.resolvedCallbacks.map(cb => cb(value));   
     }
   }
-  // then
+  
+  reject(value) {
+    if (this.state === 'PENDING') {
+      this.state = 'REJECTED';
+      this.value = value;
+      
+      this.rejectedCallbacks.map(cb => cb(value));
+    }
+  }
+  
   then(onFulfilled, onRejected) {
-    switch (this.state) {
-      case 'fulfilled':
-        onFulfilled()
-        break
-      case 'rejected':
-        onRejected()
-        break
-      default:
+    if (this.state === 'PENDING') {
+      this.resolvedCallbacks.push(onFulfilled);
+      this.rejectedCallbacks.push(onRejected);
+      
+    }
+    
+    if (this.state === 'RESOLVED') {
+      onFulfilled(this.value);
+    }
+    
+    if (this.state === 'REJECTED') {
+      onRejected(this.value);
     }
   }
 }
@@ -2790,6 +2847,10 @@ shape.perimeter()
 1. shape定义所在环境，是window对象。
 2. diameter方法中的this指向方法调用者，即shape。
 3. perimeter方法中的this指向方法调用者**所在的环境**，即window对象。
+
+### NaN 是什么，用 typeof 会输出什么？
+
+Not a Number，表示非数字，typeof NaN === 'number'
 
 ## 算法题
 
