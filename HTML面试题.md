@@ -79,3 +79,8 @@ header, nav, aside, main, section, article, footer, canvas, video, audio
 | 雪碧图   | 一次加载多处使用                    | 小图太多的时候，集中成一张图片减少 HTTP 请求 |
 
 更多阅读：[面试知识点 - 图片](https://github.com/LiangJunrong/document-library/blob/master/other-library/interview/personal-experience/other-%E5%9B%BE%E7%89%87.md)
+
+## 如何实现图片的懒加载
+
+链接：https://evestorm.github.io/posts/7617/ or [原文](https://segmentfault.com/a/1190000038413073)
+
