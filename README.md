@@ -1,6 +1,6 @@
 # front-end-interview（持续更新中...）
 
-## 2022-07-04 更新
+## 🌈 2022-07-04 更新
 
 近两年使用「[语雀](https://www.yuque.com/dashboard)」记笔记比较多，前段时间借着面试准备的机会，就把笔记整理到了语雀上，后续各位看官可移步 👉 [前端知识库](https://www.yuque.com/baofengyuqianxi/vi4wte) 👈 查看此系列。
 
