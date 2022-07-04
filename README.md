@@ -1,5 +1,9 @@
 # front-end-interview（持续更新中...）
 
+## 2022-07-04 更新
+
+近两年使用「[语雀](https://www.yuque.com/dashboard)」记笔记比较多，前段时间借着面试准备的机会，就把笔记整理到了语雀上，后续各位看官可移步 [前端知识库](https://www.yuque.com/baofengyuqianxi/vi4wte) 查看此系列。
+
 ## 介绍
 
 根据网上各大前端面试题文章以及自我总结，沉淀下来的一套面试题合集，包含前端知识点 + 面试题。
