@@ -1,5 +1,12 @@
 # front-end-interview（持续更新中...）
 
+## 置顶
+
+面试指南 + 前端知识库在线地址:
+
+- [语雀地址](https://www.yuque.com/baofengyuqianxi/vi4wte)
+- [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
+
 ## 2022-11-15 更新
 
 由于语雀会员风波，虽然目前此知识库仍然互联网可见，但我考虑再三后，还是决定后续把知识库逐步迁移至 notion，目前才开始迁移，地址各位可以先马克一下：
