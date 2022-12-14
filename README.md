@@ -1,11 +1,16 @@
 # front-end-interview（持续更新中...）
 
-## 置顶
+## 🔝 置顶
 
 面试指南 + 前端知识库在线地址:
 
 - [语雀地址](https://www.yuque.com/baofengyuqianxi/vi4wte)
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
+
+## 2022-12-14 更新
+
+已将全部语雀资源搬运至 Notion，并且调整了目录结构使知识库更清晰。大家可查看最新 [Notion版本](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02) 的知识库。
+另外由于 Notion 默认不支持侧边栏大纲显示，这里推荐一款 Chrome 插件 [Notion Boost](https://gourav.io/notion-boost) 供大家下载，它能支持网页版动态生成 Notion 文章的侧边栏大纲。如果因为众所周知原因无法在商店下载，可点击 [此官网链接](https://github.com/GorvGoyl/Notion-Boost-browser-extension/releases) 下载离线版本。
 
 ## 2022-11-15 更新
 
