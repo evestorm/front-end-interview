@@ -7,6 +7,22 @@
 - [语雀地址](https://www.yuque.com/baofengyuqianxi/vi4wte)
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
+<details><summary>更新记录</summary>
+<p>
+
+## 2023-02-07 更新
+
+- [ES5/ES6的继承除了写法以外还有什么区别？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#26190b6342ee4a46b0f6a8aa09322134)
+- [实现数组扁平化-升序且不重复](https://www.notion.so/willbchang/60305d4d7ae149d0835ebc1d078a7caa#c3421e46a4484f51bafeba0dd11cc267)
+- [JS异步解决方案的发展历程以及优缺点](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#026378b6f1db4f27947ab1b32cfdb71a)
+- [A、B 机器正常连接后，B 机器突然重启，问 A 此时处于 TCP 什么状态](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#b1b713278647450aa58260e4b7179a97)
+- [React 一道 setState 笔试题](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#3c89230e56f84f0f8f84f1c41f969610)
+- [介绍下 npm 模块安装机制，为什么输入 npm install ，就可以自动安装对应的模块？](https://www.notion.so/willbchang/3d6c571422114fe483be2dffcd128f31#349085add30e44ef8c25c3d7bd24cd32)
+- [有以下 3 个判断数组的方法，请分别介绍它们之间的区别和优劣](https://www.notion.so/willbchang/60305d4d7ae149d0835ebc1d078a7caa#8078d018200941678dcd557b6661433f)
+- [聊聊 Redux 和 Vuex 的设计思想](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#e10cc85450b74cb5a8174578f8d09eda)
+- [全局作用域中，用 const 和 let 声明的变量不在 window 上，那到底在哪里？如何去获取？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#a0d13b799a6e464aa9392890de72f4b8)
+- [cookie 和 token 都存放在 header 中，为什么不会劫持 token？](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#48f6e81111d345a29e9e99bc3dfb37b1)
+
 ## 2022-12-14 更新
 
 已将全部语雀资源搬运至 Notion，并且调整了目录结构使知识库更清晰。大家可查看最新 [Notion版本](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02) 的知识库。
@@ -25,6 +41,9 @@
 ## 🌈 2022-07-04 更新
 
 近两年使用「[语雀](https://www.yuque.com/dashboard)」记笔记比较多，前段时间借着面试准备的机会，就把笔记整理到了语雀上，后续各位看官可移步 👉 [前端知识库](https://www.yuque.com/baofengyuqianxi/vi4wte) 👈 查看此系列。
+
+</p>
+</details>
 
 ## 介绍
 
