@@ -7,9 +7,6 @@
 - [语雀地址](https://www.yuque.com/baofengyuqianxi/vi4wte)
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
-<details><summary>更新记录</summary>
-<p>
-
 ## 2023-02-07 更新
 
 - [ES5/ES6的继承除了写法以外还有什么区别？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#26190b6342ee4a46b0f6a8aa09322134)
@@ -22,6 +19,9 @@
 - [聊聊 Redux 和 Vuex 的设计思想](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#e10cc85450b74cb5a8174578f8d09eda)
 - [全局作用域中，用 const 和 let 声明的变量不在 window 上，那到底在哪里？如何去获取？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#a0d13b799a6e464aa9392890de72f4b8)
 - [cookie 和 token 都存放在 header 中，为什么不会劫持 token？](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#48f6e81111d345a29e9e99bc3dfb37b1)
+
+<details><summary>历史更新记录</summary>
+<p>
 
 ## 2022-12-14 更新
 
