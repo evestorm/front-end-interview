@@ -4,7 +4,6 @@
 
 面试指南 + 前端知识库在线地址:
 
-- [语雀地址](https://www.yuque.com/baofengyuqianxi/vi4wte)
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
 ## 2023-02-07 更新
