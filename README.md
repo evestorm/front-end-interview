@@ -6,6 +6,22 @@
 
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
+## 2023-02-08 更新
+
+- [Virtual DOM 真的比操作原生DOM 快吗？谈谈你的想法。](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#b15a53c4f5e14510bcda2fd9b3871429)
+- [下面的代码打印什么内容，为什么？【值预测】](https://www.notion.so/willbchang/822aa5b940954bc3abf859425f9be1ff#23e30efb54464d29861f1d01d2320b94)
+- [浏览器缓存读取规则](https://www.notion.so/willbchang/2175d851244445f4b6e6fbf72599b956#8e4c3c68e8764f26abe030aa9c874878)
+- [为什么 Vuex 的 mutation 和 Redux 的 reducer 中不能做异步操作？](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#f896bbb3c4f34a25baf70d1c83677f12)
+- [为什么通常在发送数据埋点请求的时候使用的是 1x1 像素的透明 gif 图片？](https://www.notion.so/willbchang/1x1-gif-f47f0082ec284d01b5898aadfc9643d3)
+- [某公司 1 到 12 月份的销售额存在一个对象里面](https://www.notion.so/willbchang/60305d4d7ae149d0835ebc1d078a7caa#529f839ae9b84095b4a2eeb6be6477de)
+- [已知如下代码，如何修改才能让图片宽度为300px ？](https://www.notion.so/willbchang/3deb29fe2f464eaa938606bbbb2fc3e4#21cad933efb9466890923341824ed2c2)
+- [介绍下如何实现 token 加密](https://www.notion.so/willbchang/2175d851244445f4b6e6fbf72599b956#761c0b01c4d44ec2a79ca7d56bfda603)
+- [redux 为什么要把 reducer 设计成纯函数](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#3ca6ac7478f84fbb90b9b0a779559395)
+- [ES6 代码转成ES5 代码的实现思路是什么](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#a86ab15537544ea495ce02a4b8a6e5d2)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-02-07 更新
 
 - [ES5/ES6的继承除了写法以外还有什么区别？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#26190b6342ee4a46b0f6a8aa09322134)
@@ -18,9 +34,6 @@
 - [聊聊 Redux 和 Vuex 的设计思想](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#e10cc85450b74cb5a8174578f8d09eda)
 - [全局作用域中，用 const 和 let 声明的变量不在 window 上，那到底在哪里？如何去获取？](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#a0d13b799a6e464aa9392890de72f4b8)
 - [cookie 和 token 都存放在 header 中，为什么不会劫持 token？](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#48f6e81111d345a29e9e99bc3dfb37b1)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2022-12-14 更新
 
