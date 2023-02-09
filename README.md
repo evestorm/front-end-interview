@@ -6,6 +6,22 @@
 
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
+## 2023-02-09 更新
+
+- [数组里面有 10 万个数据，取第一个元素和第 10 万个元素的时间相差多少](https://www.notion.so/willbchang/60305d4d7ae149d0835ebc1d078a7caa#6d6efed40f4947fe9fd7659f2a95554d)
+- [打印出1 - 10000 之间的所有对称数](https://www.notion.so/willbchang/8335f0423acb4852ac751399afd39686#0071d31fecb249048c14fdbd4f862a33)
+- [实现模糊搜索结果的关键词高亮显示](https://www.notion.so/willbchang/aa4ca15153ec45739e8660a4c6508dbd#e1c90a3a1a2e48a9b7f8b0917371d8a3)
+- [介绍下 HTTPS 中间人攻击](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#b1bcb269f3764c58beefe49a37fc5844)
+- [给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。请找出这两个有序数组的中位数。要求算法的时间复杂度为 O(log(m+n))。](https://www.notion.so/willbchang/2366f8feb98e4e95beacb2db88fa35fb#7e31ce90ed06430bb6ba3fab1197497a)
+
+## 2023-02-09 更新
+
+- [介绍下 webpack 热更新原理，是如何做到在不刷新浏览器的前提下更新页面的](https://www.notion.so/willbchang/cfc92dfe2b544957901ca0864a0f48a0#09edf8007a264e08be67ecf14590e502)
+-
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-02-08 更新
 
 - [Virtual DOM 真的比操作原生DOM 快吗？谈谈你的想法。](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#b15a53c4f5e14510bcda2fd9b3871429)
@@ -18,9 +34,6 @@
 - [介绍下如何实现 token 加密](https://www.notion.so/willbchang/2175d851244445f4b6e6fbf72599b956#761c0b01c4d44ec2a79ca7d56bfda603)
 - [redux 为什么要把 reducer 设计成纯函数](https://www.notion.so/willbchang/6a67c4a72a6b4387b996074ce0939db5#3ca6ac7478f84fbb90b9b0a779559395)
 - [ES6 代码转成ES5 代码的实现思路是什么](https://www.notion.so/willbchang/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#a86ab15537544ea495ce02a4b8a6e5d2)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-02-07 更新
 
