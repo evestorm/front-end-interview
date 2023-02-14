@@ -6,6 +6,18 @@
 
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
+## 2023-02-14 更新
+
+- [谈一下 HTTP 与 HTTPS](https://www.notion.so/willbchang/HTTP-HTTPS-64adbb8b68ad4f6abd37c17106733162)
+- [TCP 和 UDP 的区别](https://www.notion.so/willbchang/d83649ac48494fb7a42f3fe70bf4902f#b7ff3696c9b54254928c12047d5a1bac)
+- [说几个很实用的 BOM 属性对象方法?](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#1bf39c083672482c94eb89569f87285b)
+- [说一下 HTML5 drag API](https://www.notion.so/willbchang/c2d20f1d4ced405bbaa642b9a00a2df2#fc8a2c126c304942aaa15e74aa6cecd5)
+- [iframe 是什么？有什么缺点？](https://www.notion.so/willbchang/c2d20f1d4ced405bbaa642b9a00a2df2#7d2b92e1f06345a19fa55d90e630152d)
+- [GET 请求传参长度的误区](https://www.notion.so/willbchang/d83649ac48494fb7a42f3fe70bf4902f#ff497e9ae78441ddbf3cf3f7aa47c13c)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-02-09 更新
 
 - [介绍下 webpack 热更新原理，是如何做到在不刷新浏览器的前提下更新页面的](https://www.notion.so/willbchang/cfc92dfe2b544957901ca0864a0f48a0#09edf8007a264e08be67ecf14590e502)
@@ -14,9 +26,6 @@
 - [实现模糊搜索结果的关键词高亮显示](https://www.notion.so/willbchang/aa4ca15153ec45739e8660a4c6508dbd#e1c90a3a1a2e48a9b7f8b0917371d8a3)
 - [介绍下 HTTPS 中间人攻击](https://www.notion.so/willbchang/a243e209226247c38e1ecdf525f36f4c#b1bcb269f3764c58beefe49a37fc5844)
 - [给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。请找出这两个有序数组的中位数。要求算法的时间复杂度为 O(log(m+n))。](https://www.notion.so/willbchang/2366f8feb98e4e95beacb2db88fa35fb#7e31ce90ed06430bb6ba3fab1197497a)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-02-08 更新
 
