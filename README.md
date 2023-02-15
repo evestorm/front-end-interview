@@ -6,6 +6,10 @@
 
 - [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
+> **😄 温馨提醒**
+>
+> 由于 Notion 没有像语雀那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以自己参考着写了个简易版本的插件 [Notion Faster](https://github.com/evestorm/notion-faster)，欢迎大家使用并提出意见。
+
 ## 2023-02-14 更新
 
 - [谈一下 HTTP 与 HTTPS](https://www.notion.so/willbchang/HTTP-HTTPS-64adbb8b68ad4f6abd37c17106733162)
