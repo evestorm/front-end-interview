@@ -10,6 +10,24 @@
 >
 > 由于 Notion 没有像语雀那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以自己参考着写了个简易版本的插件 [Notion Faster](https://github.com/evestorm/notion-faster)，欢迎大家使用并提出意见。
 
+## 2023-02-20 更新
+
+- [如何实现图片的懒加载，随着 web 技术的发展，有没有一些更好的方案](https://willbchang.notion.site/DOM-BOM-6b4be94426c24e1a9657de89d9d725ec#5859471c66bd4ac39a042dbbfa23d133)
+- [博客系统中常见的复制代码是如何实现的](https://willbchang.notion.site/DOM-BOM-6b4be94426c24e1a9657de89d9d725ec#07963b2533d54382b4b26d2c4e9cbc14)
+- [localhost:3000 与 localhost:5000 的 cookie 信息是否共享](https://willbchang.notion.site/2175d851244445f4b6e6fbf72599b956#279de13ffa644619ba10a9d34580475f)
+- [如何计算白屏时间和首屏时间](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#e9faaf966c0c4faa970065f3125297fc)
+- [什么是 Data URL，有哪些缺点](https://willbchang.notion.site/96a27fed50ac42e9b3697b1f034a89b1)
+- [textarea 如何禁止拉伸](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#b55c09cf865f42d3870be22fb6d86726)
+- [有没有使用过 css variable，它解决了哪些问题](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#23cfd95a3b864d3dbe5c2a6728af78dd)
+- ['+' 与 '~' 选择器有什么不同](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#caec1b66d4ec445f9b82f9ce93fe0f56)
+- [css 动画与 js 动画哪个性能更好](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#2057dd48c94647669c20c57f2d4f1690)
+- [为什么会发生样式抖动](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#a0784a7dd79248c0806d3a3a2ef76933)
+- [css 如何匹配前 N 个子元素及最后 N 个子元素](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#5a8fb8e8de264701a28ead5dd2900e3c)
+- [如何自定义滚动条的样式](https://willbchang.notion.site/703ed1ce5c2c418f9c93921018675d32)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-02-14 更新
 
 - [谈一下 HTTP 与 HTTPS](https://www.notion.so/willbchang/HTTP-HTTPS-64adbb8b68ad4f6abd37c17106733162)
@@ -18,9 +36,6 @@
 - [说一下 HTML5 drag API](https://www.notion.so/willbchang/c2d20f1d4ced405bbaa642b9a00a2df2#fc8a2c126c304942aaa15e74aa6cecd5)
 - [iframe 是什么？有什么缺点？](https://www.notion.so/willbchang/c2d20f1d4ced405bbaa642b9a00a2df2#7d2b92e1f06345a19fa55d90e630152d)
 - [GET 请求传参长度的误区](https://www.notion.so/willbchang/d83649ac48494fb7a42f3fe70bf4902f#ff497e9ae78441ddbf3cf3f7aa47c13c)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-02-09 更新
 
