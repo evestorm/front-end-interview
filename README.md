@@ -211,9 +211,9 @@ Vue没什么好说的，数据响应式（双向数据绑定）是一定会问�
 
 - <https://www.resumeviking.com/wp-content/uploads/2018/01/Dwight-Kavanagh-Resume-IT-QA-Analyst-11.pdf>
   ![resume0](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume0.png)
-- <https://www.resumeviking.com/wp-content/uploads/2019/04/Emily_Carter_>-_Resume_-_English_Teacher-9.pdf
+- <https://www.resumeviking.com/wp-content/uploads/2019/04/Emily_Carter_-_Resume_-_English_Teacher-9.pdf>
   ![resume1](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume1.png)
-- <https://www.resumeviking.com/wp-content/uploads/2018/09/Karen_Philips_>-_Resume_-_Web_Designer-4.pdf
+- <https://www.resumeviking.com/wp-content/uploads/2018/09/Karen_Philips_-_Resume_-_Web_Designer-4.pdf>
   ![resume2](https://gitee.com/evestorm/various_resources/raw/master/%E7%AE%80%E5%8E%86/resume2.png)
 
 上面两份模板都来自 [此网站](https://www.resumeviking.com/templates/) ，想寻找更满意的版本可以进去逛逛。
