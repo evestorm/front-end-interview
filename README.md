@@ -2,13 +2,28 @@
 
 ## 🔝 置顶
 
-面试指南 + 前端知识库在线地址:
+前端「面试指南 + 知识库」汇总:
 
-- [Notion地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
+- [Notion 地址](https://willbchang.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
 
 > **😄 温馨提醒**
 >
-> 由于 Notion 没有像语雀那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以自己参考着写了个简易版本的插件 [Notion Faster](https://github.com/evestorm/notion-faster)，欢迎大家使用并提出意见。
+> 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
+
+## 2023-03-22 更新
+
+- [在写 HTML 代码时，语义化实践中应该注意什么 ？](https://willbchang.notion.site/9e7789ddc5f9410bbd74cc8029b23f51#79400f7ffaa34fcea688559140ed3f00)
+- [Canvas 和 SVG 有什么区别](https://willbchang.notion.site/96a27fed50ac42e9b3697b1f034a89b1#f194f13767f4431f968ac8de2c22e4d0)
+- [如何解决 flex 布局 7 个元素使用 space-between 最后一行两边分布的问题？](https://willbchang.notion.site/Flex-Grid-eb330f69ea424cb6a67ba6f77ffa5738#bc6ace01f1d44168b542432c26b92f09)
+- [第二个子元素的高度是多少](https://willbchang.notion.site/Flex-Grid-eb330f69ea424cb6a67ba6f77ffa5738#e978ccf3cbe443ad8226c526434b41e1)
+- [flex 画骰子](https://willbchang.notion.site/Flex-Grid-eb330f69ea424cb6a67ba6f77ffa5738#e3732339f2d5469a86d5a2c3d7c7e82a)
+- [说说你对 Grid 网格布局的理解 ？](https://willbchang.notion.site/Flex-Grid-eb330f69ea424cb6a67ba6f77ffa5738#ae67f9488b6f41ae96b8f9490bd5e043)
+- [CSS 绘制图形](https://willbchang.notion.site/CSS-03e0b897fd06403b815033409281fb90)
+- [CSS3 动画相关](https://willbchang.notion.site/CSS3-836b0e41b70440f3bf976072934d9bd6)
+- [min-width、max-width、width 的包含（优先级）关系](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#08e12ff8347d48a38d12899ffee4b9e2)
+
+<details><summary>历史更新记录</summary>
+<p>
 
 ## 2023-02-20 更新
 
@@ -24,9 +39,6 @@
 - [为什么会发生样式抖动](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#a0784a7dd79248c0806d3a3a2ef76933)
 - [css 如何匹配前 N 个子元素及最后 N 个子元素](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#5a8fb8e8de264701a28ead5dd2900e3c)
 - [如何自定义滚动条的样式](https://willbchang.notion.site/703ed1ce5c2c418f9c93921018675d32)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-02-14 更新
 
@@ -94,114 +106,7 @@
 </p>
 </details>
 
-## 介绍
-
-根据网上各大前端面试题文章以及自我总结，沉淀下来的一套面试题合集，包含前端知识点 + 面试题。
-
-为了更好的阅读体验，推荐各位看官在博客中查看：[Lance个人博客-面试系列](https://evestorm.github.io/posts/46036/)
-
-## 大纲
-
-### 1 HTML
-
-根据以往面试经验，HTML部分很少有问到。所以这里仅列举一些高频面试题
-
-#### 1.1 面试题
-
-- [HTML面试题](./HTML面试题.md)
-
-### 2 CSS
-
-个人经验：这部分面试题一般笔试考知识点多一些（多背），面试考布局更多一些（多实践）。所以CSS我拆成了两部分，把布局单独拧出来了。
-
-#### 2.1 知识点 + 部分面试题
-
-- [CSS知识点](./CSS.md)
-
-#### 2.2 布局
-
-- [CSS布局面试题](./CSS布局.md)
-
-### 3 JavaScript
-
-这部分是面试重中之重，基本上啥都可能考。譬如比较经典的一个有关axios的面试题：
-
-- 问：a、b、c三个请求，希望c在a、b获取数据后再发请求，要是你你会怎么做？
-- 答：axios.all 先请求 a、b，再在 then 的第一个回调中请求 c ，巴拉巴拉...
-- 问：那 axios.all 内部是通过什么实现的呢？
-- 答：Promise.all，巴拉巴拉...
-- 问：如果不用 Promise 该如何实现？
-- 答：可以用 高阶函数 ，巴拉巴拉...
-
-```js
-// 示例（使用node读取文件做场景来说明）
-let fs = require('fs')
-let arr = []
-function fn(data) {
-  arr.push(data)
-  if (arr.length === 2) {
-    // get ab
-    // todo c
-  }
-}
-fs.readFile('./a.txt', 'utf8', (err, data) => {
-  fn(data)
-})
-fs.readFile('./b.txt', 'utf8', (err, data) => {
-  fn(data)
-})
-```
-
-可以看出，往往 JS 面试题是层层深入的，需要你有坚实的基础，并且在平常开发时不仅满足会使用各种库和框架，还要深入了解原理。所以这一小节内容较多，各位做好抗压准备。
-
-#### 3.1 知识点
-
-- [JS知识点](./JavaScript知识点.md)
-
-#### 3.2 面试题
-
-- [JS笔试题](./JS笔试题.md)
-- [JS面试题](./JS面试题.md)
-
-### 4 浏览器/网络
-
-浏览器这边主要考察兼容性，当然有时候也考察下HTTP缓存等内容，所以我把它们归到了一起方便复习。
-
-- [浏览器](./浏览器.md)
-
-### 5 框架 + 工具
-
-#### 5.1 Vue
-
-Vue没什么好说的，数据响应式（双向数据绑定）是一定会问到的，其它例如生命周期之类的也常常出现，具体查看下面链接：
-
-- [Vue面试题](./Vue面试题.md)
-
-#### 5.2 Webpack
-
-个人在面试中很少被问到 webpack 的问题？唯一一次与 webpack 相关的还是在一次面试的笔试题中，有这样一道：
-
-> 写出你知道的性能优化方案（不要写 webpack 工具能做到的）
-
-虽然我自己没碰到过，但保不齐其他公司不爱问，所以还是放在这儿：
-
-- [如何使用webpack4](https://evestorm.github.io/posts/47462/)
-- [Webpack面试题](./Webpack面试题.md)
-
-### 6 性能优化
-
-性能优化现在应该是必考题了，我去几家公司面就有几家会问到，常考的知识点有「首屏优化」「重排重绘优化」以及「css3动画优化」等。不太了解这部分的童鞋可以看下面链接：
-
-- [性能优化知识点](./性能优化知识点.md)
-- [web性能优化-实践](https://evestorm.github.io/posts/47143/)
-
-### 7 算法
-
-这部分目前是我薄弱项，暂时不能给到大家更多帮助。不过对于面一般普通前端来说，也就顶多问一下常见的排序算法了。
-
-这是我之前整理的常见排序算法：可以 [点击此处](https://evestorm.github.io/posts/59937/) 查看。
-
-其他算法面试题会在后续更新...
+---
 
 ## 简历模板
 
@@ -224,11 +129,3 @@ Vue没什么好说的，数据响应式（双向数据绑定）是一定会问�
   - 下载地址：<https://github.com/Ovilia/cv>
 - <https://html5up.net/read-only>
   - 下载地址：上方链接右上角 Download
-
-## 更多
-
-本项目整合了大量下方资源的面试题内容，但毕竟是按照我自己技术栈整合的，所以如果你还想查缺补漏（例如 react 相关面试题等），可以点击下方链接了解更多：
-
-- [前端开发面试题](https://github.com/markyun/My-blog/tree/master/Front-end-Developer-Questions/Questions-and-Answers)
-- [前端面试考点多？看这些文章就够了](https://juejin.im/post/5aae076d6fb9a028cc6100a9)
-- [KieSun/Front-end-knowledge](https://github.com/KieSun/Front-end-knowledge)
