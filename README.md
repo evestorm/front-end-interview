@@ -10,6 +10,19 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
+## 2023-03-23 更新
+
+- [以下两种方式的区别？及 typeof 得到的结果](https://willbchang.notion.site/a567a25493b84e5fbe717093ecb98fe6#2feb5fa32b1b43909bb069b902c32c6f)
+- [typeof 能判断哪些类型 ？](https://willbchang.notion.site/a567a25493b84e5fbe717093ecb98fe6#af3a68a81ed94456be1cfad4e0995fa1)
+- [typeof(null) 为什么返回的是'object'](https://willbchang.notion.site/a567a25493b84e5fbe717093ecb98fe6#bbb47cd173bf4973ae349e97fd427f3e)
+- [闭包里面的变量为什么不会被垃圾回收 ？](https://willbchang.notion.site/b803fd5d6f3d4ace8b0f56925b311837#d93473cf71654c3b844b3efc62d52084)
+- [说说 JS 作用域及作用域链](https://willbchang.notion.site/4395080143c444dda4805fffb80ecd93#9970d273c25c4873ab6d3bdc827d9757)
+- [怎么理解 JS 静态作用域和动态作用域](https://willbchang.notion.site/4395080143c444dda4805fffb80ecd93#79139d9e249a4351acdc366ff6d4d62c)
+- [以下代码输出的结果是 ？](https://willbchang.notion.site/822aa5b940954bc3abf859425f9be1ff#16c21e9591eb453ba1f492f40f6a6d09)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-03-22 更新
 
 - [在写 HTML 代码时，语义化实践中应该注意什么 ？](https://willbchang.notion.site/9e7789ddc5f9410bbd74cc8029b23f51#79400f7ffaa34fcea688559140ed3f00)
@@ -21,9 +34,6 @@
 - [CSS 绘制图形](https://willbchang.notion.site/CSS-03e0b897fd06403b815033409281fb90)
 - [CSS3 动画相关](https://willbchang.notion.site/CSS3-836b0e41b70440f3bf976072934d9bd6)
 - [min-width、max-width、width 的包含（优先级）关系](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#08e12ff8347d48a38d12899ffee4b9e2)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-02-20 更新
 
