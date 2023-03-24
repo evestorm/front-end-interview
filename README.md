@@ -10,6 +10,24 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
+## 2023-03-24 更新
+
+- [说出几种你能想到的JS 变量交换的方法](https://willbchang.notion.site/2366f8feb98e4e95beacb2db88fa35fb#67c1662939984283838d921e5d996a61)
+- [如何在不改变原始数组的情况下反转数组](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#0900f904fe6f451bb34f8af33b2045c2)
+- [JS 递归、深浅克隆](https://willbchang.notion.site/JS-6c234d73a1304ef49635952e09761778)
+- [TypeScript 支持静态类吗 ？为什么 ？](https://willbchang.notion.site/042c7f6bc2d04c238ce2d33a699b9048#a3fdc520f2c945c3894df79f9f166da9)
+- [Vuex 页面刷新数据丢失怎么解决 ？](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#29839505d7794af5a344e3fa126aab9f)
+- [你都做过哪些 Vue 的性能优化](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#7039a939d1144c37a487f8047b01a5bd)
+- [Vue 有了数据响应式，为何还要 diff ？](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#8b550789de6b4229beda8524e5bb9758)
+- [何时在函数组件上使用类组件 ？](https://willbchang.notion.site/6a67c4a72a6b4387b996074ce0939db5#e10cc85450b74cb5a8174578f8d09eda)
+- [HTML 和 React 事件处理有什么区别 ？](https://willbchang.notion.site/6a67c4a72a6b4387b996074ce0939db5#34c41a0888aa46dea4c2cb10045e7b9d)
+- [如何将参数传递给事件处理程序或回调 ？](https://willbchang.notion.site/6a67c4a72a6b4387b996074ce0939db5#db98a9fbaa444910aa5d90a536842911)
+- [Node.js 如何工作的 ？](https://willbchang.notion.site/30d34736aa22463cb2ece1a6a65992de#a5ff3c9b18b44cf39a683dcee8c86e37)
+- [Node.js 如何克服 I/O 操作阻塞的问题 ？](https://willbchang.notion.site/30d34736aa22463cb2ece1a6a65992de#1fc6e4afe65f4fd98763738ae7ce3ed7)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-03-23 更新
 
 - [以下两种方式的区别？及 typeof 得到的结果](https://willbchang.notion.site/a567a25493b84e5fbe717093ecb98fe6#2feb5fa32b1b43909bb069b902c32c6f)
@@ -19,9 +37,6 @@
 - [说说 JS 作用域及作用域链](https://willbchang.notion.site/4395080143c444dda4805fffb80ecd93#9970d273c25c4873ab6d3bdc827d9757)
 - [怎么理解 JS 静态作用域和动态作用域](https://willbchang.notion.site/4395080143c444dda4805fffb80ecd93#79139d9e249a4351acdc366ff6d4d62c)
 - [以下代码输出的结果是 ？](https://willbchang.notion.site/822aa5b940954bc3abf859425f9be1ff#16c21e9591eb453ba1f492f40f6a6d09)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-03-22 更新
 
