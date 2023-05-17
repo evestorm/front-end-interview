@@ -10,6 +10,20 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
+## 2023-05-17 更新
+
+- [介绍下粘性布局（sticky）](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#6e3dc8bb19764840abe58a694a19c1fb)
+- [介绍下 http1.0、http1.1、http2.0 协议的区别？](https://willbchang.notion.site/cd2aeaaade32457ab99948c0636506fe#5d67d9a389c2493daa686218d1ff6a32)
+- [为什么 HTTP1.1 不能实现多路复用（腾讯）](https://willbchang.notion.site/cd2aeaaade32457ab99948c0636506fe#b878bae2b0224afdb0489db7b4654e84)
+- [简单讲解一下 http2 的多路复用（网易）](https://willbchang.notion.site/cd2aeaaade32457ab99948c0636506fe#55097aa0d7e24595a688cb99507785ed)
+- [HTTPS 握手过程中，客户端如何验证证书的合法性](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#b1b713278647450aa58260e4b7179a97)
+- [cookie 和 token 都存放在 header 中，为什么不会劫持 token？](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#275ae0a670b5494cb0b11b16882f8bf7)
+- [说下单点登录](https://willbchang.notion.site/cd2aeaaade32457ab99948c0636506fe#ec88d02629e046aaba844f0ff7486944)
+- [简单说说 HTTP 劫持、DNS 劫持与 XSS](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#d7f344a6affd4daeb6662a68a98e4f02)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-03-24 更新
 
 - [说出几种你能想到的JS 变量交换的方法](https://willbchang.notion.site/2366f8feb98e4e95beacb2db88fa35fb#67c1662939984283838d921e5d996a61)
@@ -24,9 +38,6 @@
 - [如何将参数传递给事件处理程序或回调 ？](https://willbchang.notion.site/6a67c4a72a6b4387b996074ce0939db5#db98a9fbaa444910aa5d90a536842911)
 - [Node.js 如何工作的 ？](https://willbchang.notion.site/30d34736aa22463cb2ece1a6a65992de#a5ff3c9b18b44cf39a683dcee8c86e37)
 - [Node.js 如何克服 I/O 操作阻塞的问题 ？](https://willbchang.notion.site/30d34736aa22463cb2ece1a6a65992de#1fc6e4afe65f4fd98763738ae7ce3ed7)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-03-23 更新
 
