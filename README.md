@@ -10,6 +10,19 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
+## 2023-05-22 更新
+
+- [根据下面 ES6 构造函数的书写方式，要求写出 ES5 的](https://willbchang.notion.site/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#18e179d291f6492c80a4604de19d517c)
+- [实现一个函数,对一个url进行请求,失败就再次请求,超过最大次数就走失败回调,任何一次成功都走成功回调](https://willbchang.notion.site/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#9eb447767c664c23a9b07ccb0ecd4038)
+- [手写 reduce flat](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#da97aaa9d14a4e54937f8bc4b55261c7)
+- [为什么普通 *for* 循环的性能远远高于 *forEach* 的性能，请解释其中的原因。](https://willbchang.notion.site/ec8cac669a334a70a2ecb112e39304e2#5c6af6c74b1a4ccab75b4a1e5f0c8f3c)
+- [数组里面有 10 万个数据，取第一个元素和第 10 万个元素的时间相差多少](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#61efd5a3282d48ea9b740e251ca60ea2)
+- [产生一个不重复的随机数组](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#cca32555072a431391a7c3e2ae3e2f62)
+- [有一堆整数，请把他们分成三份，确保每一份和尽量相等（11，42，23，4，5，6 4 5 6 11 23 42 56 78 90）](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#ec6fa7497dc34664b6f9e00d81af16f1)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-05-17 更新
 
 - [介绍下粘性布局（sticky）](https://willbchang.notion.site/3deb29fe2f464eaa938606bbbb2fc3e4#6e3dc8bb19764840abe58a694a19c1fb)
@@ -20,9 +33,6 @@
 - [cookie 和 token 都存放在 header 中，为什么不会劫持 token？](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#275ae0a670b5494cb0b11b16882f8bf7)
 - [说下单点登录](https://willbchang.notion.site/cd2aeaaade32457ab99948c0636506fe#ec88d02629e046aaba844f0ff7486944)
 - [简单说说 HTTP 劫持、DNS 劫持与 XSS](https://willbchang.notion.site/a243e209226247c38e1ecdf525f36f4c#d7f344a6affd4daeb6662a68a98e4f02)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-03-24 更新
 
