@@ -10,6 +10,19 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
+## 2023-06-21 更新
+
+- [watch 中 deep:true 是如何实现的](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#71e807ef921d456baa1de608b7f620ba)
+- [assets 和 static 的异同](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#9230fed7e8554930bd13bb94566e35df)
+- [Vue3 里为什么要用 Proxy API 替代 defineProperty API](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#08ce87ea9515474f8d5758fe92e07f4c)
+- [Vue3 中，v-if 和 v-for 的优先级哪个高？](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#12a77bbe3f20435489f54a2f78e82970)
+- [script setup 是什么，有什么好处?](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#ec5b6836b6624d2bbe59c558859277ed)
+- [ref 与 reactive 的区别？](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#c9b1395ea72c4dd598a2514f1889d7fa)
+- [谈谈pinia?](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#a31bb55094e24f29ad5bd515a97e208c)
+
+<details><summary>历史更新记录</summary>
+<p>
+
 ## 2023-05-22 更新
 
 - [根据下面 ES6 构造函数的书写方式，要求写出 ES5 的](https://willbchang.notion.site/ES6-b2b5dab7c82e4c42a44e14ec0cfe2390#18e179d291f6492c80a4604de19d517c)
@@ -19,9 +32,6 @@
 - [数组里面有 10 万个数据，取第一个元素和第 10 万个元素的时间相差多少](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#61efd5a3282d48ea9b740e251ca60ea2)
 - [产生一个不重复的随机数组](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#cca32555072a431391a7c3e2ae3e2f62)
 - [有一堆整数，请把他们分成三份，确保每一份和尽量相等（11，42，23，4，5，6 4 5 6 11 23 42 56 78 90）](https://willbchang.notion.site/60305d4d7ae149d0835ebc1d078a7caa#ec6fa7497dc34664b6f9e00d81af16f1)
-
-<details><summary>历史更新记录</summary>
-<p>
 
 ## 2023-05-17 更新
 
