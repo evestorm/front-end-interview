@@ -10,18 +10,23 @@
 >
 > 由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。
 
-## 2023-06-21 更新
+## 2023-07-20 更新
 
-- [watch 中 deep:true 是如何实现的](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#71e807ef921d456baa1de608b7f620ba)
-- [assets 和 static 的异同](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#9230fed7e8554930bd13bb94566e35df)
-- [Vue3 里为什么要用 Proxy API 替代 defineProperty API](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#08ce87ea9515474f8d5758fe92e07f4c)
-- [Vue3 中，v-if 和 v-for 的优先级哪个高？](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#12a77bbe3f20435489f54a2f78e82970)
-- [script setup 是什么，有什么好处?](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#ec5b6836b6624d2bbe59c558859277ed)
-- [ref 与 reactive 的区别？](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#c9b1395ea72c4dd598a2514f1889d7fa)
-- [谈谈pinia?](https://www.notion.so/willbchang/090d219cd814443c9868a4689fdec1fe#a31bb55094e24f29ad5bd515a97e208c)
+- [Babel 的原理是什么?](https://willbchang.notion.site/1b0cf089078745879ae44c34d1d37172#89f6eb8b65d14be1b93007a09e76b665)
+- [如何写一个 Babel 插件?](https://willbchang.notion.site/1b0cf089078745879ae44c34d1d37172#b427d7807af14e62bf770a4876537c11)
 
 <details><summary>历史更新记录</summary>
 <p>
+
+## 2023-06-21 更新
+
+- [watch 中 deep:true 是如何实现的](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#71e807ef921d456baa1de608b7f620ba)
+- [assets 和 static 的异同](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#9230fed7e8554930bd13bb94566e35df)
+- [Vue3 里为什么要用 Proxy API 替代 defineProperty API](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#08ce87ea9515474f8d5758fe92e07f4c)
+- [Vue3 中，v-if 和 v-for 的优先级哪个高？](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#12a77bbe3f20435489f54a2f78e82970)
+- [script setup 是什么，有什么好处?](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#ec5b6836b6624d2bbe59c558859277ed)
+- [ref 与 reactive 的区别？](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#c9b1395ea72c4dd598a2514f1889d7fa)
+- [谈谈pinia?](https://willbchang.notion.site/090d219cd814443c9868a4689fdec1fe#a31bb55094e24f29ad5bd515a97e208c)
 
 ## 2023-05-22 更新
 
