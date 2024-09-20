@@ -8,6 +8,7 @@
 
 > **😄 温馨提醒**
 > 由于 notion 现在已经自带侧边栏大纲，⬇️下方插件可以不用下载了
+>
 > ~~由于「Notion」没有像「语雀」那样的侧边栏大纲，所以得安装一个 Chrome 插件来支持。我本人之前一直用 [Notion Boost](https://gourav.io/notion-boost) ，但它的侧边栏功能我用着不大习惯，所以我写了个简易版本的 [Notion Faster](https://github.com/evestorm/notion-faster) 插件，欢迎大家使用并提出意见。~~
 >
 > 知识库中标题前带 ⭐️ 标识的代表需要读者重点关注记忆，为必学项目。祝大家早日打下坚实 JS 基础，拿 offer 到手软~
