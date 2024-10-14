@@ -2,6 +2,8 @@
 
 ## 🔝 置顶
 
+🌟🌟 此仓库中的面试题不是最新的！！！请移步下方 notion 地址打开阅读！！！🌟🌟
+
 前端「面试指南 + 知识库」汇总:
 
 - [Notion 地址](https://evelance.notion.site/Front-End-Lib-641a7f4ffdc643239155757324fdce02)
